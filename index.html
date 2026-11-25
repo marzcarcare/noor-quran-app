@@ -1093,7 +1093,7 @@ function setActive(i,word,scroll){
     if(el){el.classList.add("act");
       if(scroll&&Date.now()-lastScrollTouch>2500&&!S.focus&&(S.auto||!playing()))el.scrollIntoView({block:"center",behavior:"smooth"});
       if(S.focus){$("#rScroll").scrollTop=0;el.classList.remove("fcl","fcr");void el.offsetWidth;if(pv>=0)el.classList.add(i>pv?"fcl":"fcr");setTimeout(fcUpd,0)}}
-    if(!PS){save(pk("last"),{ch:cur.ch,ayah:i+1});sposSet(cur.ch,i+1)}else if(isListen()&&!PS.adv&&PS.pl.items[PS.item]?.ch===cur.ch)planSave(true);saveResume();updPbar();planRangeCheck(i);if(playing())markRead(cur.verses[i].k);
+    if(!MIN&&playing())setTimeout(msnMeta,0);if(!PS){save(pk("last"),{ch:cur.ch,ayah:i+1});sposSet(cur.ch,i+1)}else if(isListen()&&!PS.adv&&PS.pl.items[PS.item]?.ch===cur.ch)planSave(true);saveResume();updPbar();planRangeCheck(i);if(playing())markRead(cur.verses[i].k);
   }
   const el=els[i];if(!el)return;
   el.classList.toggle("play",playing()&&word>0);
@@ -1153,7 +1153,7 @@ function doPlay(){const a=$("#au");if(!a.src){toast("No audio for this surah");r
   if(cur)cur.hold=false;
   if(!cur?.local&&!navigator.onLine){toast("Offline: this surah's audio is not saved");return}
   a.play().catch(e=>{logErr("play: "+(e&&e.name)+" "+(e&&e.message)+" · "+String(a.src).slice(0,120));toast("Audio could not play — see Settings → Diagnostics")})}
-function stopAudio(){fgsStop();const a=$("#au");a.pause();clearTimeout(gapT);cancelAnimationFrame(raf);if(a.src&&a.src.startsWith("blob:"))URL.revokeObjectURL(a.src);a.removeAttribute("src");a.load()}
+function stopAudio(){fgsStop();if(!MIN)msnState("none");const a=$("#au");a.pause();clearTimeout(gapT);cancelAnimationFrame(raf);if(a.src&&a.src.startsWith("blob:"))URL.revokeObjectURL(a.src);a.removeAttribute("src");a.load()}
 const au=$("#au");
 au.addEventListener("play",()=>{$("#ppIcon").innerHTML='<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>';cancelAnimationFrame(raf);raf=requestAnimationFrame(tick)});
 au.addEventListener("pause",()=>{saveResume(true);$("#ppIcon").innerHTML='<path d="M8 5v14l11-7z"/>';if(cur)setActive(cur.idx,cur.word,false);document.querySelectorAll(".ay.play").forEach(e=>e.classList.remove("play"))});
@@ -2413,26 +2413,40 @@ function diagSheet(){
 }
 
 /* ================= V8: BACKGROUND PLAYBACK (lock screen controls) ================= */
-const MSN=window.Capacitor?.Plugins?.MediaSession||null;let msnReady=false;
+const MSN=window.Capacitor?.Plugins?.MediaSession||null;let msnReady=false,msnLast="",msnArtUrl="";
+// v16.10: real lock-screen media player (MediaStyle) for the reader and the small player
+try{if(!load("nq16_msn")){save("nq16_msn",1);save("nq8_noMsn",false)}}catch(e){} // give it a fresh start after the old crash guard
+function msnOn(){return !!MSN&&S.bgPlay!==false&&!load("nq8_noMsn")}
 async function msnSetup(){
   if(!MSN||msnReady)return;msnReady=true;
   const h=(a,f)=>{try{MSN.setActionHandler({action:a},f)}catch(e){}};
-  h("play",()=>doPlay());h("pause",()=>au.pause());
-  h("nexttrack",()=>cur&&seekAyah(cur.idx+1,true));h("previoustrack",()=>cur&&seekAyah(cur.idx-1,true));
-  h("seekto",d=>{if(d&&d.seekTime!=null)au.currentTime=d.seekTime});h("stop",()=>au.pause());
+  h("play",()=>{if(MIN){clearTimeout(MIN.gapT);MPA.play().catch(()=>{})}else doPlay()});
+  h("pause",()=>{if(MIN)MPA.pause();else au.pause()});
+  h("nexttrack",()=>{if(MIN)mpNext();else if(cur)seekAyah(cur.idx+1,true)});
+  h("previoustrack",()=>{if(MIN)mpPrev();else if(cur)seekAyah(Math.max(0,cur.idx-1),true)});
+  h("seekto",d=>{if(!MIN&&d&&d.seekTime!=null)au.currentTime=d.seekTime});
+  h("stop",()=>{if(MIN)mpStop();else{au.pause();msnState("none")}});
 }
+function msnArt(){if(msnArtUrl)return msnArtUrl;try{const c=document.createElement("canvas");c.width=c.height=256;const x=c.getContext("2d");
+  const g=x.createLinearGradient(0,0,256,256);g.addColorStop(0,"#1f6b4f");g.addColorStop(1,"#0e3b2c");x.fillStyle=g;x.fillRect(0,0,256,256);
+  x.fillStyle="#e8c574";x.textAlign="center";x.textBaseline="middle";x.font="120px serif";x.fillText("۞",128,112);x.font="bold 26px sans-serif";x.fillStyle="#f6ecd4";x.fillText("Noor Quran",128,206);
+  msnArtUrl=c.toDataURL("image/png")}catch(e){}return msnArtUrl}
+async function msnMeta(){if(!msnOn()||!msnReady)return;let title="",artist="";
+  if(MIN){const s=MIN.q[MIN.qi];title=chName(s.ch)+" · Ayah "+(MIN.ai||s.a);artist=installed[S.reciter]?.name||""}
+  else if(cur){title=cur.c.n+(cur.idx>=0?" · Ayah "+(cur.idx+1):"");artist=installed[cur.tp]?.name||""}else return;
+  if(title+"|"+artist===msnLast)return;msnLast=title+"|"+artist;
+  try{const art=msnArt();await MSN.setMetadata({title,artist,album:"Noor Quran",artwork:art?[{src:art,sizes:"256x256",type:"image/png"}]:[]})}catch(e){logErr("mediasession meta "+(e.message||e))}}
 async function msnState(st){
-  if(!MSN||S.bgPlay!==true||load("nq8_noMsn"))return;
-  try{save("nq8_bc","msn");await msnSetup();
-    if(st==="playing"&&cur)await MSN.setMetadata({title:"Surah "+cur.c.n+(cur.idx>=0?" · Ayah "+(cur.idx+1):""),artist:installed[cur.tp]?.name||"Noor Quran",album:"Noor Quran"});
+  if(!msnOn())return;
+  try{save("nq8_bc","msn");await msnSetup();if(st!=="none"){msnLast="";await msnMeta()}
     await MSN.setPlaybackState({playbackState:st});
-    if(st==="playing"&&au.duration)await MSN.setPositionState({duration:au.duration,position:au.currentTime,playbackRate:au.playbackRate||1});
-    setTimeout(()=>save("nq8_bc",""),4000);
+    const A=MIN?MPA:au;if(st==="playing"&&A.duration&&isFinite(A.duration))await MSN.setPositionState({duration:A.duration,position:A.currentTime,playbackRate:A.playbackRate||1});
+    setTimeout(()=>{if(load("nq8_bc")==="msn")save("nq8_bc","")},4000);
   }catch(e){save("nq8_bc","");logErr("mediasession "+(e.message||e))}
 }
-au.addEventListener("play",()=>msnState("playing"));
-au.addEventListener("pause",()=>msnState("paused"));
-au.addEventListener("ended",()=>{if(!S.autoNext)msnState("none")});
+au.addEventListener("play",()=>{if(!MIN)msnState("playing")});
+au.addEventListener("pause",()=>{if(!MIN)msnState("paused")});
+au.addEventListener("ended",()=>{if(!S.autoNext&&!MIN)msnState("none")});
 
 /* ================= V8: THEMES & FONTS ================= */
 const THEME_LIST=[["parch","Parchment (default)"],["mint","Mint"],["ocean","Ocean"],["rose","Rose"],["night","Night (dark)"]];
@@ -2753,8 +2767,9 @@ function fgsSt(o){fgsLast=o;return FGS.startForegroundService(o)}
 function fgsRefresh(){clearTimeout(fgsRT);fgsRT=setTimeout(()=>{if(!FGS||!fgsOn||!fgsLast)return;const pl=fgsMode==="mini"?!!(MIN&&!MPA.paused):playing();
   const bt=fgsBtns(pl);if(JSON.stringify(bt)===JSON.stringify(fgsLast.buttons))return;fgsUpd(Object.assign({},fgsLast,{buttons:bt})).catch(()=>{})},400)}
 async function fgsStart(){
+  if(msnOn())return;
   if(fgsMode==="mini"&&fgsOn){fgsMode="main";try{await fgsUpd({id:4711,title:"Noor Quran — "+(cur?cur.c.n:""),body:"Recitation · tap to open",smallIcon:"ic_stat_noor",silent:true,notificationChannelId:"playback",buttons:fgsBtns(true)})}catch(e){}return}
-  if(!FGS||fgsOn||S.bgPlay===false||load("nq10_noFgs")||!cur)return;fgsMode="main";
+  if(!FGS||fgsOn||S.bgPlay===false||load("nq10_noFgs")||!cur||msnOn())return;fgsMode="main";
   try{
     save("nq8_bc","fgs");
     if(!fgsChan){try{await FGS.createNotificationChannel({id:"playback",name:"Recitation",description:"Quran recitation playback",importance:2})}catch(e){}fgsChan=true}
@@ -4039,7 +4054,7 @@ function mpUI(){const b=mpBar();const inReader=isShown("reader");
   b.classList.remove("hidden","main");document.body.classList.add("hasmini");
   const s=MIN.q[MIN.qi];$("#miLab").textContent=`${MIN.q.length>1?`${MIN.qi+1}/${MIN.q.length} · `:""}${chName(s.ch)} ${s.ch}:${MIN.ai||s.a}${s.b>s.a?` (${s.a}–${s.b})`:""}`;
   $("#miPP").textContent=MPA.paused?"▶":"⏸";$("#miRep").textContent=MIN.rep===-1?"⟲∞":"⟲"+MIN.rep;$("#miSp").textContent=MIN.speed+"×";$("#miLR").classList.toggle("on",!!MIN.lr);$("#miRep").classList.toggle("on",MIN.rep!==1);ipBtn();recChip();sleepChip()}
-function mpText(){if(!MIN)return;ipSync();const s=MIN.q[MIN.qi];const v=verseByKey(s.ch+":"+(MIN.ai||s.a));if(!v)return;
+function mpText(){if(!MIN)return;ipSync();if(!MPA.paused)setTimeout(msnMeta,0);const s=MIN.q[MIN.qi];const v=verseByKey(s.ch+":"+(MIN.ai||s.a));if(!v)return;
   $("#miTx").innerHTML=v.w.map((w,j)=>`<span data-p="${v.p?v.p[j]:j+1}">${esc(w)}</span>`).join(" ")}
 // V16.1 in-place: the card you are looking at lights up word by word; the bar slims down
 function arSp(k){const v=verseByKey(k);return v?v.w.map((w,j)=>`<span data-wk="${k}" data-p="${v.p?v.p[j]:j+1}">${esc(w)}</span>`).join(" "):""}
@@ -4065,7 +4080,7 @@ document.addEventListener("click",e=>{const sp=e.target.closest("[data-wk]");if(
   const s=MIN.q[MIN.qi];const [c,a]=sp.dataset.wk.split(":").map(Number);if(c!==s.ch||a<s.a||a>s.b)return;
   e.stopPropagation();e.preventDefault();const z=MIN.tm[a-1];if(!z)return;const p=+sp.dataset.p;const g=(z[2]||[]).find(x=>x[0]===p);
   clearTimeout(MIN.gapT);MIN.wait=0;MIN.ai=a;mpText();mpSeekTo((g?g[1]:z[0])/1000);ipSync();mpUI()},true);
-function mpStop(){if(MIN)clearTimeout(MIN.gapT);try{MPA.pause()}catch(e){}MIN=null;ipClear();ipBtn();mpUI();if(fgsMode==="mini")fgsStop()}
+function mpStop(){if(MIN)clearTimeout(MIN.gapT);try{MPA.pause()}catch(e){}MIN=null;ipClear();ipBtn();mpUI();if(!(mainBarOn&&cur&&playing()))msnState("none");if(fgsMode==="mini")fgsStop()}
 // ↗ share what is playing now — image, reel, or text
 async function barShare(){let k,a,b,ch;
   if(MIN){const s=MIN.q[MIN.qi];ch=s.ch;a=MIN.ai||s.a;b=s.b>s.a?s.b:a;MPA.pause()}else if(cur){ch=cur.ch;a=(cur.idx>=0?cur.idx:0)+1;b=a;au.pause()}else return;
@@ -4100,7 +4115,7 @@ function mpNext(){if(!MIN)return;const my=MIN;clearTimeout(my.gapT);my.wait=0;co
 async function mpFgs(){if(!MIN)return;const s=MIN.q[MIN.qi];const title="Noor Quran — "+chName(s.ch)+" "+s.ch+":"+(MIN.ai||s.a);const body=(MIN.q.length>1?`${MIN.qi+1}/${MIN.q.length} · `:"")+(installed[S.reciter]?.name||"Recitation");
   try{if("mediaSession" in navigator){navigator.mediaSession.metadata=new MediaMetadata({title:chName(s.ch)+" "+s.ch+":"+(MIN.ai||s.a),artist:installed[S.reciter]?.name||"",album:"Noor Quran"});
     navigator.mediaSession.setActionHandler("play",()=>MPA.play());navigator.mediaSession.setActionHandler("pause",()=>MPA.pause());navigator.mediaSession.setActionHandler("nexttrack",mpNext);navigator.mediaSession.setActionHandler("previoustrack",mpPrev)}}catch(e){}
-  if(!FGS||S.bgPlay===false||load("nq10_noFgs"))return;
+  if(!FGS||S.bgPlay===false||load("nq10_noFgs")||msnOn())return;
   const opt={id:4711,title,body,smallIcon:"ic_stat_noor",silent:true,notificationChannelId:"playback",serviceType:2,buttons:fgsBtns(true)};
   try{if(!fgsChan){try{await FGS.createNotificationChannel({id:"playback",name:"Recitation",description:"Quran recitation playback",importance:2})}catch(e){}fgsChan=true}
     if(fgsOn){fgsMode="mini";await fgsUpd(opt)}else{save("nq8_bc","fgs");await fgsSt(opt);fgsOn=true;fgsMode="mini";setTimeout(()=>{if(load("nq8_bc")==="fgs")save("nq8_bc","")},6000)}}catch(e){save("nq8_bc","");logErr("mini fgs: "+(e.message||e))}}
@@ -4149,6 +4164,7 @@ function mpAfterAyah(my,ai){const s=my.q[my.qi];const V=my.tm;
 }
 MPA.addEventListener("timeupdate",mpTick);MPA.addEventListener("play",()=>{mpUI();try{$("#au").pause()}catch(e){}mpFgs()});MPA.addEventListener("pause",mpUI);
 MPA.addEventListener("play",fgsRefresh);MPA.addEventListener("pause",fgsRefresh);
+MPA.addEventListener("play",()=>msnState("playing"));MPA.addEventListener("pause",()=>{if(MIN)msnState("paused")});
 MPA.addEventListener("ended",()=>{if(MIN){const s=MIN.q[MIN.qi];mpAfterAyah(MIN,s.b)}});
 setInterval(()=>{if(MIN&&!MPA.paused)mpTick();const b=$("#mini");if(b&&!b.classList.contains("hidden"))mpProg()},200);
 setInterval(()=>{const b=$("#mini");if(!b)return;
