@@ -1,0 +1,8 @@
+{
+  "note": "Edit this file to add or remove languages/reciters/tafsirs. IDs come from api.quran.com/api/v4/resources/translations and /resources/tafsirs",
+  "translations": [50, 133, 229, 20, 85, 22, 54, 97, 234, 80, 37],
+  "wordByWord": ["ta", "en", "ur"],
+  "tafsirs": [169, 817, 160, 16],
+  "reciters": "all",
+  "bundleInApp": ["tr-50", "tr-20", "wbw-ta", "tm-10", "script-tajweed", "script-indopak"]
+}
