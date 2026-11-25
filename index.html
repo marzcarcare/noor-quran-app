@@ -2781,12 +2781,17 @@ function everBits(){if(!prog.ever)prog.ever="";if(!prog._eb){prog._eb=prog.ever?
 function everSet(g,on){const b=everBits();const has=!!(b[g>>3]&(1<<(g&7)));if(on&&!has){b[g>>3]|=1<<(g&7)}else if(!on&&has){b[g>>3]&=~(1<<(g&7))}else return;prog.ever=b2s(b)}
 function everHas(g){return !!(everBits()[g>>3]&(1<<(g&7)))}
 function activeKhatm(){return plans.find(p=>p.type==="khatm"&&!p.done)||null}
-function isRead(key){const g=gidx()[key];const k=activeKhatm();return k?bitHas(k,g):everHas(g)}
+// v16.9: inside a Khatm plan session (and in the Khatm map) ✓ means "read in this Khatm"; elsewhere it means "ever read"
+function isPlanRead(key){const g=gidx()[key];const k=activeKhatm();return k?bitHas(k,g):everHas(g)}
+function inKhatmSession(){const k=activeKhatm();return !!(k&&PS&&PS.pl===k)}
+function isRead(key){return inKhatmSession()?isPlanRead(key):everHas(gidx()[key])}
+function readPctK(keys){if(!keys.length)return 0;let n=0;for(const k of keys)if(isPlanRead(k))n++;return n/keys.length}
 function bitClear(pl,g){const b=bitsOf(pl);if(b[g>>3]&(1<<(g&7))){b[g>>3]&=~(1<<(g&7));pl.cnt=Math.max(0,(pl.cnt||0)-1);pl.bits=b2s(b)}}
-function setRead(keys,on){
+function setRead(keys,on,plan){ // plan=true only inside a Khatm plan / the Khatm map — a tick elsewhere never touches the plan
+  if(plan===undefined)plan=inKhatmSession();
   for(const key of keys){const g=gidx()[key];
-    if(on){markRead(key,true);everSet(g,true)}
-    else{everSet(g,false);for(const pl of plans)if(pl.type==="khatm"&&!pl.done)bitClear(pl,g);
+    if(on){markRead(key,plan);everSet(g,true)}
+    else{everSet(g,false);if(plan)for(const pl of plans)if(pl.type==="khatm"&&!pl.done)bitClear(pl,g);
       if(prog.today.d===dstr()&&prog.today.k[key]){delete prog.today.k[key];const d=ensureToday();d.n=Math.max(0,d.n-1)}}}
   saveProg();
 }
@@ -2797,14 +2802,14 @@ function juzKeys(j){const out=[];for(const c of core.chapters)for(const v of cor
 let mapTab="surah";
 function readPct(keys){if(!keys.length)return 0;let n=0;for(const k of keys)if(isRead(k))n++;return n/keys.length}
 function khatmMap(){
-  const k=activeKhatm();const total=gidx()._n;let readN=0;for(const key in gidx()){if(key!=="_n"&&isRead(key))readN++}
+  const k=activeKhatm();const total=gidx()._n;let readN=0;for(const key in gidx()){if(key!=="_n"&&isPlanRead(key))readN++}
   const head=`<h2>🗺 ${k?`Khatm progress · ${k.days} days`:"Quran reading map"}</h2>
   <div class="note" style="margin:0 0 8px">${readN} / ${total} ayahs read (${Math.round(readN/total*1000)/10}%)${k?" in this Khatm":" overall"}. Tap a surah or juz to open it or mark it as read.</div>
   <div class="htabs" id="mapT"><button class="tab ${mapTab==="surah"?"on":""}" data-m="surah">114 Surahs</button><button class="tab ${mapTab==="juz"?"on":""}" data-m="juz">30 Juz</button></div>`;
   let body="";
-  if(mapTab==="surah")body=`<div class="smap">${core.chapters.map(c=>{const p=readPct(surahKeys(c.id));return `<button class="sm ${p>=.999?"full":p>0?"part":""}" data-sc="${c.id}" style="--p:${Math.round(p*100)}%"><b>${c.id}</b><small>${esc(c.n)}</small></button>`}).join("")}</div>
+  if(mapTab==="surah")body=`<div class="smap">${core.chapters.map(c=>{const p=readPctK(surahKeys(c.id));return `<button class="sm ${p>=.999?"full":p>0?"part":""}" data-sc="${c.id}" style="--p:${Math.round(p*100)}%"><b>${c.id}</b><small>${esc(c.n)}</small></button>`}).join("")}</div>
     <div class="leg"><span class="sm full"></span> Done <span class="sm part" style="--p:50%"></span> In progress <span class="sm"></span> Not yet</div>`;
-  else body=Array.from({length:30},(_,i)=>{const j=i+1;const ks=juzKeys(j);const p=readPct(ks);const f=ks[0];return `<div class="jrow" data-jz="${j}"><b>Juz ${j}</b><small>${f?esc(chName(f.split(":")[0]))+" "+f:""}</small><div class="bar"><i style="width:${Math.round(p*100)}%"></i></div><span>${Math.round(p*100)}%</span></div>`}).join("");
+  else body=Array.from({length:30},(_,i)=>{const j=i+1;const ks=juzKeys(j);const p=readPctK(ks);const f=ks[0];return `<div class="jrow" data-jz="${j}"><b>Juz ${j}</b><small>${f?esc(chName(f.split(":")[0]))+" "+f:""}</small><div class="bar"><i style="width:${Math.round(p*100)}%"></i></div><span>${Math.round(p*100)}%</span></div>`}).join("");
   setSheet(head+body);
   $("#mapT").onclick=e=>{const t=e.target.closest(".tab");if(t){mapTab=t.dataset.m;khatmMap()}};
   $("#sheet").onclick=e=>{const s=e.target.closest("[data-sc]");const jz=e.target.closest("[data-jz]");
@@ -2812,16 +2817,16 @@ function khatmMap(){
     else if(jz){const ks=juzKeys(+jz.dataset.jz);rangeActions("Juz "+jz.dataset.jz,ks,ks[0])}};
 }
 function rangeActions(title,keys,openKey){
-  const p=readPct(keys);const firstUnread=keys.find(k=>!isRead(k))||openKey;
+  const p=readPctK(keys);const firstUnread=keys.find(k=>!isPlanRead(k))||openKey;
   setSheet(`<h2>${esc(title)}</h2><div class="note" style="margin:0 0 8px">${Math.round(p*100)}% read · ${keys.length} ayahs</div>
   <button class="btn" id="raOpen">▶ ${p>0&&p<1?"Continue from "+firstUnread:"Open"}</button>
   <button class="btn" id="raMark" style="background:var(--green2)">✓ Mark all as read</button>
   ${p>0?`<button class="btn" id="raUn" style="background:var(--maroon)">↺ Mark as not read</button>`:""}
   <button class="btn" id="raBack" style="background:var(--gold)">← Back to map</button>`);
   $("#raOpen").onclick=()=>{const key=p>0&&p<1?firstUnread:openKey;const [c,v]=key.split(":").map(Number);const k=activeKhatm();closeSheet();
-    setTimeout(()=>{if(k)openPlan(k,key);else openSurah(c,v)},80)};
-  $("#raMark").onclick=()=>{setRead(keys,true);toast("✓ Marked as read");khatmMap();if(isShown("home"))renderHome()};
-  const u=$("#raUn");if(u)u.onclick=()=>{if(!confirm("Mark "+title+" as not read?"))return;setRead(keys,false);khatmMap();if(isShown("home"))renderHome()};
+    setTimeout(()=>{const G=gidx();if(k&&k.last&&G[key]<G[k.last]){const un=keys.filter(x=>!isPlanRead(x)&&G[x]<G[k.last]);openGap(k,{a:key,b:un[un.length-1]||key})}else if(k)openPlan(k,key);else openSurah(c,v)},80)};
+  $("#raMark").onclick=()=>{setRead(keys,true,true);toast("✓ Marked as read");khatmMap();if(isShown("home"))renderHome()};
+  const u=$("#raUn");if(u)u.onclick=()=>{if(!confirm("Mark "+title+" as not read?"))return;setRead(keys,false,true);khatmMap();if(isShown("home"))renderHome()};
   $("#raBack").onclick=khatmMap;
 }
 
