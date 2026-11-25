@@ -1,0 +1,393 @@
+name: Build Noor Quran (packs + APK)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      # 1) Download Quran text, meanings, word meanings and reciter timings -> pack files
+      - name: Build data packs
+        run: node build-packs.mjs
+
+      # 2) Publish packs to the "packs" release (the app downloads from here)
+      - name: Publish packs
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: packs
+          name: Noor Quran data packs
+          body: Language, word-meaning and reciter timing packs used by the Noor Quran app. Updated automatically.
+          files: dist/*
+          make_latest: false
+          overwrite_files: true
+
+      # 3) Build the Android app
+      - name: Create app project
+        run: |
+          mkdir -p app/www/data app/assets
+          HA=0; HF=0; [ -f adhan.mp3 ] && HA=1; [ -f adhan_fajr.mp3 ] && HF=1
+          sed -e "s/__APPVER__/15.0.${{ github.run_number }}/g" -e "s/__HASADHAN__/$HA/g" -e "s/__HASFAJR__/$HF/g" -e "s#__PACKSRC__#https://github.com/${{ github.repository }}/releases/download/packs/#g" index.html > app/www/index.html
+          cp bundle/* app/www/data/
+          cp icon.png app/assets/icon-only.png
+          cd app
+          cat > package.json <<'JSON'
+          {"name":"noor-quran","version":"12.0.0","private":true,
+           "dependencies":{"@capacitor/core":"^6.2.0","@capacitor/android":"^6.2.0",
+                           "@capacitor/filesystem":"^6.0.0","@capacitor/share":"^6.0.0",
+                           "@capacitor/local-notifications":"^6.0.0","@capacitor/network":"^6.0.0",
+                           "@capacitor/geolocation":"^6.0.0","@capacitor-community/keep-awake":"^5.0.1","@capacitor-community/text-to-speech":"^5.1.0",
+                           "@capawesome-team/capacitor-android-foreground-service":"^6.2.0"},
+           "devDependencies":{"@capacitor/cli":"^6.2.0","sharp":"^0.33.5"}}
+          JSON
+          cat > capacitor.config.json <<'JSON'
+          {"appId":"com.marzcarcare.noorquran","appName":"Noor Quran","webDir":"www",
+           "backgroundColor":"#f3ead8","android":{"allowMixedContent":false}}
+          JSON
+          npm install --no-audit --no-fund
+          npx cap add android
+
+      - name: App icon
+        working-directory: app
+        run: |
+          cat > make-icons.cjs <<'JS'
+          // Generates Android launcher icons from icon.png (run inside app/)
+          const sharp=require("sharp"),fs=require("fs"),path=require("path");
+          const SRC=process.argv[2]||"../icon.png",RES="android/app/src/main/res",BG="#1f4d3f";
+          const D={mdpi:1,hdpi:1.5,xhdpi:2,xxhdpi:3,xxxhdpi:4};
+          (async()=>{
+            for(const [d,s] of Object.entries(D)){
+              const dir=path.join(RES,"mipmap-"+d);fs.mkdirSync(dir,{recursive:true});
+              const L=Math.round(48*s),F=Math.round(108*s),inner=F;
+              await sharp(SRC).resize(L,L).png().toFile(path.join(dir,"ic_launcher.png"));
+              const round=Buffer.from(`<svg width="${L}" height="${L}"><circle cx="${L/2}" cy="${L/2}" r="${L/2}"/></svg>`);
+              await sharp(SRC).resize(L,L).composite([{input:round,blend:"dest-in"}]).png().toFile(path.join(dir,"ic_launcher_round.png"));
+              const fg=await sharp(SRC).resize(inner,inner).png().toBuffer();
+              await sharp({create:{width:F,height:F,channels:4,background:{r:0,g:0,b:0,alpha:0}}}).composite([{input:fg,gravity:"center"}]).png().toFile(path.join(dir,"ic_launcher_foreground.png"));
+            }
+            const any=path.join(RES,"mipmap-anydpi-v26");fs.mkdirSync(any,{recursive:true});
+            const xml=`<?xml version="1.0" encoding="utf-8"?>\n<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">\n    <background android:drawable="@color/ic_launcher_background"/>\n    <foreground android:drawable="@mipmap/ic_launcher_foreground"/>\n</adaptive-icon>\n`;
+            fs.writeFileSync(path.join(any,"ic_launcher.xml"),xml);fs.writeFileSync(path.join(any,"ic_launcher_round.xml"),xml);
+            const vdir=path.join(RES,"values");fs.mkdirSync(vdir,{recursive:true});
+            const cf=path.join(vdir,"ic_launcher_background.xml");
+            fs.writeFileSync(cf,`<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <color name="ic_launcher_background">${BG}</color>\n</resources>\n`);
+            // remove template vector foreground that could shadow ours
+            for(const f of ["drawable-v24/ic_launcher_foreground.xml","drawable/ic_launcher_background.xml"]){const p=path.join(RES,f);if(fs.existsSync(p))fs.unlinkSync(p)}
+            const dd=path.join(RES,"drawable");fs.mkdirSync(dd,{recursive:true});
+            const book=`<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 24 24"><path fill="#fff" d="M12 6.5C10.2 5 7.6 4.3 4 4.5v13c3.6-.2 6.2.5 8 2 1.8-1.5 4.4-2.2 8-2v-13c-3.6-.2-6.2.5-8 2zm-1 10.6c-1.5-.8-3.3-1.2-5.5-1.2V6.5c2.4 0 4.2.5 5.5 1.5zm7.5-1.2c-2.2 0-4 .4-5.5 1.2V8c1.3-1 3.1-1.5 5.5-1.5z"/></svg>`;
+            await sharp(Buffer.from(book)).png().toFile(path.join(dd,"ic_stat_noor.png"));
+            console.log("icons generated");
+          })().catch(e=>{console.error(e);process.exit(1)});
+          JS
+          node make-icons.cjs ../icon.png
+
+      - name: Version + signing key
+        working-directory: app
+        run: |
+          npx cap sync android
+          sed -i 's#<uses-permission android:name="android.permission.INTERNET" />#<uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.RECORD_AUDIO" />\n    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />\n    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />\n    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />\n    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />\n    <queries><intent><action android:name="android.intent.action.TTS_SERVICE" /></intent></queries>#' android/app/src/main/AndroidManifest.xml
+          sed -i 's#</application>#    <receiver android:name="io.capawesome.capacitorjs.plugins.foregroundservice.NotificationActionBroadcastReceiver" />\n        <service android:name="io.capawesome.capacitorjs.plugins.foregroundservice.AndroidForegroundService" android:foregroundServiceType="mediaPlayback" />\n    </application>#' android/app/src/main/AndroidManifest.xml
+          grep -c AndroidForegroundService android/app/src/main/AndroidManifest.xml
+          mkdir -p android/app/src/main/res/raw
+          if [ -f ../adhan.mp3 ]; then cp ../adhan.mp3 android/app/src/main/res/raw/adhan.mp3; echo "adhan added"; fi
+          if [ -f ../adhan_fajr.mp3 ]; then cp ../adhan_fajr.mp3 android/app/src/main/res/raw/adhan_fajr.mp3; echo "fajr adhan added"; fi
+          grep -c ACCESS_COARSE_LOCATION android/app/src/main/AndroidManifest.xml
+          sed -i "s/versionCode 1$/versionCode ${{ github.run_number }}/" android/app/build.gradle
+          sed -i "s/versionName \"1.0\"/versionName \"15.0.${{ github.run_number }}\"/" android/app/build.gradle
+          mkdir -p $HOME/.android
+          echo "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" | base64 -d > $HOME/.android/debug.keystore
+
+      - name: Home screen widget
+        working-directory: app
+        run: |
+          mkdir -p android/app/src/main/java/com/marzcarcare/noorquran android/app/src/main/res/layout android/app/src/main/res/xml android/app/src/main/res/drawable
+          cat > android/app/src/main/java/com/marzcarcare/noorquran/NoorWidget.java <<'NQEOF'
+          package com.marzcarcare.noorquran;
+
+          import android.app.AlarmManager;
+          import android.app.PendingIntent;
+          import android.appwidget.AppWidgetManager;
+          import android.appwidget.AppWidgetProvider;
+          import android.content.ComponentName;
+          import android.content.Context;
+          import android.content.Intent;
+          import android.view.View;
+          import android.widget.RemoteViews;
+          import org.json.JSONArray;
+          import org.json.JSONObject;
+          import java.io.File;
+          import java.io.FileInputStream;
+          import java.text.DateFormat;
+          import java.util.Date;
+
+          public class NoorWidget extends AppWidgetProvider {
+              private static final int FLAG_IMMUTABLE = 67108864;
+
+              @Override
+              public void onUpdate(Context context, AppWidgetManager manager, int[] ids) {
+                  updateAll(context, manager, ids);
+              }
+
+              public static void updateAll(Context context, AppWidgetManager manager, int[] ids) {
+                  JSONObject data = readData(context);
+                  long now = System.currentTimeMillis();
+                  long nextAt = 0;
+                  for (int id : ids) {
+                      RemoteViews v = new RemoteViews(context.getPackageName(), R.layout.noor_widget);
+                      String prayer = "Noor Quran";
+                      String city = "";
+                      String cont = "Open the app to start reading";
+                      String plan = "";
+                      String stat = "";
+                      String ram = "";
+                      if (data != null) {
+                          city = data.optString("city", "");
+                          cont = data.optString("cont", cont);
+                          plan = data.optString("plan", "");
+                          stat = data.optString("stat", "");
+                          JSONArray times = data.optJSONArray("times");
+                          if (times != null) {
+                              for (int i = 0; i < times.length(); i++) {
+                                  JSONObject t = times.optJSONObject(i);
+                                  if (t == null) continue;
+                                  long at = t.optLong("t", 0);
+                                  if (at > now) {
+                                      prayer = "Next: " + t.optString("n", "") + " · " + fmt(context, at);
+                                      nextAt = at;
+                                      break;
+                                  }
+                              }
+                          }
+                          JSONObject r = data.optJSONObject("ram");
+                          if (r != null) {
+                              long iftar = r.optLong("iftar", 0), suhoor = r.optLong("suhoor", 0);
+                              String day = r.optString("day", "");
+                              if (iftar > now && (suhoor == 0 || suhoor < now || suhoor > iftar)) ram = "Ramadan " + day + " · Iftar " + fmt(context, iftar);
+                              else if (suhoor > now) ram = "Ramadan " + day + " · Suhoor ends " + fmt(context, suhoor);
+                          }
+                      }
+                      v.setTextViewText(R.id.w_prayer, prayer);
+                      v.setTextViewText(R.id.w_city, city);
+                      v.setTextViewText(R.id.w_cont, cont);
+                      v.setTextViewText(R.id.w_plan, plan);
+                      v.setViewVisibility(R.id.w_plan, plan.length() > 0 ? View.VISIBLE : View.GONE);
+                      v.setTextViewText(R.id.w_stat, stat);
+                      v.setViewVisibility(R.id.w_stat, stat.length() > 0 ? View.VISIBLE : View.GONE);
+                      v.setTextViewText(R.id.w_ram, ram);
+                      v.setViewVisibility(R.id.w_ram, ram.length() > 0 ? View.VISIBLE : View.GONE);
+                      Intent open = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+                      if (open != null) {
+                          open.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                          PendingIntent pi = PendingIntent.getActivity(context, 0, open, PendingIntent.FLAG_UPDATE_CURRENT | FLAG_IMMUTABLE);
+                          v.setOnClickPendingIntent(R.id.w_root, pi);
+                      }
+                      manager.updateAppWidget(id, v);
+                  }
+                  scheduleNext(context, nextAt);
+              }
+
+              private static void scheduleNext(Context context, long at) {
+                  try {
+                      AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                      if (am == null) return;
+                      Intent i = new Intent(context, NoorWidget.class);
+                      i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                      int[] ids = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, NoorWidget.class));
+                      i.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+                      PendingIntent pi = PendingIntent.getBroadcast(context, 7, i, PendingIntent.FLAG_UPDATE_CURRENT | FLAG_IMMUTABLE);
+                      long when = at > 0 ? at + 60000 : System.currentTimeMillis() + 30 * 60000;
+                      am.set(AlarmManager.RTC, when, pi);
+                  } catch (Exception e) { /* ignore */ }
+              }
+
+              private static String fmt(Context c, long at) {
+                  return DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date(at));
+              }
+
+              private static JSONObject readData(Context context) {
+                  try {
+                      File f = new File(context.getFilesDir(), "widget.json");
+                      if (!f.exists()) return null;
+                      FileInputStream in = new FileInputStream(f);
+                      byte[] buf = new byte[(int) f.length()];
+                      int n = 0;
+                      while (n < buf.length) { int r = in.read(buf, n, buf.length - n); if (r < 0) break; n += r; }
+                      in.close();
+                      return new JSONObject(new String(buf, 0, n, "UTF-8"));
+                  } catch (Exception e) {
+                      return null;
+                  }
+              }
+          }
+          NQEOF
+          cat > android/app/src/main/java/com/marzcarcare/noorquran/WidgetBridge.java <<'NQEOF'
+          package com.marzcarcare.noorquran;
+
+          import android.appwidget.AppWidgetManager;
+          import android.content.ComponentName;
+          import android.content.Context;
+          import com.getcapacitor.Plugin;
+          import com.getcapacitor.PluginCall;
+          import com.getcapacitor.PluginMethod;
+          import com.getcapacitor.annotation.CapacitorPlugin;
+
+          @CapacitorPlugin(name = "NoorWidget")
+          public class WidgetBridge extends Plugin {
+              @PluginMethod
+              public void update(PluginCall call) {
+                  try {
+                      Context c = getContext();
+                      AppWidgetManager m = AppWidgetManager.getInstance(c);
+                      int[] ids = m.getAppWidgetIds(new ComponentName(c, NoorWidget.class));
+                      if (ids != null && ids.length > 0) NoorWidget.updateAll(c, m, ids);
+                      call.resolve();
+                  } catch (Exception e) {
+                      call.reject(e.getMessage());
+                  }
+              }
+          }
+          NQEOF
+          cat > android/app/src/main/java/com/marzcarcare/noorquran/MainActivity.java <<'NQEOF'
+          package com.marzcarcare.noorquran;
+
+          import android.os.Bundle;
+          import com.getcapacitor.BridgeActivity;
+
+          public class MainActivity extends BridgeActivity {
+              @Override
+              public void onCreate(Bundle savedInstanceState) {
+                  registerPlugin(WidgetBridge.class);
+                  super.onCreate(savedInstanceState);
+              }
+          }
+          NQEOF
+          cat > android/app/src/main/res/layout/noor_widget.xml <<'NQEOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/w_root"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:padding="14dp"
+              android:background="@drawable/widget_bg">
+              <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+                  <TextView android:id="@+id/w_prayer" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"
+                      android:textColor="#FFE7A8" android:textSize="16sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end" android:text="Noor Quran"/>
+                  <TextView android:id="@+id/w_city" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:textColor="#B8D8CB" android:textSize="11sp" android:maxLines="1" android:text=""/>
+              </LinearLayout>
+              <TextView android:id="@+id/w_ram" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp"
+                  android:textColor="#FFD08A" android:textSize="13sp" android:maxLines="1" android:ellipsize="end" android:visibility="gone"/>
+              <TextView android:id="@+id/w_cont" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp"
+                  android:textColor="#FFFFFF" android:textSize="15sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end" android:text="Open the app to start reading"/>
+              <TextView android:id="@+id/w_plan" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp"
+                  android:textColor="#DDEDE6" android:textSize="12.5sp" android:maxLines="1" android:ellipsize="end" android:visibility="gone"/>
+              <TextView android:id="@+id/w_stat" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp"
+                  android:textColor="#B8D8CB" android:textSize="12sp" android:maxLines="1" android:ellipsize="end" android:visibility="gone"/>
+          </LinearLayout>
+          NQEOF
+          cat > android/app/src/main/res/xml/noor_widget_info.xml <<'NQEOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+              android:minWidth="250dp"
+              android:minHeight="110dp"
+              android:targetCellWidth="4"
+              android:targetCellHeight="2"
+              android:updatePeriodMillis="1800000"
+              android:initialLayout="@layout/noor_widget"
+              android:resizeMode="horizontal|vertical"
+              android:widgetCategory="home_screen"/>
+          NQEOF
+          cat > android/app/src/main/res/drawable/widget_bg.xml <<'NQEOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+              <gradient android:startColor="#164F3E" android:endColor="#1E6A53" android:angle="135"/>
+              <corners android:radius="22dp"/>
+          </shape>
+          NQEOF
+          python3 - <<'PYEOF'
+          p='android/app/src/main/AndroidManifest.xml'
+          s=open(p).read()
+          rc='''        <receiver android:name=".NoorWidget" android:exported="false">
+                      <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+                      <meta-data android:name="android.appwidget.provider" android:resource="@xml/noor_widget_info" />
+                  </receiver>
+          '''
+          if 'NoorWidget' not in s:
+              s=s.replace('</application>',rc+'    </application>',1)
+          open(p,'w').write(s)
+          print('widget receiver added')
+          PYEOF
+          grep -c NoorWidget android/app/src/main/AndroidManifest.xml
+
+      - name: Build APK
+        working-directory: app/android
+        env:
+          ANDROID_USER_HOME: /home/runner/.android
+          NQ_KEYSTORE: ${{ secrets.NQ_KEYSTORE }}
+          NQ_KS_PASS: ${{ secrets.NQ_KS_PASS }}
+          NQ_KEY_ALIAS: ${{ secrets.NQ_KEY_ALIAS }}
+          NQ_KEY_PASS: ${{ secrets.NQ_KEY_PASS }}
+        run: |
+          chmod +x gradlew
+          TASK=assembleDebug; OUT=app/build/outputs/apk/debug/app-debug.apk
+          if [ -n "$NQ_KEYSTORE" ]; then
+            echo "Private release key found - building a signed release APK"
+            echo "$NQ_KEYSTORE" | base64 -d > $RUNNER_TEMP/nq-release.jks
+            export NQ_KS_PATH=$RUNNER_TEMP/nq-release.jks
+            cat >> app/build.gradle <<'GRADLE'
+
+          android {
+              signingConfigs {
+                  nqrelease {
+                      storeFile file(System.getenv("NQ_KS_PATH"))
+                      storePassword System.getenv("NQ_KS_PASS")
+                      keyAlias System.getenv("NQ_KEY_ALIAS")
+                      keyPassword System.getenv("NQ_KEY_PASS")
+                  }
+              }
+              buildTypes { release { signingConfig signingConfigs.nqrelease; minifyEnabled false } }
+              lint { checkReleaseBuilds false; abortOnError false }
+          }
+          GRADLE
+            TASK=assembleRelease; OUT=app/build/outputs/apk/release/app-release.apk
+          else
+            echo "::warning::No NQ_KEYSTORE secret - using the shared debug key (not private). See README to add your own key."
+          fi
+          for i in 1 2 3; do
+            if [ $i -eq 1 ]; then ./gradlew $TASK --no-daemon && break; else ./gradlew $TASK --no-daemon --refresh-dependencies && break; fi
+            echo "Gradle attempt $i failed - retrying in 30s"; sleep 30
+          done
+          test -f $OUT
+          cp $OUT $GITHUB_WORKSPACE/NoorQuran.apk
+          rm -f $RUNNER_TEMP/nq-release.jks
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NoorQuran-apk
+          path: NoorQuran.apk
+
+      - name: Publish APK
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v15.0.${{ github.run_number }}
+          name: Noor Quran 15.0.${{ github.run_number }}
+          files: NoorQuran.apk
+          make_latest: true
