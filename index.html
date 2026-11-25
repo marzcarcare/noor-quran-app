@@ -2421,11 +2421,11 @@ async function msnSetup(){
   if(!MSN||msnReady)return;msnReady=true;
   const h=(a,f)=>{try{MSN.setActionHandler({action:a},f)}catch(e){}};
   h("play",()=>{if(MIN){clearTimeout(MIN.gapT);MPA.play().catch(()=>{})}else doPlay()});
-  h("pause",()=>{if(MIN)MPA.pause();else au.pause()});
+  h("pause",()=>{if(MIN)MPA.pause();else{au.pause();clearTimeout(gapT);gapT=0}msnState("paused",true)});
   h("nexttrack",()=>{if(MIN)mpNext();else if(cur)seekAyah(cur.idx+1,true)});
   h("previoustrack",()=>{if(MIN)mpPrev();else if(cur)seekAyah(Math.max(0,cur.idx-1),true)});
   h("seekto",d=>{if(!MIN&&d&&d.seekTime!=null)au.currentTime=d.seekTime});
-  h("stop",()=>{if(MIN)mpStop();else{au.pause();msnState("none")}});
+  h("stop",()=>{if(MIN)mpStop();else{au.pause();clearTimeout(gapT);gapT=0;mainBarOn=false;mpUI()}msnGone=true;msnWant="none";msnHave=null;clearTimeout(msnT);(async()=>{try{await MSN.setPlaybackState({playbackState:"none"});msnHave="none"}catch(e){}})()});
 }
 function msnArt(){if(msnArtUrl)return msnArtUrl;try{const c=document.createElement("canvas");c.width=c.height=256;const x=c.getContext("2d");
   const g=x.createLinearGradient(0,0,256,256);g.addColorStop(0,"#1f6b4f");g.addColorStop(1,"#0e3b2c");x.fillStyle=g;x.fillRect(0,0,256,256);
@@ -2436,14 +2436,24 @@ async function msnMeta(){if(!msnOn()||!msnReady)return;let title="",artist="";
   else if(cur){title=cur.c.n+(cur.idx>=0?" · Ayah "+(cur.idx+1):"");artist=installed[cur.tp]?.name||""}else return;
   if(title+"|"+artist===msnLast)return;msnLast=title+"|"+artist;
   try{const art=msnArt();await MSN.setMetadata({title,artist,album:"Noor Quran",artwork:art?[{src:art,sizes:"256x256",type:"image/png"}]:[]})}catch(e){logErr("mediasession meta "+(e.message||e))}}
-async function msnState(st){
-  if(!msnOn())return;
-  try{save("nq8_bc","msn");await msnSetup();if(st!=="none"){msnLast="";await msnMeta()}
-    await MSN.setPlaybackState({playbackState:st});
+// v16.11: one update at a time, latest state wins; brief pauses (gap between ayahs, next surah loading) don't touch the card
+let msnWant=null,msnHave=null,msnBusy=false,msnT=0,msnGone=false,msnDue=0;
+function msnReal(){return MIN?(!MPA.paused?"playing":"paused"):(playing()||gapT)?"playing":(cur&&$("#au").src)?"paused":"none"}
+function msnState(st,now){if(!msnOn())return;if(st==="playing")msnGone=false;else if(msnGone)return;const d=(now||st==="playing")?0:st==="paused"?2500:3000,due=Date.now()+d;
+  if(msnT&&msnWant===st&&msnDue<=due)return; // an earlier update for the same state is already on its way
+  msnWant=st;msnDue=due;clearTimeout(msnT);msnT=setTimeout(()=>{msnT=0;msnFlush()},d)}
+async function msnFlush(){if(msnBusy){clearTimeout(msnT);msnT=setTimeout(()=>{msnT=0;msnFlush()},200);return}msnBusy=true;
+  try{let st=msnWant;const real=msnReal();
+    if(st==="none"&&real!=="none")st=real;          // something is still open / playing → keep the card
+    if(st==="paused"&&real==="playing")st="playing"; // it was only a short gap
+    if(st===msnHave&&st!=="playing"){return}
+    save("nq8_bc","msn");await msnSetup();if(st!=="none"){msnLast="";await msnMeta()}
+    await MSN.setPlaybackState({playbackState:st});msnHave=st;
     const A=MIN?MPA:au;if(st==="playing"&&A.duration&&isFinite(A.duration))await MSN.setPositionState({duration:A.duration,position:A.currentTime,playbackRate:A.playbackRate||1});
     setTimeout(()=>{if(load("nq8_bc")==="msn")save("nq8_bc","")},4000);
-  }catch(e){save("nq8_bc","");logErr("mediasession "+(e.message||e))}
-}
+  }catch(e){save("nq8_bc","");logErr("mediasession "+(e.message||e))}finally{msnBusy=false}}
+// self-heal: if the card ever shows the wrong state, fix it
+setInterval(()=>{if(!msnOn()||!msnReady||msnBusy)return;const r=msnReal();if(msnGone&&r!=="playing")return;if(msnHave!=null&&r!==msnHave&&!(r==="none"&&msnHave==="none"))msnState(r,true)},3000);
 au.addEventListener("play",()=>{if(!MIN)msnState("playing")});
 au.addEventListener("pause",()=>{if(!MIN)msnState("paused")});
 au.addEventListener("ended",()=>{if(!S.autoNext&&!MIN)msnState("none")});
