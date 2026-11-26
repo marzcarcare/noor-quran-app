@@ -659,6 +659,74 @@ body.onListen #mini{display:none!important}
 .lsl .lpb{width:40px;height:40px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;flex:none}
 .lsl .lpb svg{width:16px;height:16px;fill:currentColor;stroke:none}
 .lhd{display:flex;justify-content:space-between;align-items:center;margin:14px 16px 6px}.lhd b{font-size:17px;font-weight:800}
+.mini.pill .mpg{display:none!important}
+.mini.pill .mlab::after{content:"  ›"}
+
+svg.bi{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-3px}
+.sb svg.bi,.btn svg.bi{margin-right:6px}
+.btn svg.bi{width:18px;height:18px;vertical-align:-4px}
+.sb.icon{width:40px;height:40px;padding:0!important;display:inline-grid;place-items:center;flex:none}.sb.icon svg.bi{margin:0;width:18px;height:18px}
+.mlist i svg.bi{width:21px;height:21px;color:var(--green2);vertical-align:0}
+.chk svg.bi{width:14px;height:14px;margin-right:5px;color:var(--green2);stroke-width:2.6}
+.chk .ring{display:inline-block;width:12px;height:12px;border-radius:50%;border:1.7px solid var(--muted);margin-right:6px;vertical-align:-1px}
+.tag svg.bi{width:12px;height:12px;margin-right:3px;stroke-width:2.8;vertical-align:-1px}
+:root body .ib.x{width:36px;height:36px;border-radius:50%;background:var(--bg);border:1px solid var(--line);color:var(--muted);display:grid;place-items:center;font-size:0}
+:root body .ib.x svg.bi{width:15px;height:15px}
+.ib.x.icon{font-size:0}
+/* plan / reminder cards */
+:root body .plan .inf>b{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:16px;font-weight:800;letter-spacing:-.01em;margin-bottom:6px}
+:root body .plan .inf>span{display:flex;flex-wrap:wrap;gap:6px}
+:root body .plan .inf>span .kd{flex-basis:100%}
+:root body .plan .chk{margin:0;padding:7px 12px;font-size:13.5px;font-weight:600}
+:root body .plan .chk small{font-weight:600;opacity:.7}
+:root body .plan .bar{height:6px;margin-top:12px;background:var(--line)}
+:root body .plan .bar i{background:var(--gold2)}
+:root body .pk .inf>b{font-size:15.5px;font-weight:700}
+:root body .bdg{border-radius:14px;background:var(--bg)}:root body .bdg.on{background:var(--goldbg)}
+:root body .kid{border:1px solid var(--line);background:var(--card);border-radius:16px}
+:root body .qcard b{font-size:17px}
+
+/* ===== v17.4 Downloads · Backup · Settings ===== */
+#lib #tabs{display:flex;gap:4px;margin:8px 14px 6px;padding:4px;border-radius:999px;background:var(--card);border:1px solid var(--line);position:sticky;top:6px;z-index:2;overflow:visible}
+#lib #tabs .tab{flex:1 1 0;min-width:0;border:0;background:none;padding:8px 4px;font-size:12.5px;line-height:1.15;white-space:normal;text-align:center;color:var(--muted);border-radius:999px}
+#lib #tabs .tab.on{background:var(--green);color:#fff}
+:root body .big{display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--card);border-radius:14px;color:var(--green2);padding:15px;margin:10px 14px;font-weight:700}
+:root body .big svg.bi{width:20px;height:20px;margin:0}
+#libBody .pk .tag.ok{background:var(--accs);color:var(--green2)}
+#libBody .note,.sheet .note{font-size:13px;line-height:1.55}
+.bkhero{margin:10px 14px;padding:18px;border-radius:18px;background:var(--hero);color:var(--heroink)}
+.bkhero p{margin:12px 0;font-size:13.5px;line-height:1.55;color:var(--herom)}.bkhero p b{color:var(--heroink)}
+.bkh1{display:flex;align-items:center;gap:12px}.bkh1 b{display:block;font-size:18px;font-weight:800;letter-spacing:-.01em}.bkh1 small{color:var(--herom);font-size:12.5px}
+.bkhero .bki{background:var(--heroline);color:var(--gold2)}
+.bkrow{display:flex;gap:8px}.bkrow select{flex:1;background:var(--heroline)!important;color:var(--heroink);border:0}.bkrow select option{color:#1c1a16}
+.bkrow .sb{background:var(--gold2)!important;color:var(--hero)!important;padding:10px 18px}
+.bkerr{color:#ffb4a8}
+.bki{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--accs);color:var(--green2);flex:none}
+.bki svg.bi{width:20px;height:20px;margin:0}.bki.sm{width:34px;height:34px;border-radius:10px}.bki.sm svg.bi{width:17px;height:17px}
+.bkgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 14px}
+.bkt,.bks{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:14px;border-radius:14px;background:var(--card);border:1px solid var(--line);color:var(--ink);text-align:left;cursor:pointer}
+.bks{cursor:default}.bkt .bki,.bks .bki{margin-bottom:6px}
+.bkt b{font-size:15px}.bks b{font-size:22px;font-weight:800;letter-spacing:-.02em}.bkt small,.bks small{font-size:12px;color:var(--muted);line-height:1.4}
+/* settings sections = grouped rows */
+:root body details.sg{padding:0 14px;margin:10px 0}
+:root body details.sg>summary{display:flex;align-items:center;gap:12px;padding:12px 0;color:var(--ink);font-size:15.5px;font-weight:700}
+:root body details.sg>summary::-webkit-details-marker{display:none}
+:root body details.sg>summary::after{content:"›";margin-left:auto;font-size:22px;line-height:1;color:var(--muted);transition:transform .2s}
+:root body details.sg[open]>summary::after{transform:rotate(90deg)}
+:root body details.sg[open]>summary{border-bottom:1px solid var(--line);margin-bottom:4px}
+details.sg>summary>svg.bi{width:34px;height:34px;padding:8px;border-radius:10px;background:var(--accs);color:var(--green2);box-sizing:border-box;margin:0}
+/* checkboxes in option rows = switches */
+.opt{gap:12px}
+.opt input[type=checkbox]{-webkit-appearance:none;appearance:none;order:2;margin:0 0 0 auto;width:46px!important;height:28px!important;border-radius:14px;background:var(--line);position:relative;cursor:pointer;transition:background .2s;flex:none}
+.opt input[type=checkbox]::after{content:"";position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0003;transition:left .2s}
+.opt input[type=checkbox]:checked{background:var(--green2)}.opt input[type=checkbox]:checked::after{left:21px}
+.opt input[type=checkbox]:disabled{opacity:.45}
+:root body .opt{padding:12px 0;font-size:14.5px}
+/* button colours: gold = secondary, maroon = outlined danger */
+:root body .btn[style*="--gold"]{background:var(--accs)!important;color:var(--green2)!important}
+:root body .btn[style*="--maroon"]{background:transparent!important;color:var(--maroon)!important;box-shadow:inset 0 0 0 1.5px var(--maroon)}
+:root body .btn[style*="--green2"]{background:var(--green)!important;color:#fff!important}
+:root body .pk>b[style]{display:block;color:var(--ink)!important;font-size:15px!important;font-weight:800;margin-bottom:6px}
 </style>
 </head>
 <body>
@@ -745,7 +813,7 @@ body.onListen #mini{display:none!important}
 <section id="lib" class="screen hidden">
   <header class="top">
     <button class="ib" data-back aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
-    <h1>Library<small id="libSub">Download · Import · Share</small></h1>
+    <h1>Downloads<small id="libSub">Meanings · tafsir · reciters · import</small></h1>
   </header>
   <div class="scroll" id="libScroll">
     <div class="tabs" id="tabs">
@@ -753,7 +821,7 @@ body.onListen #mini{display:none!important}
       <button class="tab" data-t="more">Tafsir · Script</button>
       <button class="tab" data-t="rec">Reciters</button>
       <button class="tab" data-t="imp">Import</button>
-      <button class="tab" data-t="bak">Backup</button>
+      
     </div>
     <div id="libBody"></div>
     <div style="height:90px"></div>
@@ -1451,6 +1519,9 @@ function byLang(items,title,sub){
 }
 function renderLib(){
   document.querySelectorAll("#tabs .tab").forEach(t=>t.classList.toggle("on",t.dataset.t===libTab));
+  {const bk=libTab==="bak";$("#tabs").classList.toggle("hidden",bk);const h=$("#lib header.top h1");
+   if(h.firstChild&&h.firstChild.nodeType===3)h.firstChild.nodeValue=bk?"Backup & restore":"Downloads";
+   if(!$("#libSub").textContent.startsWith("Importing"))$("#libSub").textContent=bk?"Your data · safe on this phone":"Meanings · tafsir · reciters · import";}
   const B=$("#libBody");const P=allPacks();
   const F=Q.failed.length?`<div class="note warn">⚠ ${Q.failed.length} download(s) failed.<div class="acts"><button class="sb" id="fRetry">⟳ Retry all</button><button class="sb l" id="fInfo">Details</button><button class="sb l" id="fClear">Clear</button></div></div>`:"";
   const BUNDLE=`<button class="big" id="bundleBtn">⬇ Download everything for offline use…</button>`;
@@ -1495,13 +1566,21 @@ function renderLib(){
     const n=Object.values(audioIdx).reduce((s,o)=>s+Object.keys(o).length,0);
     const pb=Object.values(installed).filter(p=>!p.bundled).reduce((s,p)=>s+(catalog.packs.find(x=>x.id===p.id)?.bytes||0),0);
     const ab=Object.entries(audioIdx).reduce((s,[id,o])=>s+((packInfo(id)?.audioBytes||0)/114)*Object.keys(o).length,0);
-    B.innerHTML=backupCard()+`<div class="lgh">Storage</div><div class="pk">Packs: <b>${Object.keys(installed).length}</b> (${mb(pb)}) · Offline surahs: <b>${n}</b>${ab?" (≈ "+mb(ab)+")":""}</div>
-    <div class="lgh">Backup</div>
-    <div class="pk">Settings, bookmarks, notes, plans, progress and reminders of all profiles — saved in one file (to move to a new phone).<div class="acts"><button class="sb" id="bkOut">↗ Backup file</button><label class="sb l">⤓ Restore<input type="file" id="bkIn" accept=".json" style="display:none"></label></div></div>
-    <div class="lgh">Pack source</div>
-    <div class="fld"><label>Pack download source (GitHub release URL)</label><input type="text" id="srcIn" value="${esc(S.src)}"></div>
-    <div class="acts" style="margin:0 12px"><button class="sb" id="srcSave">Save &amp; Check updates</button><button class="sb l" id="srcDef">Default</button></div>
-    <div class="note">Catalog: ${esc(catalog.generated||"—")}</div>`;
+    const bs=bkSet();const last=bs.last?new Date(bs.last).toLocaleString([], {day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):"never";
+    B.innerHTML=`<div class="bkhero"><div class="bkh1"><span class="bki">${liSvg("save")}</span><div><b>Automatic backup</b><small>Last backup: ${last}</small></div></div>
+    <p>All profiles, bookmarks, notes, plans, progress, reminders and settings are saved to <b>${esc(bs.where||"Documents/NoorQuran")}</b> on your phone.${bs.err?`<br><span class="bkerr">⚠ ${esc(bs.err)}</span>`:""}</p>
+    <div class="bkrow"><select id="bkFreq">${opts([["daily","Every day"],["weekly","Every week"],["off","Off"]],bs.freq)}</select><button class="sb" id="bkNow">Backup now</button></div></div>
+    <div class="lgh">Move to a new phone</div>
+    <div class="bkgrid"><button class="bkt" id="bkOut"><span class="bki">${liSvg("share")}</span><b>Backup file</b><small>Save or send one file with everything</small></button>
+    <label class="bkt"><span class="bki">${liSvg("restore")}</span><b>Restore</b><small>Pick a backup file from this phone</small><input type="file" id="bkIn" accept=".json" style="display:none"></label></div>
+    <div class="note" style="font-size:12.5px">On the new phone: install Noor Quran → More → Backup &amp; restore → Restore → pick the file (from Documents/NoorQuran, WhatsApp or Drive).</div>
+    <div class="lgh">Storage</div>
+    <div class="bkgrid"><div class="bks"><span class="bki">${liSvg("db")}</span><b>${Object.keys(installed).length}</b><small>Packs · ${mb(pb)}</small></div>
+    <div class="bks"><span class="bki">${liSvg("head")}</span><b>${n}</b><small>Offline surahs${ab?" · ≈ "+mb(ab):""}</small></div></div>
+    <details class="sg" style="margin:14px"><summary><span class="bki sm">${liSvg("wrench")}</span>Advanced · pack source</summary>
+    <div class="fld" style="margin:8px 0"><label>Pack download source (GitHub release URL)</label><input type="text" id="srcIn" value="${esc(S.src)}"></div>
+    <div class="acts"><button class="sb" id="srcSave">Save &amp; Check updates</button><button class="sb l" id="srcDef">Default</button></div>
+    <div style="font-size:12px;color:var(--muted);margin-top:8px">Catalog: ${esc(catalog.generated||"—")}</div></details>`;
     $("#bkFreq").onchange=e=>{const x=bkSet();x.freq=e.target.value;save("nq9_bk",x)};$("#bkNow").onclick=async()=>{await doBackup(true);renderLib()};
     $("#bkOut").onclick=async()=>{toast("Preparing backup…");Store.share(`noorquran-backup-${dstr()}.json`,await backupDataFull())};
     $("#bkIn").onchange=async e=>{try{const o=JSON.parse(await e.target.files[0].text());if(o.type!=="backup")throw 0;
@@ -1550,7 +1629,7 @@ async function importMp3(pid,files){
     $("#libSub").textContent=`Importing ${f.name}…`;
     try{await Store.writeBlob(`audio/${pid}/${ch}.mp3`,f);(audioIdx[pid]||(audioIdx[pid]={}))[ch]=1;ok++}catch(e){toast(f.name+" could not be saved")}
   }
-  save("nq2_aud",audioIdx);$("#libSub").textContent="Download · Import · Share";
+  save("nq2_aud",audioIdx);$("#libSub").textContent="Meanings · tafsir · reciters · import";
   toast("✓ "+ok+" surah audio imported");libTab="rec";renderLib();
 }
 function newReciter(){
@@ -2520,7 +2599,8 @@ function diagSheet(){
 /* ================= V8: BACKGROUND PLAYBACK (lock screen controls) ================= */
 const MSN=window.Capacitor?.Plugins?.MediaSession||null;let msnReady=false,msnLast="",msnArtUrl="";
 // v16.10: real lock-screen media player (MediaStyle) for the reader and the small player
-try{if(!load("nq16_msn")){save("nq16_msn",1);save("nq8_noMsn",false)}}catch(e){} // give it a fresh start after the old crash guard
+try{if(!load("nq16_msn")){save("nq16_msn",1);save("nq8_noMsn",false)}}catch(e){}
+try{if(!load("nq17_bg")){save("nq17_bg",1);save("nq8_noMsn",false);save("nq10_noFgs",false);if(load("nq8_bc"))save("nq8_bc","")}}catch(e){} // v17.2: undo the false "it crashed" switch-off once // give it a fresh start after the old crash guard
 function msnOn(){return !!MSN&&S.bgPlay!==false&&!load("nq8_noMsn")}
 async function msnSetup(){
   if(!MSN||msnReady)return;msnReady=true;
@@ -2555,7 +2635,7 @@ async function msnFlush(){if(msnBusy){clearTimeout(msnT);msnT=setTimeout(()=>{ms
     save("nq8_bc","msn");await msnSetup();if(st!=="none"){msnLast="";await msnMeta()}
     await MSN.setPlaybackState({playbackState:st});msnHave=st;
     const A=MIN?MPA:au;if(st==="playing"&&A.duration&&isFinite(A.duration))await MSN.setPositionState({duration:A.duration,position:A.currentTime,playbackRate:A.playbackRate||1});
-    setTimeout(()=>{if(load("nq8_bc")==="msn")save("nq8_bc","")},4000);
+    if(load("nq8_bc")==="msn")save("nq8_bc","");
   }catch(e){save("nq8_bc","");logErr("mediasession "+(e.message||e))}finally{msnBusy=false}}
 // self-heal: if the card ever shows the wrong state, fix it
 setInterval(()=>{if(!msnOn()||!msnReady||msnBusy)return;const r=msnReal();if(msnGone&&r!=="playing")return;if(msnHave!=null&&r!==msnHave&&!(r==="none"&&msnHave==="none"))msnState(r,true)},3000);
@@ -2893,7 +2973,7 @@ async function fgsStart(){
     try{if(LN){const pr=await LN.checkPermissions();if(pr.display!=="granted")await LN.requestPermissions()}}catch(e){}
     await fgsSt({id:4711,title:"Noor Quran — "+cur.c.n,body:(installed[cur.tp]?.name||"Recitation")+" · tap to open",smallIcon:"ic_stat_noor",silent:true,
       notificationChannelId:"playback",serviceType:2,buttons:fgsBtns(true)});
-    fgsOn=true;setTimeout(()=>{if(load("nq8_bc")==="fgs")save("nq8_bc","")},6000);
+    fgsOn=true;if(load("nq8_bc")==="fgs")save("nq8_bc","");
   }catch(e){save("nq8_bc","");logErr("foreground service: "+(e.message||e))}
 }
 async function fgsStop(){if(!FGS||!fgsOn)return;fgsOn=false;try{await FGS.stopForegroundService()}catch(e){logErr("fgs stop: "+(e.message||e))}}
@@ -4173,7 +4253,7 @@ function mpBar(){let b=$("#mini");if(b)return b;b=document.createElement("div");
   $("#miX").onclick=()=>{if(!MIN&&mainBarOn){mainBarOn=false;au.pause();mpUI();return}mpStop()};$("#miNx").onclick=()=>{if(!MIN&&mainBarOn&&cur){seekAyah(cur.idx+1,true);return}mpNext()};
   $("#miTx").onclick=()=>$("#miOpen").click();
   $("#miShare").onclick=()=>barShare();
-  $("#miLab").onclick=()=>{if(b.classList.contains("pill")){b.classList.remove("pill","compact");b.dataset.user="f";return}b.classList.toggle("compact");b.dataset.user=b.classList.contains("compact")?"c":"f"};
+  $("#miLab").onclick=()=>{if(MIN&&(MIN.ls||MIN.plan)){show("home");goNav("listen");return}$("#miOpen").click()};
   $("#miPv").onclick=()=>{if(!MIN&&mainBarOn&&cur){seekAyah(Math.max(0,cur.idx-1),true);return}mpPrev()};
   $("#miSl").onclick=()=>sleepSheet();$("#miRc").onclick=()=>recSheet();
   onLong($("#miRep"),()=>{if(!MIN)return;repSheet(MIN.rep,v=>{MIN.rep=v;MIN.repLeft=v;mpUI();toast(v===-1?"⟲ Repeat until stopped":v===1?"⟲ Play once":`⟲ Repeat ${v} times`)})});
@@ -4228,7 +4308,8 @@ function mainBarUI(b){ // the reader's recitation, shown in the same bar when yo
   $("#miLab").textContent=`${cur.c.n} ${v.k}${PS?" · "+planName(PS.pl):""}`;$("#miPP").textContent=playing()?"⏸":"▶";
   if(b.dataset.k!==v.k){b.dataset.k=v.k;$("#miTx").innerHTML=v.w.map((w,j)=>`<span data-p="${v.p?v.p[j]:j+1}">${esc(w)}</span>`).join(" ")}
   document.querySelectorAll("#miTx span").forEach(e=>e.classList.toggle("on",+e.dataset.p===cur.word))}
-function mpUI(){const b=mpBar();const inReader=isShown("reader");
+function mpUI(){mpUI0();miniForce()}
+function mpUI0(){const b=mpBar();const inReader=isShown("reader");
   if(!MIN&&mainBarOn&&cur&&!inReader&&$("#au").src){b.classList.remove("hidden");document.body.classList.add("hasmini");mainBarUI(b);return}
   if(!MIN||inReader){b.classList.add("hidden");document.body.classList.remove("hasmini");return}
   b.classList.remove("hidden","main");document.body.classList.add("hasmini");
@@ -4298,7 +4379,7 @@ async function mpFgs(){if(!MIN)return;const s=MIN.q[MIN.qi];const title="Noor Qu
   if(!FGS||S.bgPlay===false||load("nq10_noFgs")||msnOn())return;
   const opt={id:4711,title,body,smallIcon:"ic_stat_noor",silent:true,notificationChannelId:"playback",serviceType:2,buttons:fgsBtns(true)};
   try{if(!fgsChan){try{await FGS.createNotificationChannel({id:"playback",name:"Recitation",description:"Quran recitation playback",importance:2})}catch(e){}fgsChan=true}
-    if(fgsOn){fgsMode="mini";await fgsUpd(opt)}else{save("nq8_bc","fgs");await fgsSt(opt);fgsOn=true;fgsMode="mini";setTimeout(()=>{if(load("nq8_bc")==="fgs")save("nq8_bc","")},6000)}}catch(e){save("nq8_bc","");logErr("mini fgs: "+(e.message||e))}}
+    if(fgsOn){fgsMode="mini";await fgsUpd(opt)}else{save("nq8_bc","fgs");await fgsSt(opt);fgsOn=true;fgsMode="mini";if(load("nq8_bc")==="fgs")save("nq8_bc","")}}catch(e){save("nq8_bc","");logErr("mini fgs: "+(e.message||e))}}
 // queue: array of refs like "2:255", "2:285-286", or {ch,a,b}
 async function mpPlay(refs,opts){opts=opts||{};
   if(!S.reciter||!installed[S.reciter]){toast("Choose a reciter first (🎧 Listen)");return}
@@ -4345,6 +4426,73 @@ function mpAfterAyah(my,ai){const s=my.q[my.qi];const V=my.tm;
   MPA.pause();mpUI();setTimeout(()=>{if(MIN===my&&MPA.paused)mpStop()},2500);
 }
 
+
+// v17.2: outside Listen the bar is only a slim pill while something is actually playing; paused → no bar at all
+function miniForce(){const b=$("#mini");if(!b||b.classList.contains("hidden"))return;
+  const on=MIN?(!MPA.paused||mpBusy(MIN)):playing();
+  if(!on){b.classList.add("hidden");document.body.classList.remove("hasmini");return}
+  b.classList.add("pill");b.classList.remove("compact")}
+setInterval(miniForce,400);
+
+/* ================= V17.3: LINE ICONS instead of emoji in menus, titles and buttons ================= */
+const LI={
+ mosque:'<path d="M12 3c-2.2 2-5 3-5 6.5h10C17 6 14.2 5 12 3z"/><path d="M5 21V11M19 21V11M3 21h18M9.5 21v-3.5a2.5 2.5 0 0 1 5 0V21M7 9.5V21M17 9.5V21"/>',
+ heart:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
+ moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+ cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+ map:'<path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6z"/><path d="M9 4v14M15 6v14"/>',
+ dl:'<path d="M12 4v11m0 0-4-4m4 4 4-4M5 19h14"/>',
+ user:'<circle cx="12" cy="8" r="3.8"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/>',
+ fam:'<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9.5" r="2.4"/><path d="M15.6 14.3A4.8 4.8 0 0 1 21 19"/>',
+ save:'<path d="M5 3.5h11l3.5 3.5v13.5H5z"/><path d="M8 3.5V8h7V3.5M8 20.5V14h8v6.5"/>',
+ set:'<path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="17" r="2"/>',
+ pulse:'<path d="M3 12h4l3-7 4 14 3-7h4"/>',
+ pen:'<path d="M4 20h4L19.5 8.5a2.1 2.1 0 0 0-3-3L5 17z"/><path d="M14.5 7.5l3 3"/>',
+ palette:'<path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-.9 2-2 0-1.3-1-1.6-1-3 0-1.1.9-2 2-2h2.5A3.5 3.5 0 0 0 21 10.5C21 6.4 17 3 12 3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="14.5" cy="7" r="1"/>',
+ target:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8"/>',
+ img:'<rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M20.5 16l-5-5-9 8.5"/>',
+ film:'<rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><path d="M8 4.5v15M16 4.5v15M3.5 9.5H8M3.5 14.5H8M16 9.5h4.5M16 14.5h4.5"/>',
+ msg:'<path d="M4 5h16v11H9l-5 4z"/>',
+ copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-9A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"/>',
+ mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
+ check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>',
+ play:'<path d="M8 5v14l11-7z" fill="currentColor" stroke="none"/>',
+ x:'<path d="M6 6l12 12M18 6 6 18"/>',
+ redo:'<path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/>',
+ back:'<path d="M9 7 4 12l5 5"/><path d="M4 12h11a5 5 0 0 1 0 10h-1"/>',
+ compass:'<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>',
+ bell:'<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
+ book:'<path d="M2 5.5C5 4 9 4 12 6c3-2 7-2 10-.5V19c-3-1.5-7-1.5-10 .5-3-2-7-2-10-.5z"/><path d="M12 6v13.5"/>',
+ globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/>',
+ file:'<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/>',
+ share:'<path d="M12 15V4m0 0L8 8m4-4 4 4"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/>',
+ restore:'<path d="M12 4v11m0 0-4-4m4 4 4-4"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/>',
+ db:'<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>',
+ wrench:'<path d="M14.5 6.5a4 4 0 0 0 5 5L21 13l-8 8-4-4 8-8z"/><path d="M14.5 6.5 9 1M3 21l6-6"/>',
+ head:'<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4.5" height="6.5" rx="1.5"/><rect x="16.5" y="14" width="4.5" height="6.5" rx="1.5"/>'};
+const LI_EMO={"🕌":"mosque","🤲":"heart","🌙":"moon","📅":"cal","🗓":"cal","🗺":"map","⬇":"dl","📥":"dl","👤":"user","💾":"save","⚙":"set","🐞":"pulse","✍":"pen","🎨":"palette","🎯":"target","🖼":"img","🎬":"film","💬":"msg","📋":"copy","🎙":"mic","✓":"check","✔":"check","➕":"plus","▶":"play","✎":"pen","✏":"pen","↻":"redo","🔄":"redo","↩":"back","🕋":"compass","🔔":"bell","📖":"book","🎧":"head","×":"x","✕":"x","🌐":"globe","📄":"file","📥":"dl","↗":"share","⤓":"restore","🧭":"globe","⏱":"set","⟳":"redo"};
+const LI_LEAD=/^\s*((?:\p{Extended_Pictographic}|[➕✎✏▶✓✔↻↩⬇○×✕↗⤓⟳])(?:️|‍\p{Extended_Pictographic}️?)*)\s*/u;
+const liSvg=k=>`<svg class="bi" viewBox="0 0 24 24" aria-hidden="true">${LI[k]}</svg>`;
+function liKey(e){e=e.replace(/️/g,"");if(e.includes("‍"))return e.startsWith("👨")||e.startsWith("👩")?"fam":null;return LI_EMO[e]||null}
+function liFirstText(el){const w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);let n;while((n=w.nextNode()))if(n.nodeValue.trim())return n;return null}
+// take the leading emoji off an element's text; put a line icon in its place (icon:true) or just drop it
+function liLead(el,icon){const t=liFirstText(el);if(!t)return;const m=t.nodeValue.match(LI_LEAD);if(!m)return;
+  const k=liKey(m[1]);t.nodeValue=t.nodeValue.slice(m[0].length);
+  if(m[1]==="○"&&icon){const r=document.createElement("i");r.className="ring";t.parentNode.insertBefore(r,t);return}
+  if(icon&&k){const tmp=document.createElement("span");tmp.innerHTML=liSvg(k);t.parentNode.insertBefore(tmp.firstChild,t)}
+  if(!el.textContent.trim())el.classList.add("icon")}
+function iconize(root){if(!root||!root.querySelectorAll||!root.isConnected)return;if(root.closest&&root.closest("#verses,#mini,.mppage,#who,#setup .suhero"))return;
+  const q=sel=>[...(root.matches&&root.matches(sel)?[root]:[]),...root.querySelectorAll(sel)];
+  q(".mlist i").forEach(i=>{if(i.querySelector("svg"))return;const k=liKey(i.textContent.trim());if(k)i.innerHTML=liSvg(k)});
+  q(".lgh,.pk .inf>b,.qcard b,.pk>b,.sheet h2,.opt>span").forEach(e=>liLead(e,false));q(".tag,.kd").forEach(e=>liLead(e,true));
+  q(".sb:not([data-mplay]),.btn,.chk,.ib.x,.big,details.sg>summary").forEach(e=>liLead(e,true))}
+let liPend=new Set(),liRaf=0;
+function liQueue(n){if(n.nodeType===1)liPend.add(n);else if(n.parentElement)liPend.add(n.parentElement);
+  if(!liRaf)liRaf=requestAnimationFrame(()=>{liRaf=0;const L=[...liPend];liPend.clear();L.forEach(iconize)})}
+// runs after the Tamil translation (that observer works first; this one waits for the next frame)
+new MutationObserver(ms=>{for(const m of ms){if(m.type==="characterData")liQueue(m.target);else m.addedNodes.forEach(liQueue)}}).observe(document.body,{childList:true,subtree:true,characterData:true});
+liQueue(document.body);
 /* ================= V17.1: SCREEN-OFF KEEP-ALIVE for the small player ================= */
 // Android stops the app's timers when no sound is playing and the screen is off. The player pauses for a moment
 // between ayahs, between list items and while the next surah's file loads — the timer that should start the next
