@@ -727,6 +727,50 @@ details.sg>summary>svg.bi{width:34px;height:34px;padding:8px;border-radius:10px;
 :root body .btn[style*="--maroon"]{background:transparent!important;color:var(--maroon)!important;box-shadow:inset 0 0 0 1.5px var(--maroon)}
 :root body .btn[style*="--green2"]{background:var(--green)!important;color:#fff!important}
 :root body .pk>b[style]{display:block;color:var(--ink)!important;font-size:15px!important;font-weight:800;margin-bottom:6px}
+
+/* ===== v17.5 plan & playlist cards ===== */
+:root body .pk.p2{padding:16px;border-radius:18px}
+.p2h{display:flex;align-items:center;gap:12px}
+.p2t{flex:1;min-width:0;display:flex;flex-direction:column}.p2t b{font-size:17px;font-weight:800;letter-spacing:-.01em}.p2t small{font-size:12.5px;color:var(--muted);margin-top:2px}
+.p2r{position:relative;width:56px;height:56px;flex:none;display:grid;place-items:center}.p2r svg{position:absolute;inset:0;width:56px;height:56px}
+.p2r .t{fill:none;stroke:var(--line);stroke-width:6}.p2r .f{fill:none;stroke:var(--gold2);stroke-width:6;stroke-linecap:round}
+.p2r b{position:relative;font-size:12.5px;font-weight:800}
+.p2m{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);color:var(--muted);display:grid;place-items:center;flex:none}.p2m svg.bi{width:18px;height:18px;vertical-align:0}
+.p2lab{display:flex;align-items:center;justify-content:space-between;margin:14px 0 2px;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.p2lab .tag{text-transform:none;letter-spacing:0}
+.p2l{display:flex;flex-direction:column;gap:2px;margin:8px -8px 0}
+.p2row{display:flex;align-items:center;gap:12px;width:100%;padding:9px 8px;border-radius:14px;text-align:left;color:var(--ink)}
+.p2row:active{background:var(--bg)}.p2row.on{background:var(--accs)}
+.p2row .lno2{width:40px;height:40px;border-radius:12px;background:var(--bg);border:1px solid var(--line);color:var(--green2);display:grid;place-items:center;font-weight:700;font-size:13.5px;flex:none}
+.p2row.on .lno2{background:var(--card)}
+.p2row .nm{flex:1;min-width:0;display:flex;flex-direction:column}.p2row .nm b{font-size:15px;font-weight:700}.p2row .nm span{font-size:12.5px;color:var(--muted)}
+.p2row.on .nm span{color:var(--green2);font-weight:600}
+.p2row .an{font-family:AmiriQuran,serif;font-size:20px;color:var(--green2);white-space:nowrap}
+.p2s{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;flex:none}
+.p2s svg{width:15px;height:15px}.p2s svg.bi{width:17px;height:17px;vertical-align:0}
+.p2s.done{background:var(--accs);color:var(--green2)}.p2s.done svg.bi{stroke-width:2.6}
+.p2s.now{background:var(--green);color:#fff}.p2s.now svg,.p2s.play svg{fill:currentColor;stroke:none}
+.p2s.play,.p2s.open{border:1.5px solid var(--line);color:var(--green2)}
+.p2a{margin-top:12px!important;align-items:center}.p2a .p2go{flex:1;justify-content:center;display:flex;align-items:center;height:46px;font-size:14.5px}
+.p2a .sb.icon{width:46px;height:46px}
+.p2note{margin-left:auto;font-size:12.5px;color:var(--muted)}
+/* listening playlist: ink header */
+:root body .pk.p2.dark{padding:0;overflow:hidden}
+.p2.dark .p2h{background:var(--hero);color:var(--heroink);padding:16px 16px 10px}
+.p2.dark .p2t small{color:var(--herom)}
+.p2i{width:44px;height:44px;border-radius:12px;background:var(--heroline);color:var(--gold2);display:grid;place-items:center;flex:none}.p2i svg.bi{width:22px;height:22px;vertical-align:0}
+.p2pp{width:52px;height:52px;border-radius:50%;background:var(--gold2);color:var(--hero);display:grid;place-items:center;flex:none}.p2pp svg{width:20px;height:20px;fill:currentColor;stroke:none}
+.p2.dark .p2m{border-color:var(--heroline);color:var(--heroink)}
+.p2bar{background:var(--hero);padding:0 16px 16px}.p2bar i{display:block;height:6px;border-radius:3px;background:var(--gold2);box-shadow:-999px 0 0 0 transparent}
+.p2bar{background-image:linear-gradient(var(--heroline),var(--heroline));background-size:calc(100% - 32px) 6px;background-position:16px 0;background-repeat:no-repeat}
+.p2.dark .p2l{margin:6px 6px 0}.p2.dark .p2a{padding:0 16px 14px;margin-top:6px!important}
+/* badges */
+.bdc .bdh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}.bdc .bdh b{font-size:17px;font-weight:800}.bdc .bdh small{color:var(--muted);font-weight:600;font-size:13px}
+.bdr{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.bd2{display:flex;flex-direction:column;align-items:center;gap:6px;width:66px;flex:none}
+.bd2 span{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-size:28px;background:var(--bg);border:1.5px solid var(--line);color:var(--muted)}
+.bd2.on span{background:var(--goldbg);border-color:var(--gold2)}.bd2 span svg.bi{width:22px;height:22px;vertical-align:0}
+.bd2 small{font-size:11.5px;text-align:center;line-height:1.25;color:var(--muted)}.bd2.on small{color:var(--ink)}
 </style>
 </head>
 <body>
@@ -1957,32 +2001,66 @@ function hifzToday(pl){
   const todayMem=vs.filter(v=>hz[v.k]===dstr()).length;
   return {mem:mem.length,t:vs.length,next,todayMem,done:todayMem>=Math.min(pl.per,vs.length-mem.length+todayMem)};
 }
+// v17.5: plan cards — progress ring, rows in the same style as the surah list, ⋯ menu for edit / delete
+function p2Ring(pct,lab){pct=Math.max(0,Math.min(100,pct||0));const r=24,c=2*Math.PI*r,d=c*pct/100;
+  return `<span class="p2r"><svg viewBox="0 0 56 56" aria-hidden="true"><circle cx="28" cy="28" r="${r}" class="t"/><circle cx="28" cy="28" r="${r}" class="f" stroke-dasharray="${d.toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 28 28)"/></svg><b>${lab!=null?lab:Math.round(pct)+"%"}</b></span>`}
+function p2Row(o){ // {ch,name,sub,state:'done'|'now'|'play'|'open',data:'data-x="…"',cur}
+  const c=core.chapters.find(x=>x.id===+o.ch)||{};const st=o.state==="done"?`<span class="p2s done">${liSvg("check")}</span>`:o.state==="now"?`<span class="p2s now">${LIC.pause}</span>`:o.state==="play"?`<span class="p2s play">${LIC.play}</span>`:`<span class="p2s open">${liSvg("book")}</span>`;
+  return `<button class="p2row${o.cur?" on":""}" ${o.data||""}><span class="lno2">${o.ch}</span><span class="nm"><b>${esc(o.name)}</b><span>${o.sub}</span></span><span class="an">${esc(c.a||"")}</span>${st}</button>`}
 function planCard(pl,i){
-  let title="",task="",bar=0,act="",done=false;
-  if(pl.type==="khatm"){const t=khatmToday(pl);title=`📖 Khatm · ${pl.days} days`;done=t.done;bar=khatmPct(pl);
-    if(!pl.done)bar=Math.round(t.n/t.t*100);
-    task=pl.done?`🎉 Completed on ${pl.done}`:`<div class="kd"><strong>Day ${t.day}</strong> · Pages ${t.pFrom}–${t.pTo} · ${esc(kRange(t.keys[0],t.keys[t.keys.length-1]))}</div>
-    ${t.n?`<div class="kd ok">✓ Done: ${esc(kRuns(t.keys,t.read,true))} <span>(${t.n}/${t.t})</span></div>`:""}
-    ${t.n<t.t?`<div class="kd left">⏳ Left: ${esc(kRuns(t.keys,t.read,false))} <span>(${t.t-t.n})</span></div>`:`<div class="kd ok">🎉 Today's portion complete</div>`}
-    ${(()=>{const gp=khatmGap(pl,t);return gp?`<div class="acts" style="margin:6px 0 0"><button class="sb l" data-plgap="${i}">↩ Read skipped · ${esc(kRange(gp.a,gp.b))}</button></div>`:""})()}
-    <div class="kd mut">Overall ${khatmPct(pl)}% of the Quran${t.behind>50?` · <b style="color:var(--maroon)">${t.behind} ayahs behind</b>`:""}</div>`;
-    act=(pl.done?"":(r=>`<button class="sb" data-plopen="${i}">▶ ${r.cont?"Continue · "+r.key:"Read"}</button>`)(khatmResume(pl,t)))+`<button class="sb l" data-map="1">🗺 Map</button>`}
+  const menu=`<button class="p2m" data-plmenu="${i}" aria-label="More options">${liSvg("dots")}</button>`;
+  const tag=t=>`<span class="tag ok">✓ ${t||"Done today"}</span>`;
+  let head="",lab="",rows="",extra="",act="",done=false,dark=false;
+  if(pl.type==="khatm"){const t=khatmToday(pl);done=t.done;const pct=khatmPct(pl);
+    head=`${p2Ring(pct,pct<10?pct+"%":Math.round(pct)+"%")}<span class="p2t"><b>Khatm · ${pl.days} days</b><small>${pl.done?"Completed on "+esc(pl.done):`Day ${t.day} of ${pl.days} · whole Quran`}</small></span>`;
+    if(!pl.done){const k0=t.keys[0],k1=t.keys[t.keys.length-1];
+      lab=`<div class="p2lab"><span>Today · pages ${t.pFrom}–${t.pTo}</span>${t.n>=t.t?tag():""}</div>`;
+      rows=p2Row({ch:+k0.split(":")[0],name:kRange(k0,k1),sub:t.n>=t.t?`All ${t.t} ayahs read`:t.n?`${t.n} of ${t.t} read · left: ${esc(kRuns(t.keys,t.read,false))}`:`${t.t} ayahs`,state:t.n>=t.t?"done":"open",data:`data-plopen="${i}"`});
+      const gp=khatmGap(pl,t);if(gp)extra+=`<div class="acts" style="margin:8px 0 0"><button class="sb l" data-plgap="${i}">↩ Read skipped · ${esc(kRange(gp.a,gp.b))}</button></div>`;
+      if(t.behind>50)extra+=`<div class="kd" style="color:var(--maroon);margin-top:6px">${t.behind} ayahs behind</div>`;
+      const r=khatmResume(pl,t);act=`<button class="sb p2go" data-plopen="${i}">▶ ${r.cont?"Continue · "+r.key:"Read"}</button>`}
+    act+=`<button class="sb l icon" data-map="1" aria-label="Reading map">${liSvg("map")}</button>`}
   else if(pl.type==="daily"||pl.type==="weekly"){
     const isDay=pl.type==="daily"||new Date().getDay()===pl.day;
-    title=pl.type==="daily"?"🌙 Daily":"🕌 Every "+WD[pl.day];
-    const items=pl.surahs.map(ch=>{const r=surahReadToday(ch,pl);return {ch,r}});done=isDay&&items.every(x=>x.r.done);
-    task=isDay?items.map(x=>`<button class="chk ${x.r.done?"on":""}" data-plsurah="${i}:${x.ch}">${x.r.done?"✓":"○"} ${esc(chName(x.ch))} <small>${x.r.n}/${x.r.t}</small></button>`).join(""):`Next ${WD[pl.day]}: ${pl.surahs.map(c=>esc(chName(c))).join(", ")}`;
-    bar=isDay?Math.round(items.reduce((s,x)=>s+x.r.n/x.r.t,0)/items.length*100):0}
-  else if(pl.type==="custom"){const isDay=customIsDay(pl);
-    const L=pl.mode==="listen";title=`${L?"🎧":"✏️"} ${esc(pl.name||"My plan")} · ${customDaysLabel(pl)}`;const items=pl.items.map((it,j)=>({it,j,r:rangeReadToday(it,pl)}));done=isDay&&items.every(x=>x.r.done);
-    task=isDay?items.map(x=>{const pos=customPos(pl,x.j);return `<button class="chk ${x.r.done?"on":""}" data-plitem="${i}:${x.j}">${x.r.done?"✓":"○"} ${esc(itemLabel(x.it))} <small>${x.r.n}/${x.r.t}${pos&&!x.r.done?" · ▶ "+x.it.ch+":"+pos:""}</small></button>`}).join(""):`Next: ${customNextDay(pl)} · ${pl.items.map(it=>esc(itemLabel(it))).join(", ")}`;
-    bar=isDay?Math.round(items.reduce((s,x)=>s+x.r.n/x.r.t,0)/items.length*100):0;act=(L?`<button class="sb" data-pllisten="${i}">▶ ${pl.lpos?`Continue · ${pl.lpos.j+1}/${pl.items.length} · ${pl.items[pl.lpos.j]?.ch}:${pl.lpos.v}`:"Listen all"}</button>`:"")+`<button class="sb l" data-pledit="${i}">✎ Edit</button>`}
-  else if(pl.type==="hifz"){const t=hifzToday(pl);title=`🧠 Hifz · ${esc(chName(pl.ch))}`;done=t.done;bar=Math.round(t.mem/t.t*100);
-    task=t.next.length?`New today: Ayah ${t.next[0].k.split(":")[1]}–${t.next[t.next.length-1].k.split(":")[1]} · Memorized ${t.mem}/${t.t}`:`🎉 Whole surah memorized! (${t.t})`;
-    act=(t.next.length?`<button class="sb" data-hifz="${i}">▶ Practice</button><button class="sb l" data-mem="${i}">✓ Memorized</button>`:"")+(t.mem?`<button class="sb l" data-rev="${i}">↻ Revision</button>`:"")}
-  return `<div class="pk plan ${done?"pdone":""}"><div class="row"><div class="inf"><b>${title} ${done?'<span class="tag ok">✓ Done today</span>':""}</b><span>${task}</span></div><button class="ib x" data-delp="${i}" aria-label="Delete">×</button></div>
-  <div class="bar"><i style="width:${bar}%"></i></div>${act?`<div class="acts">${act}</div>`:""}</div>`;
+    const items=pl.surahs.map(ch=>({ch,r:surahReadToday(ch,pl)}));done=isDay&&items.every(x=>x.r.done);
+    const pct=isDay?Math.round(items.reduce((s,x)=>s+x.r.n/x.r.t,0)/items.length*100):0;
+    head=`${p2Ring(pct)}<span class="p2t"><b>${pl.type==="daily"?"Daily reading":"Every "+WD[pl.day]}</b><small>${items.length} surah${items.length>1?"s":""}${isDay?` · ${items.filter(x=>x.r.done).length} done today`:` · next ${WD[pl.day]}`}</small></span>`;
+    if(isDay){lab=done?`<div class="p2lab"><span>Today</span>${tag()}</div>`:"";
+      rows=items.map(x=>p2Row({ch:x.ch,name:chName(x.ch),sub:x.r.done?`All ${x.r.t} ayahs read`:`${x.r.n} of ${x.r.t} ayahs`,state:x.r.done?"done":"open",data:`data-plsurah="${i}:${x.ch}"`})).join("")}}
+  else if(pl.type==="custom"){const isDay=customIsDay(pl);const L=pl.mode==="listen";dark=L;
+    const items=pl.items.map((it,j)=>({it,j,r:rangeReadToday(it,pl)}));done=isDay&&items.every(x=>x.r.done);const nd=items.filter(x=>x.r.done).length;
+    const pct=isDay?Math.round(items.reduce((s,x)=>s+x.r.n/x.r.t,0)/items.length*100):0;
+    const live=L&&MIN&&MIN.plan===pl;const nowJ=live?MIN.planJ+MIN.qi:-1;const on=live&&(!MPA.paused||mpBusy(MIN));
+    if(L){head=`<span class="p2i">${liSvg("head")}</span><span class="p2t"><b>${esc(pl.name||"Playlist")}</b><small>${customDaysLabel(pl)} · ${items.length} parts${isDay?` · ${nd} done`:""}</small></span>
+      <button class="p2pp" ${live?`data-p2tog="1"`:`data-pllisten="${i}"`} aria-label="${on?"Pause":"Play"}">${on?LIC.pause:LIC.play}</button>${menu}`;
+      extra=`<div class="p2bar"><i style="width:${pct}%"></i></div>`}
+    else head=`${p2Ring(pct)}<span class="p2t"><b>${esc(pl.name||"My plan")}</b><small>${customDaysLabel(pl)} · ${items.length} parts${isDay?` · ${nd} done`:""}</small></span>`;
+    if(isDay||L){rows=items.map(x=>{const pos=customPos(pl,x.j);const isNow=x.j===nowJ;
+      const sub=isNow?`${on?"Now playing":"Paused"} · Ayah ${MIN.ai||x.it.a}`:x.r.done?(L?"Listened today":"Read today"):`${x.it.b-x.it.a+1} ayah${x.it.b>x.it.a?"s":""}${pos&&!x.r.done?" · continue at "+x.it.ch+":"+pos:""}${L&&pl.lpos&&pl.lpos.j===x.j&&!live?" · resume at "+x.it.ch+":"+pl.lpos.v:""}`;
+      return p2Row({ch:x.it.ch,name:itemLabel(x.it),sub,state:isNow?(on?"now":"play"):x.r.done?"done":L?"play":"open",cur:isNow,data:`data-plitem="${i}:${x.j}"`})}).join("")}
+    else extra+=`<div class="kd mut">Next: ${customNextDay(pl)}</div>`;
+    if(!L&&done)lab=`<div class="p2lab"><span>Today</span>${tag()}</div>`;
+    act=L?`<button class="sb l" data-pledit="${i}">✎ Edit</button>${pl.lpos&&!live?`<span class="p2note">Resumes at ${pl.items[pl.lpos.j]?.ch}:${pl.lpos.v}</span>`:""}`:`<button class="sb l" data-pledit="${i}">✎ Edit</button>`}
+  else if(pl.type==="hifz"){const t=hifzToday(pl);done=t.done;const pct=Math.round(t.mem/t.t*100);
+    head=`${p2Ring(pct)}<span class="p2t"><b>Hifz · ${esc(chName(pl.ch))}</b><small>Memorized ${t.mem} of ${t.t} ayahs</small></span>`;
+    if(t.next.length){const a1=t.next[0].k.split(":")[1],a2=t.next[t.next.length-1].k.split(":")[1];
+      rows=p2Row({ch:pl.ch,name:`New today · Ayah ${a1}${a2!==a1?"–"+a2:""}`,sub:`${t.next.length} ayah${t.next.length>1?"s":""} to learn`,state:done?"done":"play",data:`data-hifz="${i}"`});
+      act=`<button class="sb p2go" data-hifz="${i}">▶ Practice</button><button class="sb l" data-mem="${i}">✓ Memorized</button>`}
+    else rows=`<div class="kd ok">Whole surah memorized! (${t.t})</div>`;
+    if(t.mem)act+=`<button class="sb l" data-rev="${i}">↻ Revision</button>`}
+  if(!dark)head+=menu;
+  return `<div class="pk plan p2 ${dark?"dark":""} ${done?"pdone":""}"><div class="p2h">${head}</div>${dark?extra:""}${lab}${rows?`<div class="p2l">${rows}</div>`:""}${dark?"":extra}${act?`<div class="acts p2a">${act}</div>`:""}</div>`;
 }
+// ⋯ on a plan: edit / delete
+document.addEventListener("click",e=>{const b=e.target.closest("[data-plmenu],[data-p2tog]");if(!b)return;e.stopPropagation();e.preventDefault();
+  if(b.dataset.p2tog){mpUserToggle();setTimeout(()=>{try{renderHome()}catch(x){}},120);return}
+  const i=+b.dataset.plmenu;const pl=plans[i];if(!pl)return;
+  openSheet(`<h2>${esc(pl.name||({khatm:"Khatm",hifz:"Hifz",daily:"Daily reading",weekly:"Weekly reading"}[pl.type]||"Plan"))}</h2><div class="mlist">
+  ${pl.type==="custom"?`<button data-pm="edit"><i>✎</i><span><b>Edit</b><small>Name, days, surahs and ayahs</small></span></button>`:""}
+  <button data-pm="del"><i>×</i><span><b style="color:var(--maroon)">Delete plan</b><small>Its progress is removed too</small></span></button></div>`);
+  $("#sheet").onclick=ev=>{const x=ev.target.closest("[data-pm]");if(!x)return;closeSheet();
+    if(x.dataset.pm==="edit")setTimeout(()=>newPlan(plans[i]),80);
+    if(x.dataset.pm==="del")setTimeout(()=>{if(!confirm("Delete this plan?"))return;plans.splice(i,1);save(pk("plans"),plans);renderHome()},80)}},true);
 function newPlan(editPl,preset){if(!(editPl&&editPl.type==="custom"))editPl=null;
   openSheet(`<h2>➕ New plan</h2>
   <div class="htabs" id="npT"><button class="tab on" data-t="khatm">Khatm</button><button class="tab" data-t="daily">Daily</button><button class="tab" data-t="weekly">Weekly</button><button class="tab" data-t="hifz">Hifz</button><button class="tab" data-t="custom">✏️ Custom</button></div><div id="npB"></div>`);
@@ -2277,8 +2355,8 @@ function kidsCard(){
   <div class="lgh" style="margin:12px 0 4px">Juz Amma journey (${amma.filter(c=>prog.sdone?.[c]).length}/${amma.length})</div>
   <div class="amma">${amma.map(c=>`<button class="am ${prog.sdone?.[c]?"on":""}" data-opens="${c}"><b>${c}</b><small>${esc(chName(c))}</small></button>`).join("")}</div></div>`;
 }
-function badgesCard(){const got=BADGES.filter(b=>prog.badges?.[b[0]]);if(!got.length)return"";
-  return `<div class="pk"><b style="font-size:13px;color:var(--gold)">🏅 Badges ${got.length}/${BADGES.length}</b><div class="bgrid sm">${got.map(([id,em,t])=>`<div class="bdg on"><span>${em}</span><small>${esc(t)}</small></div>`).join("")}</div></div>`}
+function badgesCard(){const got=BADGES.filter(b=>prog.badges?.[b[0]]);if(!got.length)return"";const left=BADGES.filter(b=>!prog.badges?.[b[0]]);
+  return `<div class="pk bdc"><div class="bdh"><b>Badges</b><small>${got.length} of ${BADGES.length}</small></div><div class="bdr">${got.map(([id,em,t])=>`<div class="bd2 on"><span>${em}</span><small>${esc(t)}</small></div>`).join("")}${left.slice(0,4).map(([id,em,t,desc])=>`<div class="bd2" title="${esc(desc)}"><span>${liSvg("lock")}</span><small>${esc(t)}</small></div>`).join("")}</div></div>`}
 
 function bundleSheet(){
   const P=allPacks();const sz=a=>a.reduce((s,p)=>s+(installed[p.id]?0:(p.bytes||0)),0);
@@ -3407,7 +3485,7 @@ const LIC={play:'<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentC
   mic:'<svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
   dl:'<svg viewBox="0 0 24 24"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>',
   book:'<svg viewBox="0 0 24 24"><path d="M2 5.5C5 4 9 4 12 6c3-2 7-2 10-.5V19c-3-1.5-7-1.5-10 .5-3-2-7-2-10-.5z"/><path d="M12 6v13.5"/></svg>'};
-let lTab="surahs",lQ="",lSaveT=0;
+let lTab="surahs",lQ="",lSaveT=0,lsPlSig="";
 const chVc=ch=>(core.chapters.find(c=>c.id===+ch)||{}).vc||1;
 // what the Listen player shows: the small player's queue if it is playing, else the last surah you listened to
 function lsNow(){if(MIN){const s=MIN.q[MIN.qi];return {ch:s.ch,ai:MIN.ai||s.a,a:s.a,b:s.b,on:!MPA.paused||mpBusy(MIN),live:true}}
@@ -3478,7 +3556,7 @@ function lsClick(e){const t=e.target.closest("[data-lt]");if(t){lTab=t.dataset.l
 async function quickListen(ch){return lPlay(ch,1)}
 // keep the Listen player live; hide the floating bar there (the big card has the controls); remember the place
 setInterval(()=>{const on=!!core&&isShown("home")&&hTab==="listen";document.body.classList.toggle("onListen",on);
-  if(on)try{lsNowUI(false)}catch(e){}
+  if(on)try{lsNowUI(false);const sig=MIN&&MIN.plan?[MIN.qi,MIN.ai,MPA.paused].join():"";if(lTab==="plans"&&sig!==lsPlSig){lsPlSig=sig;lsBody()}}catch(e){}
   if(MIN&&P){const s=MIN.q[MIN.qi];if(Date.now()-lSaveT>4000){lSaveT=Date.now();
     if(MIN.plan){MIN.plan.lpos={j:MIN.planJ+MIN.qi,v:MIN.ai||s.a};save(pk("plans"),plans)}else if(MIN.ls)save(pk("lastL"),{ch:s.ch,ai:MIN.ai||s.a})}}},350);
 function renderLearnTab(){
@@ -4315,7 +4393,7 @@ function mpUI0(){const b=mpBar();const inReader=isShown("reader");
   b.classList.remove("hidden","main");document.body.classList.add("hasmini");
   const s=MIN.q[MIN.qi];$("#miLab").textContent=`${MIN.q.length>1?`${MIN.qi+1}/${MIN.q.length} · `:""}${chName(s.ch)} ${s.ch}:${MIN.ai||s.a}${s.b>s.a?` (${s.a}–${s.b})`:""}`;
   $("#miPP").textContent=MPA.paused?"▶":"⏸";$("#miRep").textContent=MIN.rep===-1?"⟲∞":"⟲"+MIN.rep;$("#miSp").textContent=MIN.speed+"×";$("#miLR").classList.toggle("on",!!MIN.lr);$("#miRep").classList.toggle("on",MIN.rep!==1);ipBtn();recChip();sleepChip()}
-function mpText(){if(!MIN)return;ipSync();if(!MPA.paused)setTimeout(msnMeta,0);const s=MIN.q[MIN.qi];const v=verseByKey(s.ch+":"+(MIN.ai||s.a));if(!v)return;
+function mpText(){if(!MIN)return;try{if(MIN.plan||MIN.ls){const s0=MIN.q[MIN.qi],k0=s0.ch+":"+(MIN.ai||s0.a);if(MIN.plan){const pl=MIN.plan;if(!pl.td||pl.td.d!==dstr())pl.td={d:dstr(),k:{}};pl.td.k[k0]=1}markRead(k0)}}catch(e){}ipSync();if(!MPA.paused)setTimeout(msnMeta,0);const s=MIN.q[MIN.qi];const v=verseByKey(s.ch+":"+(MIN.ai||s.a));if(!v)return;
   $("#miTx").innerHTML=v.w.map((w,j)=>`<span data-p="${v.p?v.p[j]:j+1}">${esc(w)}</span>`).join(" ")}
 // V16.1 in-place: the card you are looking at lights up word by word; the bar slims down
 function arSp(k){const v=verseByKey(k);return v?v.w.map((w,j)=>`<span data-wk="${k}" data-p="${v.p?v.p[j]:j+1}">${esc(w)}</span>`).join(" "):""}
@@ -4464,6 +4542,8 @@ const LI={
  compass:'<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>',
  bell:'<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
  book:'<path d="M2 5.5C5 4 9 4 12 6c3-2 7-2 10-.5V19c-3-1.5-7-1.5-10 .5-3-2-7-2-10-.5z"/><path d="M12 6v13.5"/>',
+ lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+ dots:'<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>',
  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/>',
  file:'<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/>',
  share:'<path d="M12 15V4m0 0L8 8m4-4 4 4"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/>',
