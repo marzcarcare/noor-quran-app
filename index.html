@@ -2576,12 +2576,13 @@ function renderME(){
   ${have<HISN_N?`<div class="medl"><span>Audio: ${have}/${HISN_N} saved on this phone</span><button class="sb l" data-hisndl="1">⬇ Download audio</button></div>`:""}
   ${L.map((h,i)=>{const q=typeof h.ar==="string"&&h.ar.startsWith("q:");const ar=q?arQref(h.ar.slice(2)):esc(ev&&h.ev?h.ev:h.ar);
     const pl=h.id==="baq"?`<button class="meplay" data-mplay="2:285-286" data-rep="1" aria-label="Play">${LIC.play}</button>`:`<button class="meplay" data-hp="${h.id}" aria-label="Play">${adaId===h.id&&!ADA.paused?LIC.pause:LIC.play}</button>`;
-    return `<div class="adk me" data-hid="${h.id}"><div class="meh"><span class="meno">${i+1}</span><b>${esc(h.t)}</b><span class="mecnt">×${h.n}</span>${pl}</div>
+    return `<div class="adk me" data-hid="${h.id}"${q?` data-qref="${h.ar.slice(2)}"`:""}><div class="meh"><span class="meno">${i+1}</span><b>${esc(h.t)}</b><span class="mecnt">×${h.n}</span>${pl}</div>
     <div class="ra">${ar}</div><div class="rt tam">${esc(h.ta)}</div><div class="rt">${esc(h.en)}</div>
     <div class="mev">${h.v?esc(h.v)+" · ":""}<i>${esc(h.ref)}</i></div></div>`}).join("")}
   <div class="note" style="font-size:12.5px">The number (×3, ×100…) is how many times to say it. The audio recites it once.</div><div style="height:40px"></div>`;
+  meQuranTr();
   $("#akList").onclick=e=>{const m=e.target.closest("[data-me]");if(m){meMode=m.dataset.me;adaStop();renderME();return}
-    const p=e.target.closest("[data-hp]");if(p){const id=+p.dataset.hp;if(adaId===id&&!ADA.paused){adaStop();return}adaQ=null;hisnPlay(id);return}
+    const p=e.target.closest("[data-hp]");if(p){const id=+p.dataset.hp;if(adaId===id&&!ADA.paused){adaPause();return}if(adaId===id&&ADA.paused){ADA.play().catch(()=>{});return}adaQ=null;hisnPlay(id);return}
     if(e.target.closest("[data-hall]")){const ids=L.filter(h=>typeof h.id==="number").map(h=>h.id);adaQ=ids;hisnPlay(ids[0]);return}
     if(e.target.closest("[data-hisndl]"))hisnDownload()};
 }
@@ -2592,9 +2593,19 @@ async function hisnPlay(id){
   adaId=id;ADA.src=src;ADA.play().then(()=>meIcons()).catch(err=>{toast("Could not play this audio");logErr&&logErr("hisn play "+id+": "+(err&&err.message||err));adaId=null;meIcons()});
   const card=document.querySelector(`.adk.me[data-hid="${id}"]`);document.querySelectorAll(".adk.me.on").forEach(x=>x.classList.remove("on"));if(card){card.classList.add("on");card.scrollIntoView({behavior:"smooth",block:"center"})}
 }
-function adaStop(){adaQ=null;try{ADA.pause()}catch(e){}adaId=null;meIcons();document.querySelectorAll(".adk.me.on").forEach(x=>x.classList.remove("on"))}
+async function meQuranTr(){
+  const tr=Object.values(installed).filter(p=>p.type==="translation");if(!tr.length)return;
+  const pick=lang=>S.tr.map(i=>installed[i]).find(p=>p&&p.lang===lang)||tr.find(p=>p.lang===lang);
+  const ta=pick("tamil"),en=pick("english");
+  const txt=async(pk,ref)=>{if(!pk)return"";try{const P=await getPack(pk.id);return ref.split("|").map(r=>refKeys(r).map(k=>{const t=P.data[k];return typeof t==="string"?t.replace(/<[^>]+>/g,"").trim():""}).join(" ")).join("\n\n")}catch(e){return""}};
+  for(const c of document.querySelectorAll(".adk.me[data-qref]")){const ref=c.dataset.qref;
+    const t1=await txt(ta,ref),t2=await txt(en,ref);
+    const a=c.querySelector(".rt.tam"),b=c.querySelector(".rt:not(.tam)");
+    if(t1&&a){a.textContent=t1;a.style.whiteSpace="pre-line"}if(t2&&b){b.textContent=t2;b.style.whiteSpace="pre-line"}}
+}
+function adaStop(){const was=adaId!=null;adaQ=null;try{ADA.pause()}catch(e){}adaId=null;meIcons();if(was){try{msnState("none",true)}catch(e){}try{if(fgsMode==="ada"&&!MIN&&!playing())fgsStop()}catch(e){}}kaSync();document.querySelectorAll(".adk.me.on").forEach(x=>x.classList.remove("on"))}
 function meIcons(){document.querySelectorAll("[data-hp]").forEach(b=>{const on=adaId===+b.dataset.hp&&!ADA.paused;b.innerHTML=on?LIC.pause:LIC.play})}
-ADA.addEventListener("ended",()=>{if(adaQ){const i=adaQ.indexOf(adaId);if(i>=0&&i<adaQ.length-1){setTimeout(()=>hisnPlay(adaQ[i+1]),700);return}}adaStop()});
+ADA.addEventListener("ended",()=>{if(adaQ&&!adaHold){const i=adaQ.indexOf(adaId);if(i>=0&&i<adaQ.length-1){setTimeout(()=>hisnPlay(adaQ[i+1]),700);return}}adaStop()});
 ADA.addEventListener("pause",meIcons);ADA.addEventListener("play",meIcons);
 async function hisnDownload(){
   if(hisnBusy)return toast("Already downloading…");if(!navigator.onLine)return toast("No internet connection");
@@ -2612,6 +2623,20 @@ function hisnCard(){const h=hisnHave();return `<div class="pk"><div class="row">
   ${h>=HISN_N?`<span class="tag ok">✓ Saved</span><button class="sb r" data-hisndel="1" aria-label="Delete">✕</button>`:`<button class="sb" data-hisndl="1">⬇ Download</button>`}</div></div>`}
 document.addEventListener("click",e=>{if(!e.target.closest("#lib"))return;if(e.target.closest("[data-hisndl]"))hisnDownload();else if(e.target.closest("[data-hisndel]"))hisnDelete()});
 
+
+// ---- adhkar player ↔ lock screen
+function adaPause(){adaQ=adaQ?adaQ:null;ADA.pause();adaHold=true;meIcons()}
+let adaHold=false;
+function adaSkip(d){if(adaId==null)return;const L=adaQ||HISN.filter(h=>typeof h.id==="number"&&(h.w==="b"||h.w===(meMode==="e"?"e":"m"))).map(h=>h.id);const i=L.indexOf(adaId);const j=i+d;if(j<0||j>=L.length)return;adaQ=adaQ||L;hisnPlay(L[j])}
+async function adaFgs(){if(adaId==null)return;const h=HISN.find(x=>x.id===adaId);
+  if(!FGS||S.bgPlay===false||load("nq10_noFgs")||msnOn())return;
+  const opt={id:4711,title:"Noor Quran — "+(meMode==="e"?"Evening":"Morning")+" adhkar",body:(h?h.t:"")+(h&&h.n>1?" ×"+h.n:""),smallIcon:"ic_stat_noor",silent:true,notificationChannelId:"playback",serviceType:2,buttons:fgsBtns(!ADA.paused)};
+  try{if(!fgsChan){try{await FGS.createNotificationChannel({id:"playback",name:"Recitation",description:"Quran recitation playback",importance:2})}catch(e){}fgsChan=true}
+    if(fgsOn){fgsMode="ada";await fgsUpd(opt)}else{save("nq8_bc","fgs");await fgsSt(opt);fgsOn=true;fgsMode="ada";if(load("nq8_bc")==="fgs")save("nq8_bc","")}}catch(e){save("nq8_bc","");logErr("ada fgs: "+(e.message||e))}}
+ADA.addEventListener("play",()=>{adaHold=false;msnLast="";msnState("playing");adaFgs();kaSync()});
+ADA.addEventListener("pause",()=>{if(!adaQ||adaHold)msnState("paused");fgsRefresh();clearTimeout(kaT);kaT=setTimeout(kaSync,400)});
+// another player starting stops the adhkar audio
+setTimeout(()=>{MPA.addEventListener("play",()=>{if(adaId!=null)adaStop()});au.addEventListener("play",()=>{if(adaId!=null)adaStop()})},0);
 /* ================= V7: PER-SURAH AUDIO LIST ================= */
 async function surahAudioSheet(pid){
   if(!installed[pid]){
@@ -2755,25 +2780,26 @@ function msnOn(){return !!MSN&&S.bgPlay!==false&&!load("nq8_noMsn")}
 async function msnSetup(){
   if(!MSN||msnReady)return;msnReady=true;
   const h=(a,f)=>{try{MSN.setActionHandler({action:a},f)}catch(e){}};
-  h("play",()=>{if(MIN){if(MPA.paused&&!mpBusy(MIN))mpUserToggle()}else doPlay()});
-  h("pause",()=>{if(MIN){if(!MPA.paused||mpBusy(MIN))mpUserToggle()}else{au.pause();clearTimeout(gapT);gapT=0}msnState("paused",true)});
-  h("nexttrack",()=>{if(MIN)mpNext();else if(cur)seekAyah(cur.idx+1,true)});
-  h("previoustrack",()=>{if(MIN)mpPrev();else if(cur)seekAyah(Math.max(0,cur.idx-1),true)});
-  h("seekto",d=>{if(!MIN&&d&&d.seekTime!=null)au.currentTime=d.seekTime});
-  h("stop",()=>{if(MIN)mpStop();else{au.pause();clearTimeout(gapT);gapT=0;mainBarOn=false;mpUI()}msnGone=true;msnWant="none";msnHave=null;clearTimeout(msnT);(async()=>{try{await MSN.setPlaybackState({playbackState:"none"});msnHave="none"}catch(e){}})()});
+  h("play",()=>{if(adaId!=null){ADA.play().catch(()=>{});return}if(MIN){if(MPA.paused&&!mpBusy(MIN))mpUserToggle()}else doPlay()});
+  h("pause",()=>{if(adaId!=null){adaPause();msnState("paused",true);return}if(MIN){if(!MPA.paused||mpBusy(MIN))mpUserToggle()}else{au.pause();clearTimeout(gapT);gapT=0}msnState("paused",true)});
+  h("nexttrack",()=>{if(adaId!=null)return adaSkip(1);if(MIN)mpNext();else if(cur)seekAyah(cur.idx+1,true)});
+  h("previoustrack",()=>{if(adaId!=null)return adaSkip(-1);if(MIN)mpPrev();else if(cur)seekAyah(Math.max(0,cur.idx-1),true)});
+  h("seekto",d=>{if(adaId!=null&&d&&d.seekTime!=null){ADA.currentTime=d.seekTime;return}if(!MIN&&d&&d.seekTime!=null)au.currentTime=d.seekTime});
+  h("stop",()=>{if(adaId!=null)adaStop();else if(MIN)mpStop();else{au.pause();clearTimeout(gapT);gapT=0;mainBarOn=false;mpUI()}msnGone=true;msnWant="none";msnHave=null;clearTimeout(msnT);(async()=>{try{await MSN.setPlaybackState({playbackState:"none"});msnHave="none"}catch(e){}})()});
 }
 function msnArt(){if(msnArtUrl)return msnArtUrl;try{const c=document.createElement("canvas");c.width=c.height=256;const x=c.getContext("2d");
   const g=x.createLinearGradient(0,0,256,256);g.addColorStop(0,"#1f6b4f");g.addColorStop(1,"#0e3b2c");x.fillStyle=g;x.fillRect(0,0,256,256);
   x.fillStyle="#e8c574";x.textAlign="center";x.textBaseline="middle";x.font="120px serif";x.fillText("۞",128,112);x.font="bold 26px sans-serif";x.fillStyle="#f6ecd4";x.fillText("Noor Quran",128,206);
   msnArtUrl=c.toDataURL("image/png")}catch(e){}return msnArtUrl}
 async function msnMeta(){if(!msnOn()||!msnReady)return;let title="",artist="";
-  if(MIN){const s=MIN.q[MIN.qi];title=chName(s.ch)+" · Ayah "+(MIN.ai||s.a);artist=installed[S.reciter]?.name||""}
+  if(adaId!=null){const h=HISN.find(x=>x.id===adaId);title=(h?h.t:"Adhkar")+(h&&h.n>1?" ×"+h.n:"");artist=(meMode==="e"?"Evening":"Morning")+" adhkar"+(adaQ?` · ${adaQ.indexOf(adaId)+1}/${adaQ.length}`:"")}
+  else if(MIN){const s=MIN.q[MIN.qi];title=chName(s.ch)+" · Ayah "+(MIN.ai||s.a);artist=installed[S.reciter]?.name||""}
   else if(cur){title=cur.c.n+(cur.idx>=0?" · Ayah "+(cur.idx+1):"");artist=installed[cur.tp]?.name||""}else return;
   if(title+"|"+artist===msnLast)return;msnLast=title+"|"+artist;
   try{const art=msnArt();await MSN.setMetadata({title,artist,album:"Noor Quran",artwork:art?[{src:art,sizes:"256x256",type:"image/png"}]:[]})}catch(e){logErr("mediasession meta "+(e.message||e))}}
 // v16.11: one update at a time, latest state wins; brief pauses (gap between ayahs, next surah loading) don't touch the card
 let msnWant=null,msnHave=null,msnBusy=false,msnT=0,msnGone=false,msnDue=0;
-function msnReal(){return MIN?(!MPA.paused?"playing":"paused"):(playing()||gapT)?"playing":(cur&&$("#au").src)?"paused":"none"}
+function msnReal(){if(adaId!=null)return ADA.paused&&(adaHold||!adaQ)?"paused":"playing";return MIN?(!MPA.paused?"playing":"paused"):(playing()||gapT)?"playing":(cur&&$("#au").src)?"paused":"none"}
 function msnState(st,now){if(!msnOn())return;if(st==="playing")msnGone=false;else if(msnGone)return;const d=(now||st==="playing")?0:st==="paused"?2500:3000,due=Date.now()+d;
   if(msnT&&msnWant===st&&msnDue<=due)return; // an earlier update for the same state is already on its way
   msnWant=st;msnDue=due;clearTimeout(msnT);msnT=setTimeout(()=>{msnT=0;msnFlush()},d)}
@@ -2784,7 +2810,7 @@ async function msnFlush(){if(msnBusy){clearTimeout(msnT);msnT=setTimeout(()=>{ms
     if(st===msnHave&&st!=="playing"){return}
     save("nq8_bc","msn");await msnSetup();if(st!=="none"){msnLast="";await msnMeta()}
     await MSN.setPlaybackState({playbackState:st});msnHave=st;
-    const A=MIN?MPA:au;if(st==="playing"&&A.duration&&isFinite(A.duration))await MSN.setPositionState({duration:A.duration,position:A.currentTime,playbackRate:A.playbackRate||1});
+    const A=adaId!=null?ADA:MIN?MPA:au;if(st==="playing"&&A.duration&&isFinite(A.duration))await MSN.setPositionState({duration:A.duration,position:A.currentTime,playbackRate:A.playbackRate||1});
     if(load("nq8_bc")==="msn")save("nq8_bc","");
   }catch(e){save("nq8_bc","");logErr("mediasession "+(e.message||e))}finally{msnBusy=false}}
 // self-heal: if the card ever shows the wrong state, fix it
@@ -3111,7 +3137,7 @@ const FGS=window.Capacitor?.Plugins?.ForegroundService||null;let fgsOn=false,fgs
 function fgsBtns(pl){return pl?[{title:"⏮",id:4},{title:"⏸ Pause",id:1},{title:"⏭",id:2}]:[{title:"⏮",id:4},{title:"▶ Play",id:1},{title:"■ Stop",id:3}]}
 function fgsUpd(o){fgsLast=o;return FGS.updateForegroundService(o)}
 function fgsSt(o){fgsLast=o;return FGS.startForegroundService(o)}
-function fgsRefresh(){clearTimeout(fgsRT);fgsRT=setTimeout(()=>{if(!FGS||!fgsOn||!fgsLast)return;const pl=fgsMode==="mini"?!!(MIN&&!MPA.paused):playing();
+function fgsRefresh(){clearTimeout(fgsRT);fgsRT=setTimeout(()=>{if(!FGS||!fgsOn||!fgsLast)return;const pl=fgsMode==="ada"?!!(adaId!=null&&!ADA.paused):fgsMode==="mini"?!!(MIN&&!MPA.paused):playing();
   const bt=fgsBtns(pl);if(JSON.stringify(bt)===JSON.stringify(fgsLast.buttons))return;fgsUpd(Object.assign({},fgsLast,{buttons:bt})).catch(()=>{})},400)}
 async function fgsStart(){
   if(msnOn())return;
@@ -3128,7 +3154,7 @@ async function fgsStart(){
 }
 async function fgsStop(){if(!FGS||!fgsOn)return;fgsOn=false;try{await FGS.stopForegroundService()}catch(e){logErr("fgs stop: "+(e.message||e))}}
 let fgsMode="main";
-if(FGS){try{FGS.addListener("buttonClicked",e=>{const id=e&&e.buttonId;if(fgsMode==="mini"&&MIN){if(id===1)$("#miPP").click();else if(id===2)mpNext();else if(id===3)mpStop();else if(id===4)mpPrev();return}if(id===4){cur&&seekAyah(Math.max(0,cur.idx-1),true);return}if(id===1){playing()?au.pause():doPlay()}else if(id===2){cur&&seekAyah(cur.idx+1,true)}else if(id===3){au.pause();fgsStop()}})}catch(e){}}
+if(FGS){try{FGS.addListener("buttonClicked",e=>{const id=e&&e.buttonId;if(fgsMode==="ada"&&adaId!=null){if(id===1){ADA.paused?ADA.play().catch(()=>{}):adaPause()}else if(id===2)adaSkip(1);else if(id===4)adaSkip(-1);else if(id===3)adaStop();return}if(fgsMode==="mini"&&MIN){if(id===1)$("#miPP").click();else if(id===2)mpNext();else if(id===3)mpStop();else if(id===4)mpPrev();return}if(id===4){cur&&seekAyah(Math.max(0,cur.idx-1),true);return}if(id===1){playing()?au.pause():doPlay()}else if(id===2){cur&&seekAyah(cur.idx+1,true)}else if(id===3){au.pause();fgsStop()}})}catch(e){}}
 au.addEventListener("play",()=>fgsStart());au.addEventListener("play",fgsRefresh);au.addEventListener("pause",fgsRefresh);
 
 /* ================= V10: ADHAN SOUND ================= */
@@ -4657,7 +4683,7 @@ try{const sr=8000,n=sr*2,buf=new ArrayBuffer(44+n*2),d=new DataView(buf),w=(o,t)
   for(let i=0;i<n;i++)d.setInt16(44+i*2,i%2?2:-2,true); // amplitude 2 of 32767: not hearable
   KAA.src=URL.createObjectURL(new Blob([buf],{type:"audio/wav"}))}catch(e){}
 let kaT=0,rdBusy=0;
-function kaSync(){const want=S.bgPlay!==false&&((!!MIN&&(!MPA.paused||mpBusy(MIN)))||(!MIN&&(!au.paused||!!gapT||!!rdBusy)));
+function kaSync(){const want=S.bgPlay!==false&&((adaId!=null&&(!ADA.paused||(!!adaQ&&!adaHold)))||(!!MIN&&(!MPA.paused||mpBusy(MIN)))||(!MIN&&(!au.paused||!!gapT||!!rdBusy)));
   if(want&&KAA.paused)KAA.play().catch(()=>{});else if(!want&&!KAA.paused)KAA.pause()}
 function mpUserToggle(){const m=MIN;if(!m)return;
   if(MPA.paused&&!mpBusy(m)){clearTimeout(m.gapT);MPA.play().catch(()=>{});return}
