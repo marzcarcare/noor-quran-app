@@ -786,6 +786,7 @@ details.sg>summary>svg.bi{width:34px;height:34px;padding:8px;border-radius:10px;
 .meplay{width:40px;height:40px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;flex:none}
 .meplay svg{width:15px;height:15px;fill:currentColor;stroke:none}
 .mev{font-size:12.5px;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px solid var(--line);line-height:1.5}
+#akList.noTa .rt.tam,#akList.noEn .rt.en{display:none}
 </style>
 </head>
 <body>
@@ -2531,13 +2532,15 @@ const QITEMS={kursi:Q_KURSI,ikh:Q_IKH,fal:Q_FAL,nas:Q_NAS,ikh3:["ikh3","Surah Al
 const RNOTE={36:"Yaseen — commonly read in the morning",56:"Al-Waqi'ah — commonly read in the evening",67:"Al-Mulk — read every night",32:"As-Sajdah — read at night",109:"Al-Kafirun — before sleep"};
 function akState(){const s=load(pk("adk"))||{};if(s.d!==dstr()){return {d:dstr(),c:{}}}return s}
 function akSave(s){save(pk("adk"),s)}
+function akLang(){const L=(S.tr||[]).map(i=>installed[i]&&installed[i].lang);const el=$("#akList");if(!el)return;el.classList.toggle("noTa",!L.includes("tamil"));el.classList.toggle("noEn",!L.includes("english"))}
 function renderAdhkar(){
+  akLang();
   if(prTab==="me")return renderME();
   const L=AK_LISTS[prTab];const st=akState();let done=0;
   const items=L.items.map((it,i)=>{
     const [kind,id]=it.split(":");const key=prTab+":"+it;const c=st.c[key]||0;
     if(kind==="d"){const d=DH[id];const ok=c>=d.n;if(ok)done++;
-      return `<div class="adk ${ok?"ok":""}" data-key="${key}" data-n="${d.n}"><div class="ra">${esc(d.ar)}</div><div class="rt">${esc(d.en)}</div><div class="rt tam">${esc(d.ta)}</div>
+      return `<div class="adk ${ok?"ok":""}" data-key="${key}" data-n="${d.n}"><div class="ra">${esc(d.ar)}</div><div class="rt en">${esc(d.en)}</div><div class="rt tam">${esc(d.ta)}</div>
       <button class="cnt" data-cnt="${key}">${ok?"✓":c+" / "+d.n}</button></div>`}
     if(kind==="q"){const [,t,ref,n]=QITEMS[id];const ks=refKeys(ref);const ok=c>=n;if(ok)done++;
       return `<div class="adk ${ok?"ok":""}"><b>📖 ${esc(t)}${n>1?" ×"+n:""}</b><div class="ra">${ks.map(k=>arSp(k)+" ﴿"+arNum(k.split(":")[1])+"﴾").join(" ")}</div>
@@ -2577,7 +2580,7 @@ function renderME(){
   ${L.map((h,i)=>{const q=typeof h.ar==="string"&&h.ar.startsWith("q:");const ar=q?arQref(h.ar.slice(2)):esc(ev&&h.ev?h.ev:h.ar);
     const pl=h.id==="baq"?`<button class="meplay" data-mplay="2:285-286" data-rep="1" aria-label="Play">${LIC.play}</button>`:`<button class="meplay" data-hp="${h.id}" aria-label="Play">${adaId===h.id&&!ADA.paused?LIC.pause:LIC.play}</button>`;
     return `<div class="adk me" data-hid="${h.id}"${q?` data-qref="${h.ar.slice(2)}"`:""}><div class="meh"><span class="meno">${i+1}</span><b>${esc(h.t)}</b><span class="mecnt">×${h.n}</span>${pl}</div>
-    <div class="ra">${ar}</div><div class="rt tam">${esc(h.ta)}</div><div class="rt">${esc(h.en)}</div>
+    <div class="ra">${ar}</div><div class="rt tam">${esc(h.ta)}</div><div class="rt en">${esc(h.en)}</div>
     <div class="mev">${h.v?esc(h.v)+" · ":""}<i>${esc(h.ref)}</i></div></div>`}).join("")}
   <div class="note" style="font-size:12.5px">The number (×3, ×100…) is how many times to say it. The audio recites it once.</div><div style="height:40px"></div>`;
   meQuranTr();
@@ -2595,12 +2598,12 @@ async function hisnPlay(id){
 }
 async function meQuranTr(){
   const tr=Object.values(installed).filter(p=>p.type==="translation");if(!tr.length)return;
-  const pick=lang=>S.tr.map(i=>installed[i]).find(p=>p&&p.lang===lang)||tr.find(p=>p.lang===lang);
+  const pick=lang=>S.tr.map(i=>installed[i]).find(p=>p&&p.type==="translation"&&p.lang===lang);
   const ta=pick("tamil"),en=pick("english");
   const txt=async(pk,ref)=>{if(!pk)return"";try{const P=await getPack(pk.id);return ref.split("|").map(r=>refKeys(r).map(k=>{const t=P.data[k];return typeof t==="string"?t.replace(/<[^>]+>/g,"").trim():""}).join(" ")).join("\n\n")}catch(e){return""}};
   for(const c of document.querySelectorAll(".adk.me[data-qref]")){const ref=c.dataset.qref;
     const t1=await txt(ta,ref),t2=await txt(en,ref);
-    const a=c.querySelector(".rt.tam"),b=c.querySelector(".rt:not(.tam)");
+    const a=c.querySelector(".rt.tam"),b=c.querySelector(".rt.en");
     if(t1&&a){a.textContent=t1;a.style.whiteSpace="pre-line"}if(t2&&b){b.textContent=t2;b.style.whiteSpace="pre-line"}}
 }
 function adaStop(){const was=adaId!=null;adaQ=null;try{ADA.pause()}catch(e){}adaId=null;meIcons();if(was){try{msnState("none",true)}catch(e){}try{if(fgsMode==="ada"&&!MIN&&!playing())fgsStop()}catch(e){}}kaSync();document.querySelectorAll(".adk.me.on").forEach(x=>x.classList.remove("on"))}
