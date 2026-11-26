@@ -1214,7 +1214,7 @@ function playing(){const a=$("#au");return !a.paused&&!a.ended}
 function gapThen(i,fn){
   if(!H||!H.gap){fn();return}
   const a=$("#au");const T=cur.timings[i];const ms=H.gap===-1?(T.to-T.from)/S.speed:H.gap*1000;
-  a.pause();clearTimeout(gapT);gapT=setTimeout(()=>{gapT=0;fn();doPlay()},ms);
+  a.pause();clearTimeout(gapT);gapT=setTimeout(()=>{gapT=0;fn();doPlay()},ms);try{kaSync()}catch(e){}
 }
 function onAyahEnd(i){
   const a=$("#au");const T=cur.timings;
@@ -1267,7 +1267,7 @@ au.addEventListener("ended",async()=>{
   if(sleepT===-1){sleepT=0;toast("Sleep timer: stopped");return}
   if(SLEEP.mode==="surah"){SLEEP={mode:null,at:0,idx:-1};sleepChip();toast("⏾ Sleep timer — stopped");return}
   if(PS&&PS.item!=null&&PS.pl.type==="custom"){rangeEnd();return}
-  if(S.autoNext&&!H&&cur&&cur.ch<114){const n=cur.ch+1;toast("▶ Next: "+chName(n));await openSurah(n,1,true);if(cur&&cur.surah)seekAyah(0,true);return}
+  if(S.autoNext&&!H&&cur&&cur.ch<114){const n=cur.ch+1;toast("▶ Next: "+chName(n));rdBusy=1;try{kaSync()}catch(e){}try{await openSurah(n,1,true);if(cur&&cur.surah)seekAyah(0,true)}finally{rdBusy=0}return}
   toast("Surah finished");
 });
 au.addEventListener("seeked",()=>{if(!playing())tick()});
@@ -2525,8 +2525,8 @@ function msnOn(){return !!MSN&&S.bgPlay!==false&&!load("nq8_noMsn")}
 async function msnSetup(){
   if(!MSN||msnReady)return;msnReady=true;
   const h=(a,f)=>{try{MSN.setActionHandler({action:a},f)}catch(e){}};
-  h("play",()=>{if(MIN){clearTimeout(MIN.gapT);MPA.play().catch(()=>{})}else doPlay()});
-  h("pause",()=>{if(MIN)MPA.pause();else{au.pause();clearTimeout(gapT);gapT=0}msnState("paused",true)});
+  h("play",()=>{if(MIN){if(MPA.paused&&!mpBusy(MIN))mpUserToggle()}else doPlay()});
+  h("pause",()=>{if(MIN){if(!MPA.paused||mpBusy(MIN))mpUserToggle()}else{au.pause();clearTimeout(gapT);gapT=0}msnState("paused",true)});
   h("nexttrack",()=>{if(MIN)mpNext();else if(cur)seekAyah(cur.idx+1,true)});
   h("previoustrack",()=>{if(MIN)mpPrev();else if(cur)seekAyah(Math.max(0,cur.idx-1),true)});
   h("seekto",d=>{if(!MIN&&d&&d.seekTime!=null)au.currentTime=d.seekTime});
@@ -3330,7 +3330,7 @@ const LIC={play:'<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentC
 let lTab="surahs",lQ="",lSaveT=0;
 const chVc=ch=>(core.chapters.find(c=>c.id===+ch)||{}).vc||1;
 // what the Listen player shows: the small player's queue if it is playing, else the last surah you listened to
-function lsNow(){if(MIN){const s=MIN.q[MIN.qi];return {ch:s.ch,ai:MIN.ai||s.a,a:s.a,b:s.b,on:!MPA.paused,live:true}}
+function lsNow(){if(MIN){const s=MIN.q[MIN.qi];return {ch:s.ch,ai:MIN.ai||s.a,a:s.a,b:s.b,on:!MPA.paused||mpBusy(MIN),live:true}}
   const L=P&&load(pk("lastL"));return L&&L.ch?{ch:L.ch,ai:L.ai||1,a:1,b:chVc(L.ch),on:false,live:false}:null}
 function renderListenTab(){
   const E=$("#hListen");const rp=installed[S.reciter];const nOff=audioIdx[S.reciter]?Object.keys(audioIdx[S.reciter]).length:0;
@@ -3379,10 +3379,10 @@ async function lPlay(ch,ai){ch=+ch;if(!S.reciter||!installed[S.reciter]){toast("
   const vc=chVc(ch);ai=Math.min(Math.max(1,ai||1),vc);save(pk("lastL"),{ch,ai});
   await mpPlay([{ch,a:1,b:vc}],{startAi:ai,ls:true,onEnd:()=>{if(S.autoNext!==false&&ch<114)lPlay(ch+1,1);else{save(pk("lastL"),{ch,ai:1});mpStop()}}});
   lsNowUI(true)}
-function lsToggle(ch){if(MIN&&MIN.q[MIN.qi].ch===ch){if(MPA.paused){clearTimeout(MIN.gapT);MIN.wait=0;MPA.play().catch(()=>{})}else MPA.pause();setTimeout(()=>lsNowUI(false),60);return}
+function lsToggle(ch){if(MIN&&MIN.q[MIN.qi].ch===ch){mpUserToggle();setTimeout(()=>lsNowUI(false),60);return}
   const L=load(pk("lastL"));lPlay(ch,L&&L.ch===ch?L.ai:1)}
 function lsCtl(a){const n=lsNow();
-  if(a==="pp"){if(MIN){if(MPA.paused){clearTimeout(MIN.gapT);MIN.wait=0;MPA.play().catch(()=>{})}else MPA.pause();setTimeout(()=>lsNowUI(false),60)}else lPlay(n?n.ch:1,n?n.ai:1);return}
+  if(a==="pp"){if(MIN){mpUserToggle();setTimeout(()=>lsNowUI(false),60)}else lPlay(n?n.ch:1,n?n.ai:1);return}
   if(a==="next"||a==="prev"){const d=a==="next"?1:-1;
     if(MIN&&MIN.plan){const ni=MIN.qi+d;if(ni<0||ni>=MIN.q.length)return;clearTimeout(MIN.gapT);MIN.wait=0;MIN.qi=ni;mpLoad();return}
     if(a==="prev"&&MIN&&MIN.tm){const s=MIN.q[MIN.qi];if(MPA.currentTime*1000-MIN.tm[s.a-1][0]>4000||(MIN.ai||s.a)>s.a+1){MIN.ai=s.a;mpText();mpSeekTo(MIN.tm[s.a-1][0]/1000);return}} // first press: back to the start
@@ -4165,7 +4165,7 @@ function mpBar(){let b=$("#mini");if(b)return b;b=document.createElement("div");
   <div class="mtx" id="miTx"></div><div class="mrow"><button id="miPv" title="Previous">⏮</button><button id="miPP" aria-label="Pause">⏸</button><button id="miNx" title="Next">⏭</button><button id="miRep" title="Repeat (hold for more)">⟲1</button><button id="miSp" title="Speed">1×</button><button id="miLR" title="Listen & repeat">🗣</button><button id="miSl" title="Sleep timer">⏾</button><button id="miShare" title="Share">↗</button></div>
   <div class="mpg" id="miPg"><i id="miPf"></i></div>`;
   document.body.appendChild(b);
-  $("#miPP").onclick=()=>{if(!MIN&&mainBarOn&&cur){playing()?au.pause():doPlay();setTimeout(mpUI,50);return}if(!MIN)return;if(MPA.paused){clearTimeout(MIN.gapT);MPA.play().catch(()=>{})}else MPA.pause();mpUI()};
+  $("#miPP").onclick=()=>{if(!MIN&&mainBarOn&&cur){playing()?au.pause():doPlay();setTimeout(mpUI,50);return}if(!MIN)return;mpUserToggle();mpUI()};
   $("#miRep").onclick=()=>{if(!MIN)return;MIN.rep=mpRepOpts[(mpRepOpts.indexOf(MIN.rep)+1)%mpRepOpts.length];MIN.repLeft=MIN.rep;mpUI();toast(MIN.rep===-1?"⟲ Repeat until stopped":MIN.rep===1?"⟲ Play once":`⟲ Repeat ${MIN.rep} times`)};
   $("#miSp").onclick=()=>{if(!MIN)return;MIN.speed=MIN.speed===1?0.75:MIN.speed===0.75?1.25:1;MPA.playbackRate=MIN.speed;save("nq15_mpsp",MIN.speed);mpUI()};
   $("#miLR").onclick=()=>{if(!MIN)return;MIN.lr=!MIN.lr;mpUI();toast(MIN.lr?"🗣 Listen & repeat: a pause after each ayah for you to say it":"Listen & repeat off")};
@@ -4260,7 +4260,7 @@ document.addEventListener("click",e=>{const sp=e.target.closest("[data-wk]");if(
   const s=MIN.q[MIN.qi];const [c,a]=sp.dataset.wk.split(":").map(Number);if(c!==s.ch||a<s.a||a>s.b)return;
   e.stopPropagation();e.preventDefault();const z=MIN.tm[a-1];if(!z)return;const p=+sp.dataset.p;const g=(z[2]||[]).find(x=>x[0]===p);
   clearTimeout(MIN.gapT);MIN.wait=0;MIN.ai=a;mpText();mpSeekTo((g?g[1]:z[0])/1000);ipSync();mpUI()},true);
-function mpStop(){if(MIN)clearTimeout(MIN.gapT);try{MPA.pause()}catch(e){}MIN=null;ipClear();ipBtn();mpUI();if(!(mainBarOn&&cur&&playing()))msnState("none");if(fgsMode==="mini")fgsStop()}
+function mpStop(){if(MIN)clearTimeout(MIN.gapT);try{MPA.pause()}catch(e){}MIN=null;kaSync();ipClear();ipBtn();mpUI();if(!(mainBarOn&&cur&&playing()))msnState("none");if(fgsMode==="mini")fgsStop()}
 // ↗ share what is playing now — image, reel, or text
 async function barShare(){let k,a,b,ch;
   if(MIN){const s=MIN.q[MIN.qi];ch=s.ch;a=MIN.ai||s.a;b=s.b>s.a?s.b:a;MPA.pause()}else if(cur){ch=cur.ch;a=(cur.idx>=0?cur.idx:0)+1;b=a;au.pause()}else return;
@@ -4288,8 +4288,8 @@ async function mpToReader(){if(!MIN||mpToReader.busy)return;mpToReader.busy=1;co
     RQ={q:st.q,qi:st.qi,gap:st.gap};
     if(st.rep!==1||st.lr){H={ch:s.ch,a:s.a-1,b:s.b-1,each:1,range:st.rep,gap:st.lr?-1:0,hide:false,ar:0,rr:0};repLabel();cur.stopAt=null}else{cur.stopAt=s.b-1}
     au.playbackRate=st.speed||S.speed;seekAyah(ai-1,true)}finally{mpToReader.busy=0}}
-function readerQueueNext(){if(!RQ||RQ.qi>=RQ.q.length-1){RQ=null;return false}RQ.qi++;const n=RQ.q[RQ.qi];
-  setTimeout(async()=>{if(!RQ)return;if(!cur||cur.ch!==n.ch)await openSurah(n.ch,n.a,true);cur.stopAt=n.b-1;seekAyah(n.a-1,true)},RQ.gap||1500);return true}
+function readerQueueNext(){if(!RQ||RQ.qi>=RQ.q.length-1){RQ=null;return false}RQ.qi++;const n=RQ.q[RQ.qi];rdBusy=1;try{kaSync()}catch(e){}
+  setTimeout(async()=>{try{if(!RQ)return;if(!cur||cur.ch!==n.ch)await openSurah(n.ch,n.a,true);cur.stopAt=n.b-1;seekAyah(n.a-1,true)}finally{rdBusy=0}},document.hidden?600:(RQ.gap||1500));return true}
 function mpNext(){if(!MIN)return;const my=MIN;clearTimeout(my.gapT);my.wait=0;const s=my.q[my.qi];if(my.ai<s.b){my.ai++;mpText();MPA.currentTime=my.tm[my.ai-1][0]/1000;MPA.play().catch(()=>{});mpUI();return}
   if(my.qi<my.q.length-1){my.qi++;mpLoad()}else mpStop()}
 async function mpFgs(){if(!MIN)return;const s=MIN.q[MIN.qi];const title="Noor Quran — "+chName(s.ch)+" "+s.ch+":"+(MIN.ai||s.a);const body=(MIN.q.length>1?`${MIN.qi+1}/${MIN.q.length} · `:"")+(installed[S.reciter]?.name||"Recitation");
@@ -4308,7 +4308,8 @@ async function mpPlay(refs,opts){opts=opts||{};
   MIN={q,qi:0,ai:q[0].a,rep:opts.rep||1,repLeft:opts.rep||1,lr:!!opts.lr,speed:load("nq15_mpsp")||1,gap:opts.gap??(q.length>1?2000:0),srcCh:null,card:opts.card||null,onItem:opts.onItem||null,resumeAi:opts.startAi||0,onEnd:opts.onEnd||null,ls:!!opts.ls,plan:opts.plan||null,planJ:opts.planJ||0};ipClear();
   mpBar();mpUI();await mpLoad();
 }
-async function mpLoad(){const my=MIN;if(!my)return;const s=my.q[my.qi];
+async function mpLoad(){const my=MIN;if(!my)return;my.loading=1;try{await mpLoad0(my)}finally{my.loading=0;kaSync()}}
+async function mpLoad0(my){if(MIN!==my)return;const s=my.q[my.qi];
   const p=await getPack(S.reciter).catch(()=>null);const su=p?.data?.surahs?.[s.ch];
   if(!su||!su.v||!su.v[s.a-1]){toast("No timing for this ayah with this reciter");mpStop();return}
   my.tm=su.v;
@@ -4323,7 +4324,7 @@ async function mpLoad(){const my=MIN;if(!my)return;const s=my.q[my.qi];
   await seekTo();
   if(Math.abs(MPA.currentTime-target)>1&&!MPA.src.startsWith("blob:")){ // server cannot seek → load the whole file once
     try{toast("Loading audio…");const bl=await (await fetch(MPA.src)).blob();if(MIN!==my)return;MPA.src=URL.createObjectURL(bl);await new Promise(r=>{MPA.onloadedmetadata=r;setTimeout(r,4000)});await seekTo()}catch(e){logErr("mini seek: "+(e.message||e))}}
-  if(MIN!==my)return;await MPA.play().catch(e=>toast("Could not play: "+(e.message||e)));mpUI();
+  if(MIN!==my)return;if(my.hold){my.hold=0;mpUI();return}await MPA.play().catch(e=>toast("Could not play: "+(e.message||e)));mpUI();
 }
 function mpTick(){const my=MIN;if(!my||MPA.paused||my.wait)return;const s=my.q[my.qi];const t=MPA.currentTime*1000;const V=my.tm;if(!V)return;
   let ai=my.ai;const z=V[ai-1];
@@ -4338,14 +4339,35 @@ function mpAfterAyah(my,ai){const s=my.q[my.qi];const V=my.tm;
   if(ai<s.b){my.ai=ai+1;mpText();MPA.currentTime=V[ai][0]/1000;MPA.play().catch(()=>{});mpUI();return}
   if(my.onItem)try{my.onItem(my.qi)}catch(e){}
   // end of this item: repeat?
-  if(my.rep===-1||my.repLeft>1){if(my.rep!==-1)my.repLeft--;my.ai=s.a;mpText();MPA.pause();my.gapT=setTimeout(()=>{if(MIN!==my)return;MPA.currentTime=V[s.a-1][0]/1000;MPA.play().catch(()=>{});mpUI()},my.rep===1?0:800);return}
-  if(my.qi<my.q.length-1){MPA.pause();my.gapT=setTimeout(async()=>{if(MIN!==my)return;my.qi++;await mpLoad()},my.gap||0);return}
-  if(my.onEnd){const fn=my.onEnd;MPA.pause();mpUI();my.gapT=setTimeout(()=>{if(MIN===my)fn()},900);return}
+  if(my.rep===-1||my.repLeft>1){if(my.rep!==-1)my.repLeft--;my.ai=s.a;mpText();my.gapping=1;MPA.pause();my.gapT=setTimeout(()=>{my.gapping=0;if(MIN!==my)return;MPA.currentTime=V[s.a-1][0]/1000;MPA.play().catch(()=>{});mpUI()},my.rep===1?0:800);return}
+  if(my.qi<my.q.length-1){my.gapping=1;MPA.pause();my.gapT=setTimeout(async()=>{my.gapping=0;if(MIN!==my)return;my.qi++;await mpLoad()},document.hidden?Math.min(my.gap||0,600):(my.gap||0));return}
+  if(my.onEnd){const fn=my.onEnd;my.gapping=1;MPA.pause();mpUI();my.gapT=setTimeout(()=>{my.gapping=0;if(MIN===my)fn()},document.hidden?300:900);return}
   MPA.pause();mpUI();setTimeout(()=>{if(MIN===my&&MPA.paused)mpStop()},2500);
 }
+
+/* ================= V17.1: SCREEN-OFF KEEP-ALIVE for the small player ================= */
+// Android stops the app's timers when no sound is playing and the screen is off. The player pauses for a moment
+// between ayahs, between list items and while the next surah's file loads — the timer that should start the next
+// part then never ran, so playback stopped until you woke the phone. A near-silent loop keeps the app awake in those gaps.
+function mpBusy(m){return !!(m&&(m.gapping||m.wait||m.loading))}
+const KAA=new Audio();KAA.loop=true;KAA.preload="auto";
+try{const sr=8000,n=sr*2,buf=new ArrayBuffer(44+n*2),d=new DataView(buf),w=(o,t)=>{for(let i=0;i<t.length;i++)d.setUint8(o+i,t.charCodeAt(i))};
+  w(0,"RIFF");d.setUint32(4,36+n*2,true);w(8,"WAVE");w(12,"fmt ");d.setUint32(16,16,true);d.setUint16(20,1,true);d.setUint16(22,1,true);
+  d.setUint32(24,sr,true);d.setUint32(28,sr*2,true);d.setUint16(32,2,true);d.setUint16(34,16,true);w(36,"data");d.setUint32(40,n*2,true);
+  for(let i=0;i<n;i++)d.setInt16(44+i*2,i%2?2:-2,true); // amplitude 2 of 32767: not hearable
+  KAA.src=URL.createObjectURL(new Blob([buf],{type:"audio/wav"}))}catch(e){}
+let kaT=0,rdBusy=0;
+function kaSync(){const want=S.bgPlay!==false&&((!!MIN&&(!MPA.paused||mpBusy(MIN)))||(!MIN&&(!au.paused||!!gapT||!!rdBusy)));
+  if(want&&KAA.paused)KAA.play().catch(()=>{});else if(!want&&!KAA.paused)KAA.pause()}
+function mpUserToggle(){const m=MIN;if(!m)return;
+  if(MPA.paused&&!mpBusy(m)){clearTimeout(m.gapT);MPA.play().catch(()=>{});return}
+  clearTimeout(m.gapT);if(m.gapping||m.wait){m.gapping=0;m.wait=0}if(m.loading)m.hold=1;MPA.pause();msnState("paused",true);kaSync()}
+MPA.addEventListener("play",kaSync);au.addEventListener("play",kaSync);au.addEventListener("pause",()=>{clearTimeout(kaT);kaT=setTimeout(kaSync,400)});
+MPA.addEventListener("pause",()=>{clearTimeout(kaT);kaT=setTimeout(kaSync,400)});
+setInterval(kaSync,2000);
 MPA.addEventListener("timeupdate",mpTick);MPA.addEventListener("play",()=>{mpUI();try{$("#au").pause()}catch(e){}mpFgs()});MPA.addEventListener("pause",mpUI);
 MPA.addEventListener("play",fgsRefresh);MPA.addEventListener("pause",fgsRefresh);
-MPA.addEventListener("play",()=>msnState("playing"));MPA.addEventListener("pause",()=>{if(MIN)msnState("paused")});
+MPA.addEventListener("play",()=>msnState("playing"));MPA.addEventListener("pause",()=>{if(MIN&&!mpBusy(MIN))msnState("paused")});
 MPA.addEventListener("ended",()=>{if(MIN){const s=MIN.q[MIN.qi];mpAfterAyah(MIN,s.b)}});
 setInterval(()=>{if(MIN&&!MPA.paused)mpTick();const b=$("#mini");if(b&&!b.classList.contains("hidden"))mpProg()},200);
 setInterval(()=>{const b=$("#mini");if(!b)return;
