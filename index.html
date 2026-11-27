@@ -4618,7 +4618,9 @@ async function mpLoad0(my){if(MIN!==my)return;const s=my.q[my.qi];
   if(Math.abs(MPA.currentTime-target)>1&&!MPA.src.startsWith("blob:")){ // server cannot seek → load the whole file once
     try{toast("Loading audio…");const bl=await (await fetch(MPA.src)).blob();if(MIN!==my)return;MPA.src=URL.createObjectURL(bl);await new Promise(r=>{MPA.onloadedmetadata=r;setTimeout(r,4000)});await seekTo()}catch(e){logErr("mini seek: "+(e.message||e))}}
   if(MIN!==my)return;if(my.hold){my.hold=0;mpUI();return}
-  if(sa===1&&bismNeeded(s.ch,my.tm[0]&&my.tm[0][0])){const ok=await playBism(S.reciter,my.speed||1);if(MIN!==my||!ok)return;MPA.currentTime=target}
+  // v18.4: playlists — every item starts with Bismillah (also mid-surah ayahs), but only once when the previous item is from the same surah
+  const pv=my.qi>0?my.q[my.qi-1]:null,plB=my.plan&&sa===s.a&&s.a>1&&s.ch!==9&&S.bism!==false&&!(pv&&pv.ch===s.ch);
+  if((sa===1&&!(my.plan&&pv&&pv.ch===s.ch)&&bismNeeded(s.ch,my.tm[0]&&my.tm[0][0]))||plB){const ok=await playBism(S.reciter,my.speed||1);if(MIN!==my||!ok)return;MPA.currentTime=target}
   await MPA.play().catch(e=>toast("Could not play: "+(e.message||e)));mpUI();
 }
 function mpTick(){const my=MIN;if(!my||MPA.paused||my.wait)return;const s=my.q[my.qi];const t=MPA.currentTime*1000;const V=my.tm;if(!V)return;
