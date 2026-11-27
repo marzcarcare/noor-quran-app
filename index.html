@@ -2882,7 +2882,7 @@ function specialCards(){
   // Jumu'ah: Thursday after Maghrib, or Friday
   const isFri=now.getDay()===5||(now.getDay()===4&&t&&now>t.maghrib);
   if(isFri){const r=surahReadToday(18);h+=`<div class="pk spc"><div class="row"><span class="spi">🕌</span><div class="inf"><b>Jumu'ah Mubarak</b><span>Read Surah Al-Kahf today${r.n?` · ${r.n}/${r.t} read`:""}. Send plenty of salawat upon the Prophet ﷺ.</span></div></div>
-    <div class="acts"><button class="sb" data-open="18:1">▶ Surah Al-Kahf</button></div></div>`}
+    <div class="acts">${(pi=>pi>=0?`<button class="sb" data-plsurah="${pi}:18">▶ Surah Al-Kahf</button>`:`<button class="sb" data-open="18:1">▶ Surah Al-Kahf</button>`)(plans.findIndex(pl=>!pl.done&&((pl.type==="weekly"&&pl.day===5)||pl.type==="daily")&&(pl.surahs||[]).includes(18)))}</div></div>`}
   const ev=upcomingDays(3).filter(e=>!e.mt)[0];
   if(ev){const tm=ev.date.toDateString()===now.toDateString()?"Today":"Tomorrow";if(dstr(ev.date)<=dstr(new Date(now.getTime()+86400000)))h+=`<div class="pk spc"><div class="row"><span class="spi">✨</span><div class="inf"><b>${tm}: ${esc(ev.t)}</b><span>${esc(ev.h.txt)}</span></div></div></div>`}
   return h;
