@@ -1861,6 +1861,8 @@ function initProfiles(){
 function loadProfile(id){
   P=profiles.find(p=>p.id===id)||profiles[0];save("nq4_cur",P.id);
   S=Object.assign({},DEF,load(pk("set"))||{});
+  // v18.1: the app moved to a new GitHub repo — an old saved GitHub pack address is switched to this build's own repo
+  if(S.src!==DEFAULT_SRC&&/^https:\/\/github\.com\/[^/]+\/[^/]+\/releases\/download\/packs\/$/.test(S.src||"")&&!"__PACKSRC__".startsWith("__")){S.src=DEFAULT_SRC;try{save(pk("set"),S)}catch(e){}}
   marks=load(pk("marks"))||{};
   prog=Object.assign({days:{},today:{d:"",k:{}},best:0,khatms:0},load(pk("prog"))||{});
   plans=load(pk("plans"))||[];
