@@ -1259,6 +1259,7 @@ async function openSurah(ch,ayah,keepPS){if(!keepPS){try{RQ=null}catch(e){}}
   let wbw=null,tp=null,scr=null;
   try{wbw=await getPack(S.wbw)}catch(e){}
   try{tp=await getPack(S.reciter)}catch(e){}
+  bismDurSet(S.reciter,tp);
   try{if(S.script!=="uthmani")scr=await getPack("script-"+S.script)}catch(e){}
   let surah=tp?.data?.surahs?.[ch]||null;
   if(!surah&&tp&&audioIdx[S.reciter]?.[ch])surah={u:"",v:[]};
@@ -1376,7 +1377,10 @@ function tick(){
 }
 /* v18.2: Bismillah before a surah — played from the same reciter's Al-Fatiha 1:1 when the surah audio starts straight at ayah 1 */
 const BAU=new Audio();BAU.preload="auto";let bismRun=null;
-function bismNeeded(ch,first){return S.bism!==false&&ch!==1&&ch!==9&&first!=null&&first<1500}
+// v18.5: how long this reciter's Bismillah is (Al-Fatiha 1:1). A surah file whose ayah 1 starts later than ~60% of that already has the Bismillah at its start.
+const BDUR={};function bismDurSet(tpid,tp){try{const f=tp?.data?.surahs?.["1"]?.v?.[0];if(f)BDUR[tpid]=f[1]-f[0]}catch(e){}}
+function bismNeeded(ch,first,tpid){return S.bism!==false&&ch!==1&&ch!==9&&first!=null&&first<0.6*(BDUR[tpid]||2500)}
+function fileBism(ch,first,tpid){return S.bism!==false&&ch!==1&&ch!==9&&first!=null&&first>=0.6*(BDUR[tpid]||2500)}
 async function bismSrc(tpid){const tp=await getPack(tpid).catch(()=>null);const f=tp?.data?.surahs?.["1"];if(!f||!f.v||!f.v[0])return null;let src=null;
   if(audioIdx[tpid]?.[1]){try{src=await Store.src(`audio/${tpid}/1.mp3`);if(src.includes("_capacitor_file_")||window.__blobAll)src=URL.createObjectURL(await (await fetch(src)).blob())}catch(e){src=null}}
   if(!src&&f.u&&navigator.onLine)src=f.u;return src?{src,from:f.v[0][0],to:f.v[0][1]}:null}
@@ -1398,10 +1402,12 @@ function seekAyah(i,autoplay){
 function seekWord(i,p){const tm=cur?.timings[i];if(!tm)return;RQ=null;const s=tm.segs.find(x=>x.p===p);$("#au").currentTime=(s?s.s:tm.from)/1000;repCount=0;cur.lastEnd=-1;doPlay()}
 function doPlay(){const a=$("#au");if(!a.src){toast("No audio for this surah");return}
   if(bismRun){bismStop();return} // tapping play/pause during the Bismillah stops it
-  if(cur&&!cur.bismOk&&(cur.idx<=0)&&cur.timings[0]&&bismNeeded(cur.ch,cur.timings[0].from)&&Math.abs(a.currentTime*1000-cur.timings[0].from)<900){
-    cur.bismOk=true;const my=cur;setActive(0,-1,true);playBism(my.tp,S.speed||1).then(ok=>{if(ok&&cur===my)doPlay()});return}
+  if(cur&&!cur.bismOk&&(cur.idx<=0)&&cur.timings[0]&&a.currentTime*1000<=cur.timings[0].from+900){const f0=cur.timings[0].from;
+    if(bismNeeded(cur.ch,f0,cur.tp)){cur.bismOk=true;const my=cur;setActive(0,-1,true);playBism(my.tp,S.speed||1).then(ok=>{if(ok&&cur===my)doPlay()});return}
+    if(fileBism(cur.ch,f0,cur.tp)){cur.bismOk=true;cur.fromZero=true;if(cur.pendSeek!=null)cur.pendSeek=0;try{a.currentTime=0}catch(e){}}} // the file's own Bismillah: start from the very beginning
   // v12.1: make sure playback starts at the ayah on screen (WebView may drop a seek made before the audio loaded)
-  if(cur&&cur.idx>=0){const tm=cur.timings[cur.idx];const t=a.currentTime*1000;
+  const fz=cur&&cur.fromZero;if(cur)cur.fromZero=false;
+  if(cur&&cur.idx>=0&&!fz){const tm=cur.timings[cur.idx];const t=a.currentTime*1000;
     if(tm&&(t<tm.from-700||t>tm.to+300)){cur.pendSeek=tm.from/1000;try{a.currentTime=cur.pendSeek}catch(e){}if(a.readyState>=1)cur.pendSeek=null}}
   if(cur)cur.hold=false;
   if(!cur?.local&&!navigator.onLine){toast("Offline: this surah's audio is not saved");return}
@@ -2081,7 +2087,7 @@ function planCard(pl,i){
     const live=L&&MIN&&MIN.plan===pl;const nowJ=live?MIN.planJ+MIN.qi:-1;const on=live&&(!MPA.paused||mpBusy(MIN));
     if(L){head=`<span class="p2i">${liSvg("head")}</span><span class="p2t"><b>${esc(pl.name||"Playlist")}</b><small>${customDaysLabel(pl)} · ${items.length} parts${isDay?` · ${nd} done`:""}</small></span>
       <button class="p2pp" ${live?`data-p2tog="1"`:`data-pllisten="${i}"`} aria-label="${on?"Pause":"Play"}">${on?LIC.pause:LIC.play}</button>${menu}`;
-      extra=`<div class="p2bar"><i style="width:${pct}%"></i></div>`}
+      extra=live?"":`<div class="p2bar"><i style="width:${pct}%"></i></div>`}
     else head=`${p2Ring(pct)}<span class="p2t"><b>${esc(pl.name||"My plan")}</b><small>${customDaysLabel(pl)} · ${items.length} parts${isDay?` · ${nd} done`:""}</small></span>`;
     if(isDay||L){rows=items.map(x=>{const pos=customPos(pl,x.j);const isNow=x.j===nowJ;
       const sub=isNow?`${on?"Now playing":"Paused"} · Ayah ${MIN.ai||x.it.a}`:x.r.done?(L?"Listened today":"Read today"):`${x.it.b-x.it.a+1} ayah${x.it.b>x.it.a?"s":""}${pos&&!x.r.done?" · continue at "+x.it.ch+":"+pos:""}${L&&pl.lpos&&pl.lpos.j===x.j&&!live?" · resume at "+x.it.ch+":"+pl.lpos.v:""}`;
@@ -2190,7 +2196,9 @@ function homeClick(e){{
     if(d.map){mapTab="surah";khatmMap()}
     else if(d.pllisten!=null){const pl=plans[+d.pllisten];const lp=pl.lpos&&pl.items[pl.lpos.j]?pl.lpos:{j:0,v:0};listenStart(pl,lp.j,lp.v)}
     else if(d.ram){openRamadan()}
-    else if(d.plitem&&plans[+d.plitem.split(":")[0]].mode==="listen"){const [pi,j]=d.plitem.split(":").map(Number);const pl=plans[pi];listenStart(pl,j,pl.lpos&&pl.lpos.j===j?pl.lpos.v:0)}
+    else if(d.plitem&&plans[+d.plitem.split(":")[0]].mode==="listen"){const [pi,j]=d.plitem.split(":").map(Number);const pl=plans[pi];
+      if(MIN&&MIN.plan===pl&&MIN.planJ+MIN.qi===j){mpUserToggle();setTimeout(()=>{try{renderHome()}catch(e){}try{if(hTab==="listen")renderListenTab()}catch(e){}},80);return}
+      listenStart(pl,j,pl.lpos&&pl.lpos.j===j?pl.lpos.v:0)}
     else if(d.plitem){const [pi,j]=d.plitem.split(":").map(Number);const pl=plans[pi];const it=pl.items[j];const pos=customPos(pl,j);PS=null;openPlan(pl,it.ch+":"+(pos||it.a),j)}
     else if(d.pledit!=null){newPlan(plans[+d.pledit])}
     else if(d.plopen!=null){const pl=plans[+d.plopen];openPlan(pl,khatmResume(pl,khatmToday(pl)).key)}
@@ -4603,7 +4611,7 @@ async function mpPlay(refs,opts){opts=opts||{};
 }
 async function mpLoad(){const my=MIN;if(!my)return;my.loading=1;try{await mpLoad0(my)}finally{my.loading=0;kaSync()}}
 async function mpLoad0(my){if(MIN!==my)return;const s=my.q[my.qi];
-  const p=await getPack(S.reciter).catch(()=>null);const su=p?.data?.surahs?.[s.ch];
+  const p=await getPack(S.reciter).catch(()=>null);bismDurSet(S.reciter,p);const su=p?.data?.surahs?.[s.ch];
   if(!su||!su.v||!su.v[s.a-1]){toast("No timing for this ayah with this reciter");mpStop();return}
   my.tm=su.v;
   if(my.srcCh!==s.ch){let src=null;
@@ -4612,15 +4620,16 @@ async function mpLoad0(my){if(MIN!==my)return;const s=my.q[my.qi];
     if(!src){toast("No audio for this surah");mpStop();return}
     if(MIN!==my)return;MPA.src=src;my.srcCh=s.ch;await new Promise(r=>{MPA.onloadedmetadata=r;setTimeout(r,4000)})}
   if(MIN!==my)return;const sa=my.resumeAi>=s.a&&my.resumeAi<=s.b?my.resumeAi:s.a;my.resumeAi=0;my.ai=sa;my.repLeft=my.rep;mpText();MPA.playbackRate=my.speed;
-  const target=my.tm[sa-1][0]/1000;
+  const pv=my.qi>0?my.q[my.qi-1]:null,samePrev=!!(my.plan&&pv&&pv.ch===s.ch),f0=my.tm[0]&&my.tm[0][0];
+  let target=my.tm[sa-1][0]/1000;if(sa===1&&sa===s.a&&!samePrev&&fileBism(s.ch,f0,S.reciter))target=0; // keep the Bismillah that is in the file
   const seekTo=async()=>{MPA.currentTime=target;await new Promise(r=>{const f=()=>{MPA.removeEventListener("seeked",f);r()};MPA.addEventListener("seeked",f);setTimeout(r,2500)})};
   await seekTo();
   if(Math.abs(MPA.currentTime-target)>1&&!MPA.src.startsWith("blob:")){ // server cannot seek → load the whole file once
     try{toast("Loading audio…");const bl=await (await fetch(MPA.src)).blob();if(MIN!==my)return;MPA.src=URL.createObjectURL(bl);await new Promise(r=>{MPA.onloadedmetadata=r;setTimeout(r,4000)});await seekTo()}catch(e){logErr("mini seek: "+(e.message||e))}}
   if(MIN!==my)return;if(my.hold){my.hold=0;mpUI();return}
   // v18.4: playlists — every item starts with Bismillah (also mid-surah ayahs), but only once when the previous item is from the same surah
-  const pv=my.qi>0?my.q[my.qi-1]:null,plB=my.plan&&sa===s.a&&s.a>1&&s.ch!==9&&S.bism!==false&&!(pv&&pv.ch===s.ch);
-  if((sa===1&&!(my.plan&&pv&&pv.ch===s.ch)&&bismNeeded(s.ch,my.tm[0]&&my.tm[0][0]))||plB){const ok=await playBism(S.reciter,my.speed||1);if(MIN!==my||!ok)return;MPA.currentTime=target}
+  const plB=my.plan&&sa===s.a&&s.a>1&&s.ch!==9&&S.bism!==false&&!samePrev;
+  if((sa===1&&sa===s.a&&!samePrev&&bismNeeded(s.ch,f0,S.reciter))||plB){const ok=await playBism(S.reciter,my.speed||1);if(MIN!==my||!ok)return;MPA.currentTime=target}
   await MPA.play().catch(e=>toast("Could not play: "+(e.message||e)));mpUI();
 }
 function mpTick(){const my=MIN;if(!my||MPA.paused||my.wait)return;const s=my.q[my.qi];const t=MPA.currentTime*1000;const V=my.tm;if(!V)return;
