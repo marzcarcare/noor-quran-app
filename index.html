@@ -937,7 +937,7 @@ details.sg>summary>svg.bi{width:34px;height:34px;padding:8px;border-radius:10px;
 const DEFAULT_SRC=(p=>p.startsWith("http")?p:"https://github.com/marzcarcare/noor-quran/releases/download/packs/")("__PACKSRC__"); // filled in by build.yml with this repo's address
 const LANG_LABEL={tamil:"Tamil",english:"English",urdu:"Urdu",malayalam:"Malayalam",arabic:"Arabic"};
 const LANG_ORDER=["tamil","english","urdu","malayalam","arabic"];
-const DEF={autoNext:true,tr:["tr-50","tr-20"],reciter:"tm-10",wbw:"wbw-ta",script:"uthmani",tafsir:null,ar:30,trs:16,wbwShow:false,dark:false,auto:true,focus:false,speed:1,autoSave:true,src:DEFAULT_SRC};
+const DEF={bism:true,autoNext:true,tr:["tr-50","tr-20"],reciter:"tm-10",wbw:"wbw-ta",script:"uthmani",tafsir:null,ar:30,trs:16,wbwShow:false,dark:false,auto:true,focus:false,speed:1,autoSave:true,src:DEFAULT_SRC};
 const $=s=>document.querySelector(s);
 let S=Object.assign({},DEF);
 let core=null,catalog={packs:[]},bundledCat={packs:[]},cur=null,raf=0,lastScrollTouch=0,repeatMode=0,repCount=0,seeking=false;
@@ -1364,7 +1364,7 @@ function tick(){
   const a=$("#au");const t=a.currentTime*1000;
   if(cur&&cur.timings.length&&cur.pendSeek==null&&!(cur.hold&&!playing())){
     const T=cur.timings;let i=cur.idx>=0?cur.idx:0;
-    if(T[i]&&t>=T[i].to-40&&t<T[i].to+800&&cur.lastEnd!==i){if(onAyahEnd(i)){if(playing())raf=requestAnimationFrame(tick);return}cur.lastEnd=i}
+    if(T[i]&&t>=T[i].to-40&&t<T[i].to+800&&cur.lastEnd!==i){try{const k=cur.verses[i]&&cur.verses[i].k;if(k&&playing()){const hd=cur.heard||(cur.heard={});if(!hd[k]){hd[k]=1;markRead(k,false,Date.now()-(LCNT[k]||0)>600000)}else markRead(k,false,true)}}catch(e){}if(onAyahEnd(i)){if(playing())raf=requestAnimationFrame(tick);return}cur.lastEnd=i}
     if(!(T[i]&&t>=T[i].from&&t<T[i].to)){const j=T.findIndex(x=>x&&t>=x.from&&t<x.to);if(j>=0&&j!==i){i=j;repCount=0}}
     let w=-1;const tm=T[i];
     if(tm&&tm.segs.length){for(const s of tm.segs){if(t>=s.s)w=s.p;else break}if(t>=tm.to)w=-1}
@@ -1374,21 +1374,39 @@ function tick(){
   if(cur){$("#tCur").textContent=fmt(t);if(a.duration&&!seeking)$("#seek").value=Math.round(a.currentTime/a.duration*1000)}
   if(playing())raf=requestAnimationFrame(tick);
 }
+/* v18.2: Bismillah before a surah — played from the same reciter's Al-Fatiha 1:1 when the surah audio starts straight at ayah 1 */
+const BAU=new Audio();BAU.preload="auto";let bismRun=null;
+function bismNeeded(ch,first){return S.bism!==false&&ch!==1&&ch!==9&&first!=null&&first<1500}
+async function bismSrc(tpid){const tp=await getPack(tpid).catch(()=>null);const f=tp?.data?.surahs?.["1"];if(!f||!f.v||!f.v[0])return null;let src=null;
+  if(audioIdx[tpid]?.[1]){try{src=await Store.src(`audio/${tpid}/1.mp3`);if(src.includes("_capacitor_file_")||window.__blobAll)src=URL.createObjectURL(await (await fetch(src)).blob())}catch(e){src=null}}
+  if(!src&&f.u&&navigator.onLine)src=f.u;return src?{src,from:f.v[0][0],to:f.v[0][1]}:null}
+function bismStop(){if(bismRun){const r=bismRun;bismRun=null;try{BAU.pause()}catch(e){}r(false)}}
+async function playBism(tpid,rate){bismStop();const b=await bismSrc(tpid);if(!b)return true;
+  return await new Promise(res=>{let done=false;const fin=ok=>{if(done)return;done=true;BAU.ontimeupdate=null;BAU.onerror=null;clearTimeout(tm);try{BAU.pause()}catch(e){}if(bismRun===fin)bismRun=null;res(ok)};bismRun=fin;
+    const tm=setTimeout(()=>fin(true),(b.to-b.from)/(rate||1)+6000);
+    BAU.onerror=()=>fin(true);BAU.ontimeupdate=()=>{if(BAU.currentTime*1000>=b.to-60)fin(true)};
+    if(BAU.src!==b.src)BAU.src=b.src;BAU.playbackRate=rate||1;
+    const go=()=>{try{BAU.currentTime=b.from/1000}catch(e){}BAU.play().catch(()=>fin(true))};
+    if(BAU.readyState>=1)go();else{BAU.onloadedmetadata=()=>{BAU.onloadedmetadata=null;go()}}
+  })}
 function seekAyah(i,autoplay){
-  if(!cur)return;i=Math.max(0,Math.min(cur.verses.length-1,i));repCount=0;clearTimeout(gapT);
+  if(!cur)return;if(i<=0)cur.bismOk=false;i=Math.max(0,Math.min(cur.verses.length-1,i));repCount=0;clearTimeout(gapT);
   const tm=cur.timings[i];setActive(i,-1,true);cur.lastEnd=-1;cur.hold=true;
   if(tm){const a=$("#au");cur.pendSeek=tm.from/1000;try{a.currentTime=cur.pendSeek}catch(e){}if(a.readyState>=1)cur.pendSeek=null}
   if(autoplay)doPlay();
 }
 function seekWord(i,p){const tm=cur?.timings[i];if(!tm)return;RQ=null;const s=tm.segs.find(x=>x.p===p);$("#au").currentTime=(s?s.s:tm.from)/1000;repCount=0;cur.lastEnd=-1;doPlay()}
 function doPlay(){const a=$("#au");if(!a.src){toast("No audio for this surah");return}
+  if(bismRun){bismStop();return} // tapping play/pause during the Bismillah stops it
+  if(cur&&!cur.bismOk&&(cur.idx<=0)&&cur.timings[0]&&bismNeeded(cur.ch,cur.timings[0].from)&&Math.abs(a.currentTime*1000-cur.timings[0].from)<900){
+    cur.bismOk=true;const my=cur;setActive(0,-1,true);playBism(my.tp,S.speed||1).then(ok=>{if(ok&&cur===my)doPlay()});return}
   // v12.1: make sure playback starts at the ayah on screen (WebView may drop a seek made before the audio loaded)
   if(cur&&cur.idx>=0){const tm=cur.timings[cur.idx];const t=a.currentTime*1000;
     if(tm&&(t<tm.from-700||t>tm.to+300)){cur.pendSeek=tm.from/1000;try{a.currentTime=cur.pendSeek}catch(e){}if(a.readyState>=1)cur.pendSeek=null}}
   if(cur)cur.hold=false;
   if(!cur?.local&&!navigator.onLine){toast("Offline: this surah's audio is not saved");return}
   a.play().catch(e=>{logErr("play: "+(e&&e.name)+" "+(e&&e.message)+" · "+String(a.src).slice(0,120));toast("Audio could not play — see Settings → Diagnostics")})}
-function stopAudio(){fgsStop();if(!MIN)msnState("none");const a=$("#au");a.pause();clearTimeout(gapT);cancelAnimationFrame(raf);if(a.src&&a.src.startsWith("blob:"))URL.revokeObjectURL(a.src);a.removeAttribute("src");a.load()}
+function stopAudio(){bismStop();fgsStop();if(!MIN)msnState("none");const a=$("#au");a.pause();clearTimeout(gapT);cancelAnimationFrame(raf);if(a.src&&a.src.startsWith("blob:"))URL.revokeObjectURL(a.src);a.removeAttribute("src");a.load()}
 const au=$("#au");
 au.addEventListener("play",()=>{$("#ppIcon").innerHTML='<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>';cancelAnimationFrame(raf);raf=requestAnimationFrame(tick)});
 au.addEventListener("pause",()=>{saveResume(true);$("#ppIcon").innerHTML='<path d="M8 5v14l11-7z"/>';if(cur)setActive(cur.idx,cur.word,false);document.querySelectorAll(".ay.play").forEach(e=>e.classList.remove("play"))});
@@ -1520,6 +1538,7 @@ function openSettings(focus){if(typeof focus!=="string")focus="";
   <h3>Reciter</h3><select id="sRec">${by("timing").map(p=>`<option value="${p.id}" ${p.id===S.reciter?"selected":""}>${esc(p.name+" · "+(p.style||""))}${audioIdx[p.id]?" ("+Object.keys(audioIdx[p.id]).length+" offline)":""}</option>`).join("")||"<option value=''>— download in Library —</option>"}</select>
   <label class="opt"><input type="checkbox" id="sSave" ${S.autoSave?"checked":""}><span>Auto-save the surah I listen to for offline</span></label>
   <label class="opt"><input type="checkbox" id="sNext" ${S.autoNext?"checked":""}><span>Continue to the next surah automatically</span></label>
+  <label class="opt"><input type="checkbox" id="sBism" ${S.bism!==false?"checked":""}><span>Recite Bismillah before a surah when the reciter's audio does not have it</span></label>
   <h3>▶ on an ayah plays</h3><select id="sAyP">${opts([["cont","From this ayah onwards"],["one","Only this ayah"]],S.ayPlay||"cont")}</select><div class="note" style="margin:4px 0 0;font-size:12px">Tip: long-press ▶ on any ayah to play just that ayah.</div>
   <label class="opt"><input type="checkbox" id="sBg" ${S.bgPlay!==false&&!load("nq10_noFgs")?"checked":""} ${FGS?"":"disabled"}><span>Keep reciting when the screen is locked<small>${!FGS?"Available in the phone app.":load("nq10_noFgs")?"Turned off automatically because the app closed when it started on this phone.":"Shows a notification with ⏯ ⏭ ■ buttons on the lock screen."}</small></span></label>
   </details>
@@ -1551,7 +1570,7 @@ function openSettings(focus){if(typeof focus!=="string")focus="";
     const before=JSON.stringify([S.tr,S.reciter,S.wbw,S.script,S.tafsir]);
     S.tr=[...document.querySelectorAll(".trc:checked")].map(x=>x.value);
     S.reciter=$("#sRec").value||S.reciter;S.wbw=$("#sWbw").value||null;S.script=$("#sScr").value;S.tafsir=$("#sTf").value||null;
-    S.auto=$("#sAuto").checked;S.autoSave=$("#sSave").checked;S.autoNext=$("#sNext").checked;S.mushafOn=$("#sMp").checked;S.ayPlay=$("#sAyP").value;S.simple=$("#sSimple").checked;applySimple();document.body.classList.toggle("nomp",!S.mushafOn);S.keepOn=$("#sKeep").checked;S.bgPlay=$("#sBg").checked;if(S.bgPlay)save("nq10_noFgs",false);if(!S.bgPlay)fgsStop();save("nq6_wifi",$("#sWifi").checked);
+    S.auto=$("#sAuto").checked;S.autoSave=$("#sSave").checked;S.autoNext=$("#sNext").checked;S.bism=$("#sBism").checked;S.mushafOn=$("#sMp").checked;S.ayPlay=$("#sAyP").value;S.simple=$("#sSimple").checked;applySimple();document.body.classList.toggle("nomp",!S.mushafOn);S.keepOn=$("#sKeep").checked;S.bgPlay=$("#sBg").checked;if(S.bgPlay)save("nq10_noFgs",false);if(!S.bgPlay)fgsStop();save("nq6_wifi",$("#sWifi").checked);
     saveSet();applyLook();closeSheet();
     if(cur&&before!==JSON.stringify([S.tr,S.reciter,S.wbw,S.script,S.tafsir]))openSurah(cur.ch,cur.idx+1);
   };
@@ -1951,7 +1970,8 @@ function dayShort(s){return ["Su","Mo","Tu","We","Th","Fr","Sa"][new Date(s+"T12
 let progSaveT=0;
 function saveProg(){clearTimeout(progSaveT);progSaveT=setTimeout(()=>{save(pk("prog"),prog);save(pk("plans"),plans)},800)}
 function ensureToday(){const t=dstr();if(prog.today.d!==t)prog.today={d:t,k:{}};const d=prog.days[t]||(prog.days[t]={n:0,sec:0});return d}
-function markRead(key,force){
+const LCNT={}; // when each ayah was last counted today (memory only)
+function markRead(key,force,rep){
   if(!P||!key)return;const d=ensureToday();try{everSet(gidx()[key],true)}catch(e){}
   // v12.9: daily / weekly / custom plans count only what was read from the plan itself
   if(PS&&PS.pl.type!=="khatm"){const pl=PS.pl;if(!pl.td||pl.td.d!==dstr())pl.td={d:dstr(),k:{}};if(!pl.td.k[key]){pl.td.k[key]=1;saveProg()}}
@@ -1959,7 +1979,9 @@ function markRead(key,force){
   const g=gidx()[key];
   for(const pl of plans)if(pl.type==="khatm"&&!pl.done&&(force||(PS&&PS.pl===pl))&&!bitHas(pl,g)){bitSet(pl,g);saveProg();if(khatmPct(pl)>=99.5){pl.done=dstr();prog.khatms=(prog.khatms||0)+1;toast("🎉 MashaAllah! Khatm completed")}
     if(PS&&PS.gap&&PS.pl===pl)gapCheck(pl)}
-  if(prog.today.k[key])return;prog.today.k[key]=1;d.n++;prog.total=(prog.total||0)+1;
+  // v18.2: a recited ayah that is played again (repeat, hifz, listening again) counts again in today's ayahs
+  if(prog.today.k[key]){if(!rep)return;LCNT[key]=Date.now();d.n++;prog.total=(prog.total||0)+1;saveProg();return}
+  LCNT[key]=Date.now();prog.today.k[key]=1;d.n++;prog.total=(prog.total||0)+1;
   const s=streakOf(P.id,true);if(s>(prog.best||0))prog.best=s;
   onSurahProgress(key);checkBadges();
   saveProg();
@@ -4505,7 +4527,7 @@ function mpUI0(){const b=mpBar();const inReader=isShown("reader");
   b.classList.remove("hidden","main");document.body.classList.add("hasmini");
   const s=MIN.q[MIN.qi];$("#miLab").textContent=`${MIN.q.length>1?`${MIN.qi+1}/${MIN.q.length} · `:""}${chName(s.ch)} ${s.ch}:${MIN.ai||s.a}${s.b>s.a?` (${s.a}–${s.b})`:""}`;
   $("#miPP").textContent=MPA.paused?"▶":"⏸";$("#miRep").textContent=MIN.rep===-1?"⟲∞":"⟲"+MIN.rep;$("#miSp").textContent=MIN.speed+"×";$("#miLR").classList.toggle("on",!!MIN.lr);$("#miRep").classList.toggle("on",MIN.rep!==1);ipBtn();recChip();sleepChip()}
-function mpText(){if(!MIN)return;try{if(MIN.plan||MIN.ls){const s0=MIN.q[MIN.qi],k0=s0.ch+":"+(MIN.ai||s0.a);if(MIN.plan){const pl=MIN.plan;if(!pl.td||pl.td.d!==dstr())pl.td={d:dstr(),k:{}};pl.td.k[k0]=1}markRead(k0)}}catch(e){}ipSync();if(!MPA.paused)setTimeout(msnMeta,0);const s=MIN.q[MIN.qi];const v=verseByKey(s.ch+":"+(MIN.ai||s.a));if(!v)return;
+function mpText(){if(!MIN)return;try{const s0=MIN.q[MIN.qi],k0=s0.ch+":"+(MIN.ai||s0.a);if(MIN.plan){const pl=MIN.plan;if(!pl.td||pl.td.d!==dstr())pl.td={d:dstr(),k:{}};pl.td.k[k0]=1}/* v18.3: listening only (mini player) does not add to the daily reading count */}catch(e){}ipSync();if(!MPA.paused)setTimeout(msnMeta,0);const s=MIN.q[MIN.qi];const v=verseByKey(s.ch+":"+(MIN.ai||s.a));if(!v)return;
   $("#miTx").innerHTML=v.w.map((w,j)=>`<span data-p="${v.p?v.p[j]:j+1}">${esc(w)}</span>`).join(" ")}
 // V16.1 in-place: the card you are looking at lights up word by word; the bar slims down
 function arSp(k){const v=verseByKey(k);return v?v.w.map((w,j)=>`<span data-wk="${k}" data-p="${v.p?v.p[j]:j+1}">${esc(w)}</span>`).join(" "):""}
@@ -4531,7 +4553,7 @@ document.addEventListener("click",e=>{const sp=e.target.closest("[data-wk]");if(
   const s=MIN.q[MIN.qi];const [c,a]=sp.dataset.wk.split(":").map(Number);if(c!==s.ch||a<s.a||a>s.b)return;
   e.stopPropagation();e.preventDefault();const z=MIN.tm[a-1];if(!z)return;const p=+sp.dataset.p;const g=(z[2]||[]).find(x=>x[0]===p);
   clearTimeout(MIN.gapT);MIN.wait=0;MIN.ai=a;mpText();mpSeekTo((g?g[1]:z[0])/1000);ipSync();mpUI()},true);
-function mpStop(){if(MIN)clearTimeout(MIN.gapT);try{MPA.pause()}catch(e){}MIN=null;kaSync();ipClear();ipBtn();mpUI();if(!(mainBarOn&&cur&&playing()))msnState("none");if(fgsMode==="mini")fgsStop()}
+function mpStop(){bismStop();if(MIN)clearTimeout(MIN.gapT);try{MPA.pause()}catch(e){}MIN=null;kaSync();ipClear();ipBtn();mpUI();if(!(mainBarOn&&cur&&playing()))msnState("none");if(fgsMode==="mini")fgsStop()}
 // ↗ share what is playing now — image, reel, or text
 async function barShare(){let k,a,b,ch;
   if(MIN){const s=MIN.q[MIN.qi];ch=s.ch;a=MIN.ai||s.a;b=s.b>s.a?s.b:a;MPA.pause()}else if(cur){ch=cur.ch;a=(cur.idx>=0?cur.idx:0)+1;b=a;au.pause()}else return;
@@ -4595,7 +4617,9 @@ async function mpLoad0(my){if(MIN!==my)return;const s=my.q[my.qi];
   await seekTo();
   if(Math.abs(MPA.currentTime-target)>1&&!MPA.src.startsWith("blob:")){ // server cannot seek → load the whole file once
     try{toast("Loading audio…");const bl=await (await fetch(MPA.src)).blob();if(MIN!==my)return;MPA.src=URL.createObjectURL(bl);await new Promise(r=>{MPA.onloadedmetadata=r;setTimeout(r,4000)});await seekTo()}catch(e){logErr("mini seek: "+(e.message||e))}}
-  if(MIN!==my)return;if(my.hold){my.hold=0;mpUI();return}await MPA.play().catch(e=>toast("Could not play: "+(e.message||e)));mpUI();
+  if(MIN!==my)return;if(my.hold){my.hold=0;mpUI();return}
+  if(sa===1&&bismNeeded(s.ch,my.tm[0]&&my.tm[0][0])){const ok=await playBism(S.reciter,my.speed||1);if(MIN!==my||!ok)return;MPA.currentTime=target}
+  await MPA.play().catch(e=>toast("Could not play: "+(e.message||e)));mpUI();
 }
 function mpTick(){const my=MIN;if(!my||MPA.paused||my.wait)return;const s=my.q[my.qi];const t=MPA.currentTime*1000;const V=my.tm;if(!V)return;
   let ai=my.ai;const z=V[ai-1];
@@ -4699,7 +4723,7 @@ try{const sr=8000,n=sr*2,buf=new ArrayBuffer(44+n*2),d=new DataView(buf),w=(o,t)
 let kaT=0,rdBusy=0;
 function kaSync(){const want=S.bgPlay!==false&&((adaId!=null&&(!ADA.paused||(!!adaQ&&!adaHold)))||(!!MIN&&(!MPA.paused||mpBusy(MIN)))||(!MIN&&(!au.paused||!!gapT||!!rdBusy)));
   if(want&&KAA.paused)KAA.play().catch(()=>{});else if(!want&&!KAA.paused)KAA.pause()}
-function mpUserToggle(){const m=MIN;if(!m)return;
+function mpUserToggle(){if(bismRun){bismStop();return}const m=MIN;if(!m)return;
   if(MPA.paused&&!mpBusy(m)){clearTimeout(m.gapT);MPA.play().catch(()=>{});return}
   clearTimeout(m.gapT);if(m.gapping||m.wait){m.gapping=0;m.wait=0}if(m.loading)m.hold=1;MPA.pause();msnState("paused",true);kaSync()}
 MPA.addEventListener("play",kaSync);au.addEventListener("play",kaSync);au.addEventListener("pause",()=>{clearTimeout(kaT);kaT=setTimeout(kaSync,400)});
@@ -4732,7 +4756,7 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-mplay]");i
 
 TA_RULES.push([/^↩ Read skipped · (.+)$/,"↩ விட்டதை ஓது · $1"],[/^↩ Skipped: (.+)$/,"↩ விட்டது: $1"],[/^⏭ Continue · (.+)$/,"⏭ தொடர் · $1"]);
 Object.assign(TA_MAP,{"✓ Skipped ayahs done — tap ⏭ to continue the plan":"✓ விட்ட ஆயத்கள் முடிந்தன — திட்டத்தை தொடர ⏭ தொடுங்கள்","✓ Saved — read ayahs are counted":"✓ சேமிக்கப்பட்டது — ஓதிய ஆயத்கள் கணக்கில்"});
-Object.assign(TA_MAP,{"The number (×3, ×100…) is how many times to say it. The audio recites it once.":"எண் (×3, ×100…) = எத்தனை முறை சொல்ல வேண்டும். ஆடியோ ஒரு முறை மட்டும் ஓதும்.","The number (×3, ×100…) is how many times to say it. The audio recites it once. Adhkar with the evening wording (Amsayna…) have no audio, so Play all skips them.":"எண் (×3, ×100…) = எத்தனை முறை சொல்ல வேண்டும். ஆடியோ ஒரு முறை மட்டும் ஓதும். மாலை வாசகம் (அம்ஸைனா…) உள்ள திக்ருகளுக்கு ஆடியோ இல்லை; ▶ அனைத்தும் அவற்றைத் தவிர்க்கும்.","No audio for the evening wording — read it from the text":"மாலை வாசகத்துக்கு ஆடியோ இல்லை — உரையைப் பார்த்து ஓதுங்கள்","Last 3 ayahs of Al-Hashr":"அல்-ஹஷ்ர் கடைசி 3 ஆயத்கள்","Go":"போ","Type a number, or tap one. Gold = read.":"எண்ணை தட்டச்சு செய்யுங்கள் அல்லது தொடுங்கள். தங்கம் = ஓதியது.","Type an ayah number":"ஆயத் எண்ணை தட்டச்சு செய்யுங்கள்","No such surah":"அந்த சூரா இல்லை"});
+Object.assign(TA_MAP,{"Recite Bismillah before a surah when the reciter's audio does not have it":"காரியின் ஆடியோவில் பிஸ்மில்லாஹ் இல்லாத சூராக்களுக்கு முன் பிஸ்மில்லாஹ் ஓது","The number (×3, ×100…) is how many times to say it. The audio recites it once.":"எண் (×3, ×100…) = எத்தனை முறை சொல்ல வேண்டும். ஆடியோ ஒரு முறை மட்டும் ஓதும்.","The number (×3, ×100…) is how many times to say it. The audio recites it once. Adhkar with the evening wording (Amsayna…) have no audio, so Play all skips them.":"எண் (×3, ×100…) = எத்தனை முறை சொல்ல வேண்டும். ஆடியோ ஒரு முறை மட்டும் ஓதும். மாலை வாசகம் (அம்ஸைனா…) உள்ள திக்ருகளுக்கு ஆடியோ இல்லை; ▶ அனைத்தும் அவற்றைத் தவிர்க்கும்.","No audio for the evening wording — read it from the text":"மாலை வாசகத்துக்கு ஆடியோ இல்லை — உரையைப் பார்த்து ஓதுங்கள்","Last 3 ayahs of Al-Hashr":"அல்-ஹஷ்ர் கடைசி 3 ஆயத்கள்","Go":"போ","Type a number, or tap one. Gold = read.":"எண்ணை தட்டச்சு செய்யுங்கள் அல்லது தொடுங்கள். தங்கம் = ஓதியது.","Type an ayah number":"ஆயத் எண்ணை தட்டச்சு செய்யுங்கள்","No such surah":"அந்த சூரா இல்லை"});
 TA_RULES.push([/^🔢 Go to ayah · (.+)$/,"🔢 ஆயத்துக்கு செல் · $1"]);
 Object.assign(TA_MAP,{"Meaning on the last part …":"பொருள் கடைசி பகுதியில் …","Text size: large":"எழுத்து அளவு: பெரியது","Text size: very large":"எழுத்து அளவு: மிகப் பெரியது","Text size: largest":"எழுத்து அளவு: அதிகபட்சம்"});
 TA_RULES.push([/^(\d+:\d+) · (\d+) \/ (\d+) · Part (\d+)\/(\d+)$/,"$1 · $2 / $3 · பகுதி $4/$5"]);
