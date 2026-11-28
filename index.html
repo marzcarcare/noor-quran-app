@@ -99,6 +99,33 @@ select{font-size:15px;padding:10px;border-radius:10px;border:1px solid var(--lin
 .toast{position:fixed;left:50%;bottom:150px;transform:translateX(-50%);background:#000c;color:#fff;padding:9px 16px;border-radius:20px;font-size:13.5px;z-index:20;pointer-events:none;transition:opacity .3s}
 #toTop{position:fixed;right:16px;bottom:96px;z-index:60;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--card,#fff);color:var(--green,#1f6b4f);box-shadow:0 4px 14px #0002;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(12px) scale(.9);pointer-events:none;transition:.2s}
 #toTop.on{opacity:1;transform:none;pointer-events:auto}body.hasmini #toTop{bottom:176px}body.shOpen #toTop{opacity:0;pointer-events:none}
+.lp2{padding:0!important;border-radius:18px!important;overflow:hidden}.lp2.live{border-color:var(--green2)!important;box-shadow:0 6px 18px #0f4c4c1f}
+.lph{display:flex;align-items:center;gap:10px;padding:12px 10px 12px 14px}
+.lpi{width:46px;height:46px;border-radius:13px;background:var(--bg);border:1px solid var(--line);color:var(--green2);display:grid;place-items:center;flex:none}.lp2.live .lpi{background:var(--green);color:#fff;border-color:var(--green)}.lpi svg.bi{width:22px;height:22px;vertical-align:0}
+.lpt{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;text-align:left;color:var(--ink)}.lpt b{font-size:17px;font-weight:800;letter-spacing:-.01em;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lpt small{font-size:12.5px;color:var(--muted);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lpt .lplive{font-size:11px;font-weight:800;color:var(--green2);letter-spacing:.03em;display:flex;align-items:center;gap:5px}.lplive i{width:6px;height:6px;border-radius:3px;background:var(--gold2)}
+.lpt .lpres{color:var(--green2);font-weight:600}
+.lp2 .p2pp{width:48px;height:48px}
+.lpc{width:30px;height:40px;display:grid;place-items:center;color:var(--muted);flex:none}.lpc svg.bi{width:18px;height:18px;transition:transform .2s}.lp2.open .lpc svg.bi{transform:rotate(180deg)}
+.lpl{border-top:1px solid var(--line);margin:0!important;padding:6px}.p2row.past{opacity:.55}
+.lprep{font-style:normal;font-size:11.5px;font-weight:800;color:var(--green2);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:1px 6px;margin-left:6px;vertical-align:1px}
+.lpa{display:flex;align-items:center;gap:8px;padding:4px 12px 12px;flex-wrap:wrap}
+.lpchip{height:34px;padding:0 12px;border-radius:17px;border:1px solid var(--line);background:var(--card);color:var(--muted);font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px}.lpchip svg.bi{width:15px;height:15px;vertical-align:0}.lpchip.on{background:var(--green);border-color:var(--green);color:#fff}
+.lpa .p2m{width:34px;height:34px}
+.lpqh{font-size:13px;font-weight:700;color:var(--muted);margin:16px 16px 8px}.lpq{display:flex;gap:8px;overflow-x:auto;padding:0 14px 4px;scrollbar-width:none}
+.lpq button{flex:none;width:128px;text-align:left;padding:12px;border-radius:14px;background:var(--card);border:1px dashed var(--line);display:flex;flex-direction:column;gap:2px;color:var(--ink)}.lpq button span{color:var(--green2)}.lpq svg.bi{width:20px;height:20px;vertical-align:0}.lpq b{font-size:13.5px;margin-top:4px}.lpq small{font-size:11.5px;color:var(--muted);line-height:1.3}
+.lpe{display:flex;flex-direction:column;gap:6px}.lpel{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:6px}
+.lpein{height:44px;border-radius:12px;border:1px solid var(--line);background:var(--card);padding:0 12px;font:inherit;font-size:15px;color:var(--ink)}
+.lper{display:flex;flex-direction:column;gap:4px}.lper button{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;background:var(--accs);text-align:left;color:var(--ink)}.lper button b{font-size:14px}.lper button small{flex:1;font-size:12px;color:var(--muted)}.lper button span{color:var(--green2);font-weight:800;font-size:18px}
+.lpeli{display:flex;flex-direction:column}.lper2{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--line);background:var(--bg);touch-action:pan-y}.lper2.drag{position:relative;z-index:2;background:var(--card);box-shadow:0 6px 16px #0002;border-radius:10px}
+.lpg{width:26px;height:36px;display:grid;place-items:center;color:var(--muted);touch-action:none;cursor:grab;flex:none}.lpg svg.bi{width:18px;height:18px;vertical-align:0}
+.lper2 .nm{flex:1;min-width:0;display:flex;flex-direction:column}.lper2 .nm b{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lper2 .nm small{font-size:12px;color:var(--muted)}
+.lpst{display:flex;align-items:center;border:1px solid var(--line);border-radius:16px;background:var(--card);height:32px;flex:none}.lpst button{width:30px;height:30px;font-size:17px;font-weight:700;color:var(--muted)}.lpst b{font-size:12.5px;color:var(--green2);min-width:24px;text-align:center}
+.lpx{width:32px;height:32px;font-size:20px;color:var(--muted);flex:none}
+.lpeo{border:1px solid var(--line);border-radius:14px;background:var(--card);padding:2px 12px;margin-top:10px}.lpeor{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}.lpeor:last-child{border-bottom:0}.lpeor span{flex:1;min-width:0;display:flex;flex-direction:column}.lpeor b{font-size:14.5px}.lpeor small{font-size:12px;color:var(--muted)}
+.lpeor select{flex:none;width:auto;max-width:110px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--bg);font:inherit;font-size:13.5px;padding:0 8px;color:var(--ink)}.lpeor input[type=checkbox]{width:22px;height:22px;accent-color:var(--green)}
+.lrfav{display:flex;gap:8px;margin:-4px 14px 10px}.lrfav button{flex:1;min-width:0;height:38px;border-radius:19px;border:1px solid var(--line);background:var(--card);color:var(--muted);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 10px}.lrfav button span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lrfav button svg{width:15px;height:15px;flex:none;vertical-align:0}.lrfav button.on{background:var(--green);border-color:var(--green);color:#fff}
+.lperc{display:flex;gap:8px;flex-wrap:wrap}.lperc .chk svg{width:14px;height:14px;vertical-align:-2px}
 </style>
 <style>
 .tabs{display:flex;gap:6px;padding:10px 12px 4px;overflow-x:auto;background:var(--bg);position:sticky;top:0;z-index:1}
@@ -1246,8 +1273,11 @@ async function doSearch(){
 }
 
 /* ================= READER ================= */
+let AU_LOADING=false,AU_WANT=false;
 async function openSurah(ch,ayah,keepPS){if(!keepPS){try{RQ=null}catch(e){}}
   stopAudio();if(!keepPS)PS=null;
+  // v18.6: drop the previous surah's audio at once, so ▶ can never play the old surah while the new one is still loading
+  AU_LOADING=true;AU_WANT=false;try{const a0=$("#au");a0.pause();a0.removeAttribute("src");a0.load()}catch(e){}
   const c=core.chapters.find(x=>x.id===ch);
   show("reader");
   $("#rTitle").firstChild.textContent=c.id+". "+c.n;
@@ -1267,7 +1297,8 @@ async function openSurah(ch,ayah,keepPS){if(!keepPS){try{RQ=null}catch(e){}}
   cur={ch,c,verses,trs,wbw,scr,tp:S.reciter,timings:[],idx:-1,word:-1,surah,lastEnd:-1};
   renderVerses();
   $("#rName").textContent=S.reciter&&installed[S.reciter]?installed[S.reciter].name:"No reciter";
-  await setupAudio();
+  try{await setupAudio()}finally{AU_LOADING=false}
+  if(AU_WANT){AU_WANT=false;if($("#au").src)setTimeout(doPlay,0)}
   const target=Math.max(0,Math.min(verses.length-1,(ayah||1)-1));
   if(ayah>1)seekAyah(target,false);else setActive(target,-1,true);
 }
@@ -1400,7 +1431,7 @@ function seekAyah(i,autoplay){
   if(autoplay)doPlay();
 }
 function seekWord(i,p){const tm=cur?.timings[i];if(!tm)return;RQ=null;const s=tm.segs.find(x=>x.p===p);$("#au").currentTime=(s?s.s:tm.from)/1000;repCount=0;cur.lastEnd=-1;doPlay()}
-function doPlay(){const a=$("#au");if(!a.src){toast("No audio for this surah");return}
+function doPlay(){const a=$("#au");if(AU_LOADING){AU_WANT=true;toast("Loading audio…");return}if(!a.src){toast("No audio for this surah");return}
   if(bismRun){bismStop();return} // tapping play/pause during the Bismillah stops it
   if(cur&&!cur.bismOk&&(cur.idx<=0)&&cur.timings[0]&&a.currentTime*1000<=cur.timings[0].from+900){const f0=cur.timings[0].from;
     if(bismNeeded(cur.ch,f0,cur.tp)){cur.bismOk=true;const my=cur;setActive(0,-1,true);playBism(my.tp,S.speed||1).then(ok=>{if(ok&&cur===my)doPlay()});return}
@@ -2081,6 +2112,7 @@ function planCard(pl,i){
     head=`${p2Ring(pct)}<span class="p2t"><b>${pl.type==="daily"?"Daily reading":"Every "+WD[pl.day]}</b><small>${items.length} surah${items.length>1?"s":""}${isDay?` · ${items.filter(x=>x.r.done).length} done today`:` · next ${WD[pl.day]}`}</small></span>`;
     if(isDay){lab=done?`<div class="p2lab"><span>Today</span>${tag()}</div>`:"";
       rows=items.map(x=>p2Row({ch:x.ch,name:chName(x.ch),sub:x.r.done?`All ${x.r.t} ayahs read`:`${x.r.n} of ${x.r.t} ayahs`,state:x.r.done?"done":"open",data:`data-plsurah="${i}:${x.ch}"`})).join("")}}
+  else if(pl.type==="custom"&&pl.mode==="listen")return lpCard(pl,i);
   else if(pl.type==="custom"){const isDay=customIsDay(pl);const L=pl.mode==="listen";dark=L;
     const items=pl.items.map((it,j)=>({it,j,r:rangeReadToday(it,pl)}));done=isDay&&items.every(x=>x.r.done);const nd=items.filter(x=>x.r.done).length;
     const pct=isDay?Math.round(items.reduce((s,x)=>s+x.r.n/x.r.t,0)/items.length*100):0;
@@ -2110,10 +2142,10 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-plmenu],[d
   if(b.dataset.p2tog){mpUserToggle();setTimeout(()=>{try{renderHome()}catch(x){}},120);return}
   const i=+b.dataset.plmenu;const pl=plans[i];if(!pl)return;
   openSheet(`<h2>${esc(pl.name||({khatm:"Khatm",hifz:"Hifz",daily:"Daily reading",weekly:"Weekly reading"}[pl.type]||"Plan"))}</h2><div class="mlist">
-  ${pl.type==="custom"?`<button data-pm="edit"><i>✎</i><span><b>Edit</b><small>Name, days, surahs and ayahs</small></span></button>`:""}
-  <button data-pm="del"><i>×</i><span><b style="color:var(--maroon)">Delete plan</b><small>Its progress is removed too</small></span></button></div>`);
+  ${pl.type==="custom"?`<button data-pm="edit"><i>✎</i><span><b>Edit</b><small>${pl.mode==="listen"?"Name, surahs and ayahs, repeat, order":"Name, days, surahs and ayahs"}</small></span></button>`:""}
+  <button data-pm="del"><i>×</i><span><b style="color:var(--maroon)">${pl.mode==="listen"?"Delete playlist":"Delete plan"}</b><small>Its progress is removed too</small></span></button></div>`);
   $("#sheet").onclick=ev=>{const x=ev.target.closest("[data-pm]");if(!x)return;closeSheet();
-    if(x.dataset.pm==="edit")setTimeout(()=>newPlan(plans[i]),80);
+    if(x.dataset.pm==="edit")setTimeout(()=>plans[i]&&plans[i].mode==="listen"?lpEditor(plans[i]):newPlan(plans[i]),80);
     if(x.dataset.pm==="del")setTimeout(()=>{if(!confirm("Delete this plan?"))return;plans.splice(i,1);save(pk("plans"),plans);renderHome()},80)}},true);
 function newPlan(editPl,preset){if(!(editPl&&editPl.type==="custom"))editPl=null;
   openSheet(`<h2>➕ New plan</h2>
@@ -2194,7 +2226,12 @@ function renderToday(){setTimeout(()=>widgetUpdate(),1500);
 function homeClick(e){{
     const b=e.target.closest("button");if(!b)return;const d=b.dataset;
     if(d.map){mapTab="surah";khatmMap()}
-    else if(d.pllisten!=null){const pl=plans[+d.pllisten];const lp=pl.lpos&&pl.items[pl.lpos.j]?pl.lpos:{j:0,v:0};listenStart(pl,lp.j,lp.v)}
+    else if(d.pllisten!=null){const pl=plans[+d.pllisten];const lp=pl.lpos&&pl.items[pl.lpos.j]?pl.lpos:{j:0,v:0};lpSleepStart(pl);LPOPEN.add(pl);listenStart(pl,lp.j,lp.v)}
+    else if(d.lpx!=null){const pl=plans[+d.lpx];if(LPOPEN.has(pl))LPOPEN.delete(pl);else LPOPEN.add(pl);lpRefresh()}
+    else if(d.lploop!=null){const pl=plans[+d.lploop];pl.loop=!pl.loop;save(pk("plans"),plans);toast(pl.loop?"🔁 Loop on — plays again after the last item":"Loop off");lpRefresh()}
+    else if(d.lpsleep!=null){sleepSheet()}
+    else if(d.lptpl!=null){lpFromTemplate(+d.lptpl)}
+    else if(d.pledit!=null&&plans[+d.pledit]&&plans[+d.pledit].mode==="listen"){lpEditor(plans[+d.pledit])}
     else if(d.ram){openRamadan()}
     else if(d.plitem&&plans[+d.plitem.split(":")[0]].mode==="listen"){const [pi,j]=d.plitem.split(":").map(Number);const pl=plans[pi];
       if(MIN&&MIN.plan===pl&&MIN.planJ+MIN.qi===j){mpUserToggle();setTimeout(()=>{try{renderHome()}catch(e){}try{if(hTab==="listen")renderListenTab()}catch(e){}},80);return}
@@ -3355,7 +3392,9 @@ function rangeEnd(){if(!PS||PS.item==null)return;const it=PS.pl.items[PS.item];
   au.pause();if(cur&&it&&cur.idx!==it.b-1&&cur.ch===it.ch)setActive(it.b-1,-1,false);planSave(true);toast("✓ Range finished: "+itemLabel(it))}
 // 🎧 listening plan: play every chosen surah / ayah range one after another
 async function listenStart(pl,j,v){const its=pl.items.slice(j);if(!its.length)return;
-  await mpPlay(its.map(it=>({ch:it.ch,a:it.a,b:it.b})),{gap:1500,startAi:v||its[0].a,plan:pl,planJ:j,onEnd:()=>{pl.lpos=null;save(pk("plans"),plans);mpStop();toast("✓ "+(pl.name||"Playlist")+" finished")}})}
+  await mpPlay(its.map(it=>({ch:it.ch,a:it.a,b:it.b,rep:it.rep||1})),{rec:pl.rec&&installed[pl.rec]?pl.rec:null,gap:pl.gap!=null?pl.gap*1000:1500,startAi:v||its[0].a,plan:pl,planJ:j,onEnd:()=>{pl.lpos=null;save(pk("plans"),plans);
+    if(pl.loop&&MIN){toast("🔁 "+(pl.name||"Playlist")+" — again");listenStart(pl,0);return}
+    mpStop();toast("✓ "+(pl.name||"Playlist")+" finished")}})}
 async function listenNext(){if(!PS||PS.adv)return;PS.adv=1;const pl=PS.pl;const j=PS.item+1;
   if(j>=pl.items.length){au.pause();pl.lpos=null;pl.ldone=dstr();saveProg();saveResume(true);toast("✓ Listening plan finished — MashaAllah");PS=null;updPbar();if(isShown("home"))renderToday();return}
   pl.lpos={j,v:pl.items[j].a};saveProg();saveResume(true);toast("▶ Next: "+itemLabel(pl.items[j]));await listenStart(pl,j)}
@@ -3633,10 +3672,11 @@ const chVc=ch=>(core.chapters.find(c=>c.id===+ch)||{}).vc||1;
 function lsNow(){if(MIN){const s=MIN.q[MIN.qi];return {ch:s.ch,ai:MIN.ai||s.a,a:s.a,b:s.b,on:!MPA.paused||mpBusy(MIN),live:true}}
   const L=P&&load(pk("lastL"));return L&&L.ch?{ch:L.ch,ai:L.ai||1,a:1,b:chVc(L.ch),on:false,live:false}:null}
 function renderListenTab(){
-  const E=$("#hListen");const rp=installed[S.reciter];const nOff=audioIdx[S.reciter]?Object.keys(audioIdx[S.reciter]).length:0;
+  const E=$("#hListen");const LR=LREC();const rp=installed[LR];const nOff=audioIdx[LR]?Object.keys(audioIdx[LR]).length:0;const favs=lrecFavs();
   E.innerHTML=`<div class="lnow" id="lNow"></div>
   <div class="lrec"><span class="lri">${LIC.mic}</span><div style="flex:1;min-width:0"><b style="display:block;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(rp?rp.name:"No reciter yet")}</b><small style="color:var(--muted);font-size:12.5px">${rp?esc(rp.style||"Reciter")+(nOff?` · ${nOff} surahs offline`:""):"Choose a reciter to listen"}</small></div>
-  <button class="sb l" data-ls="rec">Change</button>${rp?`<button class="ib" data-ls="dl" aria-label="Download surah audio">${LIC.dl}</button>`:""}</div>
+  <button class="sb l" data-ls="lrec">Change</button>${rp?`<button class="ib" data-ls="dl" aria-label="Download surah audio">${LIC.dl}</button>`:""}</div>
+  ${favs.length>1?`<div class="lrfav">${favs.map(id=>`<button class="${id===LR?"on":""}" data-lrf="${id}">${liSvg("mic")}<span>${esc(shortRec(id))}</span></button>`).join("")}</div>`:""}
   <div class="lseg" id="lSeg">${[["surahs","Surahs"],["plans","Playlists"],["mine","My audio"]].map(([k,l])=>`<button data-lt="${k}" class="${lTab===k?"on":""}">${l}</button>`).join("")}</div>
   <div id="lBody"></div>`;
   E.dataset.k="";lsBody();lsNowUI(true);bindPanel(E,lsClick);
@@ -3645,14 +3685,15 @@ function lsBody(){const B=$("#lBody");if(!B)return;
   if(lTab==="surahs"){B.innerHTML=`<div class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="lsQ" placeholder="Search surah name or number" autocomplete="off" value="${esc(lQ)}"></div><ul class="lsl" id="lsList"></ul>`;
     $("#lsQ").oninput=e=>{lQ=e.target.value;lsList()};lsList();return}
   if(lTab==="plans"){B.innerHTML=`<div class="lhd"><b>Listening playlists</b><button class="sb l" data-ls="new">➕ Playlist</button></div>
-    ${plansHtml(pl=>pl.type==="custom"&&pl.mode==="listen")||`<div class="note">Make a playlist of surahs / ayah ranges that plays one after another — even with the screen off. Tap "➕ Playlist".</div>`}`;return}
+    ${plansHtml(pl=>pl.type==="custom"&&pl.mode==="listen")||`<div class="note">Make a playlist of surahs / ayah ranges that plays one after another — even with the screen off. Tap "➕ Playlist", or start from a ready-made one below.</div>`}
+    <div class="lpqh">Quick start · ready-made</div><div class="lpq">${LPT.map((t,k)=>`<button data-lptpl="${k}"><span>${liSvg(t.ic)}</span><b>${esc(t.n)}</b><small>${esc(t.s)}</small></button>`).join("")}</div>`;return}
   B.innerHTML=`<div class="lhd"><b>My audio (own MP3)</b><button class="sb l" data-ls="mynew">➕ Add</button></div>
   ${myReciters().length?myReciters().map(r=>`<button class="pk myr" data-myr="${r.id}"><div class="row"><div class="inf"><b>🎙 ${esc(r.name)}</b><span>${Object.keys(audioIdx[r.id]||{}).length} surah MP3 · tap to manage</span></div><span>›</span></div></button>`).join(""):`<div class="note">Upload your own MP3 for any surah (your voice, a teacher, any reciter) and add timing — by file or by tapping along.</div>`}`}
 function lsList(){const U=$("#lsList");if(!U)return;const q=lQ.trim().toLowerCase();const n=lsNow();
   const list=core.chapters.filter(c=>!q||String(c.id)===q||c.n.toLowerCase().includes(q)||(c.t||"").toLowerCase().includes(q)||(c.ta||"").includes(q)||c.a.includes(q));
   U.innerHTML=list.map(c=>{const on=n&&n.ch===c.id;return `<li data-lp="${c.id}" class="${on?"on":""}"><span class="lno2">${c.id}</span><div class="nm"><b>${esc(c.n)}</b><span>${esc(c.t||c.ta||"")} · ${c.vc} ayahs</span></div><span class="an">${esc(c.a)}</span><span class="lpb" aria-label="${on&&n.on?"Pause":"Play"} ${esc(c.n)}">${on&&n.on?LIC.pause:LIC.play}</span></li>`}).join("")||`<div class="note">No surah found</div>`;
   U.dataset.sig=n?n.ch+"|"+n.on:"1|false"}
-function lsNowUI(full){const E=$("#lNow");if(!E)return;const rp=installed[S.reciter];
+function lsNowUI(full){const E=$("#lNow");if(!E)return;const rp=installed[(MIN&&MIN.rec)||LREC()];
   if(!rp){if(E.dataset.k!=="none"){E.dataset.k="none";E.innerHTML=`<div class="lno">Choose a reciter to start listening.</div><button class="sb" data-ls="rec" style="align-self:center;background:var(--gold2);color:var(--hero)">🎙 Choose reciter</button>`}return}
   const n=lsNow()||{ch:1,ai:1,a:1,b:7,on:false,live:false};const c=core.chapters.find(x=>x.id===n.ch)||{n:chName(n.ch),a:"",vc:n.b};
   const pl=MIN&&MIN.plan;const key=n.ch+"|"+(pl?MIN.qi:"");
@@ -3675,7 +3716,7 @@ function lsNowUI(full){const E=$("#lNow");if(!E)return;const rp=installed[S.reci
   $("#lSp").textContent=(MIN?MIN.speed:(load("nq15_mpsp")||1))+"×";
   const U=$("#lsList");if(U&&U.dataset.sig!==n.ch+"|"+n.on)lsList()}
 // play a whole surah right here (no reader); goes on to the next surah when "auto next" is on
-async function lPlay(ch,ai){ch=+ch;if(!S.reciter||!installed[S.reciter]){toast("Choose a reciter first");return openLib("rec")}
+async function lPlay(ch,ai){ch=+ch;if(!LREC()){toast("Choose a reciter first");return lrecSheet()}
   const vc=chVc(ch);ai=Math.min(Math.max(1,ai||1),vc);save(pk("lastL"),{ch,ai});
   await mpPlay([{ch,a:1,b:vc}],{startAi:ai,ls:true,onEnd:()=>{if(S.autoNext!==false&&ch<114)lPlay(ch+1,1);else{save(pk("lastL"),{ch,ai:1});mpStop()}}});
   lsNowUI(true)}
@@ -3690,11 +3731,11 @@ function lsCtl(a){const n=lsNow();
   if(a==="rep"){if(!MIN)return toast("Play something first");MIN.rep=mpRepOpts[(mpRepOpts.indexOf(MIN.rep)+1)%mpRepOpts.length];MIN.repLeft=MIN.rep;lsNowUI(false);toast(MIN.rep===-1?"⟲ Repeat until stopped":MIN.rep===1?"⟲ Play once":`⟲ Repeat ${MIN.rep} times`);return}
   if(a==="sp"){const sp=MIN?MIN.speed:(load("nq15_mpsp")||1);const nv=sp===1?0.75:sp===0.75?1.25:sp===1.25?1.5:1;save("nq15_mpsp",nv);if(MIN){MIN.speed=nv;MPA.playbackRate=nv}lsNowUI(false);return}
   if(a==="read"){if(MIN){mpToReader();return}if(n)openSurah(n.ch,n.ai)}}
-function lsClick(e){const t=e.target.closest("[data-lt]");if(t){lTab=t.dataset.lt;$("#lSeg").querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===t));lsBody();return}
+function lsClick(e){{const f=e.target.closest("[data-lrf]");if(f){lrecSet(f.dataset.lrf);return}}const t=e.target.closest("[data-lt]");if(t){lTab=t.dataset.lt;$("#lSeg").querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===t));lsBody();return}
   const c=e.target.closest("[data-lc]");if(c)return lsCtl(c.dataset.lc);
   const li=e.target.closest("[data-lp]");if(li)return lsToggle(+li.dataset.lp);
   const my=e.target.closest("[data-myr]");if(my)return myAudioSheet(my.dataset.myr);const b=e.target.closest("[data-ls]");if(!b)return;if(b.dataset.ls==="mynew")return myNewSheet();
-  const a=b.dataset.ls;if(a==="rec")openLib("rec");if(a==="dl")surahAudioSheet(S.reciter);if(a==="new")newPlan(null,"listen")}
+  const a=b.dataset.ls;if(a==="rec")openLib("rec");if(a==="lrec")lrecSheet();if(a==="dl")surahAudioSheet(LREC());if(a==="new")lpEditor(null)}
 async function quickListen(ch){return lPlay(ch,1)}
 // keep the Listen player live; hide the floating bar there (the big card has the controls); remember the place
 setInterval(()=>{const on=!!core&&isShown("home")&&hTab==="listen";document.body.classList.toggle("onListen",on);
@@ -4475,7 +4516,7 @@ function mpBar(){let b=$("#mini");if(b)return b;b=document.createElement("div");
   $("#miShare").onclick=()=>barShare();
   $("#miLab").onclick=()=>{if(MIN&&(MIN.ls||MIN.plan)){show("home");goNav("listen");return}$("#miOpen").click()};
   $("#miPv").onclick=()=>{if(!MIN&&mainBarOn&&cur){seekAyah(Math.max(0,cur.idx-1),true);return}mpPrev()};
-  $("#miSl").onclick=()=>sleepSheet();$("#miRc").onclick=()=>recSheet();
+  $("#miSl").onclick=()=>sleepSheet();$("#miRc").onclick=()=>lrecSheet();
   onLong($("#miRep"),()=>{if(!MIN)return;repSheet(MIN.rep,v=>{MIN.rep=v;MIN.repLeft=v;mpUI();toast(v===-1?"⟲ Repeat until stopped":v===1?"⟲ Play once":`⟲ Repeat ${v} times`)})});
   // progress line: tap or drag to seek
   const pg=$("#miPg");let pd=false;const fr=e=>{const r=pg.getBoundingClientRect();return Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))};
@@ -4504,7 +4545,7 @@ function recSheet(){const L=Object.values(installed).filter(p=>p.type==="timing"
     if(MIN){const wasP=!MPA.paused;clearTimeout(MIN.gapT);MIN.srcCh=null;MIN.resumeAi=MIN.ai;MPA.pause();await mpLoad();if(!wasP)MPA.pause();return}
     if(cur&&isShown("reader")){const wasP=playing(),i=Math.max(0,cur.idx);au.pause();await openSurah(cur.ch,i+1,true);if(wasP)seekAyah(i,true);return}
     if(cur&&mainBarOn)toast("New reciter starts when you open the reader again")}}
-function recChip(){const r=$("#miRc");if(r){const n=installed[S.reciter]?.name||"";r.textContent="🎙 "+(n.split(/[\s-]/)[0]||"")}const rn=$("#rName");if(rn&&cur)rn.textContent=S.reciter&&installed[S.reciter]?installed[S.reciter].name:"No reciter"}
+function recChip(){const r=$("#miRc");if(r){const n=installed[(MIN&&MIN.rec)||LREC()]?.name||"";r.textContent="🎙 "+(n.split(/[\s-]/)[0]||"")}const rn=$("#rName");if(rn&&cur)rn.textContent=S.reciter&&installed[S.reciter]?installed[S.reciter].name:"No reciter"}
 function mpPrev(){if(!MIN)return;const my=MIN;clearTimeout(my.gapT);my.wait=0;const s=my.q[my.qi];const z=my.tm&&my.tm[(my.ai||s.a)-1];
   if(z&&MPA.currentTime*1000-z[0]>2500){MPA.currentTime=z[0]/1000;MPA.play().catch(()=>{});return} // first press: back to the start of this ayah
   if(my.ai>s.a){my.ai--;mpText();MPA.currentTime=my.tm[my.ai-1][0]/1000;MPA.play().catch(()=>{});mpUI();return}
@@ -4593,8 +4634,8 @@ function readerQueueNext(){if(!RQ||RQ.qi>=RQ.q.length-1){RQ=null;return false}RQ
   setTimeout(async()=>{try{if(!RQ)return;if(!cur||cur.ch!==n.ch)await openSurah(n.ch,n.a,true);cur.stopAt=n.b-1;seekAyah(n.a-1,true)}finally{rdBusy=0}},document.hidden?600:(RQ.gap||1500));return true}
 function mpNext(){if(!MIN)return;const my=MIN;clearTimeout(my.gapT);my.wait=0;const s=my.q[my.qi];if(my.ai<s.b){my.ai++;mpText();MPA.currentTime=my.tm[my.ai-1][0]/1000;MPA.play().catch(()=>{});mpUI();return}
   if(my.qi<my.q.length-1){my.qi++;mpLoad()}else mpStop()}
-async function mpFgs(){if(!MIN)return;const s=MIN.q[MIN.qi];const title="Noor Quran — "+chName(s.ch)+" "+s.ch+":"+(MIN.ai||s.a);const body=(MIN.q.length>1?`${MIN.qi+1}/${MIN.q.length} · `:"")+(installed[S.reciter]?.name||"Recitation");
-  try{if("mediaSession" in navigator){navigator.mediaSession.metadata=new MediaMetadata({title:chName(s.ch)+" "+s.ch+":"+(MIN.ai||s.a),artist:installed[S.reciter]?.name||"",album:"Noor Quran"});
+async function mpFgs(){if(!MIN)return;const s=MIN.q[MIN.qi];const title="Noor Quran — "+chName(s.ch)+" "+s.ch+":"+(MIN.ai||s.a);const body=(MIN.q.length>1?`${MIN.qi+1}/${MIN.q.length} · `:"")+(installed[MIN.rec||S.reciter]?.name||"Recitation");
+  try{if("mediaSession" in navigator){navigator.mediaSession.metadata=new MediaMetadata({title:chName(s.ch)+" "+s.ch+":"+(MIN.ai||s.a),artist:installed[MIN.rec||S.reciter]?.name||"",album:"Noor Quran"});
     navigator.mediaSession.setActionHandler("play",()=>MPA.play());navigator.mediaSession.setActionHandler("pause",()=>MPA.pause());navigator.mediaSession.setActionHandler("nexttrack",mpNext);navigator.mediaSession.setActionHandler("previoustrack",mpPrev)}}catch(e){}
   if(!FGS||S.bgPlay===false||load("nq10_noFgs")||msnOn())return;
   const opt={id:4711,title,body,smallIcon:"ic_stat_noor",silent:true,notificationChannelId:"playback",serviceType:2,buttons:fgsBtns(true)};
@@ -4602,26 +4643,27 @@ async function mpFgs(){if(!MIN)return;const s=MIN.q[MIN.qi];const title="Noor Qu
     if(fgsOn){fgsMode="mini";await fgsUpd(opt)}else{save("nq8_bc","fgs");await fgsSt(opt);fgsOn=true;fgsMode="mini";if(load("nq8_bc")==="fgs")save("nq8_bc","")}}catch(e){save("nq8_bc","");logErr("mini fgs: "+(e.message||e))}}
 // queue: array of refs like "2:255", "2:285-286", or {ch,a,b}
 async function mpPlay(refs,opts){opts=opts||{};
-  if(!S.reciter||!installed[S.reciter]){toast("Choose a reciter first (🎧 Listen)");return}
+  const rec=opts.rec&&installed[opts.rec]?opts.rec:LREC();
+  if(!rec){toast("Choose a reciter first (🎧 Listen)");return}
   try{$("#au").pause()}catch(e){}qStopAll&&qStopAll();
   const q=refs.map(r=>{if(typeof r==="object")return r;const [c,rest]=String(r).split(":");const [a,b]=rest.split("-").map(Number);return {ch:+c,a,b:b||a}});
   if(MIN)clearTimeout(MIN.gapT);
-  MIN={q,qi:0,ai:q[0].a,rep:opts.rep||1,repLeft:opts.rep||1,lr:!!opts.lr,speed:load("nq15_mpsp")||1,gap:opts.gap??(q.length>1?2000:0),srcCh:null,card:opts.card||null,onItem:opts.onItem||null,resumeAi:opts.startAi||0,onEnd:opts.onEnd||null,ls:!!opts.ls,plan:opts.plan||null,planJ:opts.planJ||0};ipClear();
+  MIN={q,qi:0,ai:q[0].a,rep:opts.rep||1,repLeft:opts.rep||1,lr:!!opts.lr,speed:load("nq15_mpsp")||1,gap:opts.gap??(q.length>1?2000:0),srcCh:null,card:opts.card||null,onItem:opts.onItem||null,resumeAi:opts.startAi||0,onEnd:opts.onEnd||null,ls:!!opts.ls,plan:opts.plan||null,planJ:opts.planJ||0,rec};ipClear();
   mpBar();mpUI();await mpLoad();
 }
 async function mpLoad(){const my=MIN;if(!my)return;my.loading=1;try{await mpLoad0(my)}finally{my.loading=0;kaSync()}}
 async function mpLoad0(my){if(MIN!==my)return;const s=my.q[my.qi];
-  const p=await getPack(S.reciter).catch(()=>null);bismDurSet(S.reciter,p);const su=p?.data?.surahs?.[s.ch];
+  const p=await getPack(my.rec).catch(()=>null);bismDurSet(my.rec,p);const su=p?.data?.surahs?.[s.ch];
   if(!su||!su.v||!su.v[s.a-1]){toast("No timing for this ayah with this reciter");mpStop();return}
   my.tm=su.v;
   if(my.srcCh!==s.ch){let src=null;
-    if(audioIdx[S.reciter]?.[s.ch]){try{src=await Store.src(`audio/${S.reciter}/${s.ch}.mp3`);if(src.includes("_capacitor_file_")||window.__blobAll)src=URL.createObjectURL(await (await fetch(src)).blob())}catch(e){src=null}}
+    if(audioIdx[my.rec]?.[s.ch]){try{src=await Store.src(`audio/${my.rec}/${s.ch}.mp3`);if(src.includes("_capacitor_file_")||window.__blobAll)src=URL.createObjectURL(await (await fetch(src)).blob())}catch(e){src=null}}
     if(!src&&su.u){if(!navigator.onLine){toast("Download this surah's audio to play offline");mpStop();return}src=su.u}
     if(!src){toast("No audio for this surah");mpStop();return}
     if(MIN!==my)return;MPA.src=src;my.srcCh=s.ch;await new Promise(r=>{MPA.onloadedmetadata=r;setTimeout(r,4000)})}
-  if(MIN!==my)return;const sa=my.resumeAi>=s.a&&my.resumeAi<=s.b?my.resumeAi:s.a;my.resumeAi=0;my.ai=sa;my.repLeft=my.rep;mpText();MPA.playbackRate=my.speed;
+  if(MIN!==my)return;const sa=my.resumeAi>=s.a&&my.resumeAi<=s.b?my.resumeAi:s.a;my.resumeAi=0;my.ai=sa;my.repLeft=(s.rep>1&&my.rep===1)?s.rep:my.rep;mpText();MPA.playbackRate=my.speed;
   const pv=my.qi>0?my.q[my.qi-1]:null,samePrev=!!(my.plan&&pv&&pv.ch===s.ch),f0=my.tm[0]&&my.tm[0][0];
-  let target=my.tm[sa-1][0]/1000;if(sa===1&&sa===s.a&&!samePrev&&fileBism(s.ch,f0,S.reciter))target=0; // keep the Bismillah that is in the file
+  let target=my.tm[sa-1][0]/1000;if(sa===1&&sa===s.a&&!samePrev&&fileBism(s.ch,f0,my.rec))target=0; // keep the Bismillah that is in the file
   const seekTo=async()=>{MPA.currentTime=target;await new Promise(r=>{const f=()=>{MPA.removeEventListener("seeked",f);r()};MPA.addEventListener("seeked",f);setTimeout(r,2500)})};
   await seekTo();
   if(Math.abs(MPA.currentTime-target)>1&&!MPA.src.startsWith("blob:")){ // server cannot seek → load the whole file once
@@ -4629,7 +4671,7 @@ async function mpLoad0(my){if(MIN!==my)return;const s=my.q[my.qi];
   if(MIN!==my)return;if(my.hold){my.hold=0;mpUI();return}
   // v18.4: playlists — every item starts with Bismillah (also mid-surah ayahs), but only once when the previous item is from the same surah
   const plB=my.plan&&sa===s.a&&s.a>1&&s.ch!==9&&S.bism!==false&&!samePrev;
-  if((sa===1&&sa===s.a&&!samePrev&&bismNeeded(s.ch,f0,S.reciter))||plB){const ok=await playBism(S.reciter,my.speed||1);if(MIN!==my||!ok)return;MPA.currentTime=target}
+  if((sa===1&&sa===s.a&&!samePrev&&bismNeeded(s.ch,f0,my.rec))||plB){const ok=await playBism(my.rec,my.speed||1);if(MIN!==my||!ok)return;MPA.currentTime=target}
   await MPA.play().catch(e=>toast("Could not play: "+(e.message||e)));mpUI();
 }
 function mpTick(){const my=MIN;if(!my||MPA.paused||my.wait)return;const s=my.q[my.qi];const t=MPA.currentTime*1000;const V=my.tm;if(!V)return;
@@ -4661,6 +4703,11 @@ setInterval(miniForce,400);
 
 /* ================= V17.3: LINE ICONS instead of emoji in menus, titles and buttons ================= */
 const LI={
+  chev:'<path d="m6 9 6 6 6-6"/>',
+  grip:'<circle cx="9" cy="6" r="1.3" fill="currentColor" stroke="none"/><circle cx="15" cy="6" r="1.3" fill="currentColor" stroke="none"/><circle cx="9" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="9" cy="18" r="1.3" fill="currentColor" stroke="none"/><circle cx="15" cy="18" r="1.3" fill="currentColor" stroke="none"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+  rep:'<path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/>',
  mosque:'<path d="M12 3c-2.2 2-5 3-5 6.5h10C17 6 14.2 5 12 3z"/><path d="M5 21V11M19 21V11M3 21h18M9.5 21v-3.5a2.5 2.5 0 0 1 5 0V21M7 9.5V21M17 9.5V21"/>',
  heart:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
  moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
@@ -4767,7 +4814,7 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-mplay]");i
 
 TA_RULES.push([/^↩ Read skipped · (.+)$/,"↩ விட்டதை ஓது · $1"],[/^↩ Skipped: (.+)$/,"↩ விட்டது: $1"],[/^⏭ Continue · (.+)$/,"⏭ தொடர் · $1"]);
 Object.assign(TA_MAP,{"✓ Skipped ayahs done — tap ⏭ to continue the plan":"✓ விட்ட ஆயத்கள் முடிந்தன — திட்டத்தை தொடர ⏭ தொடுங்கள்","✓ Saved — read ayahs are counted":"✓ சேமிக்கப்பட்டது — ஓதிய ஆயத்கள் கணக்கில்"});
-Object.assign(TA_MAP,{"Recite Bismillah before a surah when the reciter's audio does not have it":"காரியின் ஆடியோவில் பிஸ்மில்லாஹ் இல்லாத சூராக்களுக்கு முன் பிஸ்மில்லாஹ் ஓது","The number (×3, ×100…) is how many times to say it. The audio recites it once.":"எண் (×3, ×100…) = எத்தனை முறை சொல்ல வேண்டும். ஆடியோ ஒரு முறை மட்டும் ஓதும்.","The number (×3, ×100…) is how many times to say it. The audio recites it once. Adhkar with the evening wording (Amsayna…) have no audio, so Play all skips them.":"எண் (×3, ×100…) = எத்தனை முறை சொல்ல வேண்டும். ஆடியோ ஒரு முறை மட்டும் ஓதும். மாலை வாசகம் (அம்ஸைனா…) உள்ள திக்ருகளுக்கு ஆடியோ இல்லை; ▶ அனைத்தும் அவற்றைத் தவிர்க்கும்.","No audio for the evening wording — read it from the text":"மாலை வாசகத்துக்கு ஆடியோ இல்லை — உரையைப் பார்த்து ஓதுங்கள்","Last 3 ayahs of Al-Hashr":"அல்-ஹஷ்ர் கடைசி 3 ஆயத்கள்","Go":"போ","Type a number, or tap one. Gold = read.":"எண்ணை தட்டச்சு செய்யுங்கள் அல்லது தொடுங்கள். தங்கம் = ஓதியது.","Type an ayah number":"ஆயத் எண்ணை தட்டச்சு செய்யுங்கள்","No such surah":"அந்த சூரா இல்லை"});
+Object.assign(TA_MAP,{"🎧 Listening reciter": "🎧 கேட்கும் இமாம்", "Only for Listen and playlists. The reader keeps its own reciter for word highlighting.": "Listen, playlist-களுக்கு மட்டும். Reader தன் இமாமையே வார்த்தை highlight-க்கு வைத்திருக்கும்.", "More reciters": "மேலும் இமாம்கள்", "Word timing is not needed for listening — every reciter here works. Tap to add (small download).": "கேட்பதற்கு வார்த்தை timing தேவையில்லை — இங்குள்ள எல்லா இமாம்களும் வேலை செய்யும். சேர்க்கத் தொடுங்கள் (சிறிய download).", "Adding reciter…": "இமாம் சேர்க்கப்படுகிறது…", "Reciter": "இமாம்", "Change": "மாற்று","New playlist": "புதிய playlist", "Edit playlist": "Playlist-ஐ மாற்று", "Name": "பெயர்", "Surahs and ayahs": "சூராக்கள், ஆயத்கள்", "Nothing added yet — search above.": "இன்னும் எதுவும் சேர்க்கவில்லை — மேலே தேடுங்கள்.", "Or start from": "அல்லது இதிலிருந்து தொடங்கு", "Loop the playlist": "Playlist-ஐ மீண்டும் ஓட்டு", "Start again after the last item": "கடைசி item முடிந்ததும் மீண்டும் தொடங்கும்", "Gap between items": "Item-களுக்கு இடையே இடைவெளி", "Short pause before the next item": "அடுத்த item-க்கு முன் சிறு இடைவெளி", "Sleep timer": "Sleep timer", "Stop after a set time (when you press ▶)": "குறித்த நேரத்தில் நிறுத்தும் (▶ அழுத்தும்போது)", "Create playlist": "Playlist உருவாக்கு", "Save": "சேமி", "Delete": "நீக்கு", "Quick start · ready-made": "விரைவு தொடக்கம் · தயாரானவை", "Before sleep": "தூங்கும் முன்", "Morning protection": "காலை பாதுகாப்பு", "Ruqyah": "ருக்யா", "Juz Amma": "ஜுஸ் அம்மா", "Loop": "Loop", "Sleep": "Sleep", "Ayat al-Kursi": "ஆயத்துல் குர்ஸீ", "Last 2 ayahs of Al-Baqarah": "அல்-பகரா கடைசி 2 ஆயத்கள்", "Delete playlist": "Playlist-ஐ நீக்கு", "Drag ⋮⋮ to change the order · ×3 = play that item 3 times": "⋮⋮ இழுத்து வரிசையை மாற்றுங்கள் · ×3 = அந்த item 3 முறை ஓடும்", "Add at least one surah or ayah range": "குறைந்தது ஒரு சூரா அல்லது ஆயத் வரம்பைச் சேருங்கள்", "✓ Playlist created": "✓ Playlist உருவாக்கப்பட்டது", "✓ Playlist saved": "✓ Playlist சேமிக்கப்பட்டது", "Delete this playlist?": "இந்த playlist-ஐ நீக்கவா?","Loading audio…":"ஆடியோ ஏற்றப்படுகிறது…","Recite Bismillah before a surah when the reciter's audio does not have it":"காரியின் ஆடியோவில் பிஸ்மில்லாஹ் இல்லாத சூராக்களுக்கு முன் பிஸ்மில்லாஹ் ஓது","The number (×3, ×100…) is how many times to say it. The audio recites it once.":"எண் (×3, ×100…) = எத்தனை முறை சொல்ல வேண்டும். ஆடியோ ஒரு முறை மட்டும் ஓதும்.","The number (×3, ×100…) is how many times to say it. The audio recites it once. Adhkar with the evening wording (Amsayna…) have no audio, so Play all skips them.":"எண் (×3, ×100…) = எத்தனை முறை சொல்ல வேண்டும். ஆடியோ ஒரு முறை மட்டும் ஓதும். மாலை வாசகம் (அம்ஸைனா…) உள்ள திக்ருகளுக்கு ஆடியோ இல்லை; ▶ அனைத்தும் அவற்றைத் தவிர்க்கும்.","No audio for the evening wording — read it from the text":"மாலை வாசகத்துக்கு ஆடியோ இல்லை — உரையைப் பார்த்து ஓதுங்கள்","Last 3 ayahs of Al-Hashr":"அல்-ஹஷ்ர் கடைசி 3 ஆயத்கள்","Go":"போ","Type a number, or tap one. Gold = read.":"எண்ணை தட்டச்சு செய்யுங்கள் அல்லது தொடுங்கள். தங்கம் = ஓதியது.","Type an ayah number":"ஆயத் எண்ணை தட்டச்சு செய்யுங்கள்","No such surah":"அந்த சூரா இல்லை"});
 TA_RULES.push([/^🔢 Go to ayah · (.+)$/,"🔢 ஆயத்துக்கு செல் · $1"]);
 Object.assign(TA_MAP,{"Meaning on the last part …":"பொருள் கடைசி பகுதியில் …","Text size: large":"எழுத்து அளவு: பெரியது","Text size: very large":"எழுத்து அளவு: மிகப் பெரியது","Text size: largest":"எழுத்து அளவு: அதிகபட்சம்"});
 TA_RULES.push([/^(\d+:\d+) · (\d+) \/ (\d+) · Part (\d+)\/(\d+)$/,"$1 · $2 / $3 · பகுதி $4/$5"]);
@@ -4788,6 +4835,116 @@ boot();
   document.addEventListener("click",e=>{const h=e.target.closest("header.top");if(!h||e.target.closest("button,a,input,select,textarea,label,[data-act],[onclick]"))return;
     const sc=h.parentElement&&h.parentElement.querySelector(".scroll");if(sc&&sc.scrollTop>0)top(sc)});
   setInterval(()=>{if(el&&!el.offsetParent)b.classList.remove("on")},700)})();
+
+/* v19: LISTENING PLAYLISTS — compact cards, friendly names, per-item repeat, loop, gap, sleep, editor, ready-made */
+const LPOPEN=new Set();
+const LPNAMES={"2:255-255":"Ayat al-Kursi","2:285-286":"Last 2 ayahs of Al-Baqarah","59:22-24":"Last 3 ayahs of Al-Hashr","18:1-10":"First 10 ayahs of Al-Kahf","18:101-110":"Last 10 ayahs of Al-Kahf","3:190-200":"Last ayahs of Al-Imran","2:1-5":"Al-Baqarah 1–5"};
+function lpName(it){const c=core.chapters.find(x=>x.id===it.ch);const k=it.ch+":"+it.a+"-"+it.b;if(LPNAMES[k])return LPNAMES[k];
+  const whole=c&&it.a===1&&it.b===c.vc;return (c?c.n:"Surah "+it.ch)+(whole?"":it.a===it.b?" "+it.a:` ${it.a}–${it.b}`)}
+function lpSub(it){const c=core.chapters.find(x=>x.id===it.ch);const n=it.b-it.a+1;const whole=c&&it.a===1&&it.b===c.vc;
+  return whole?`${n} ayah${n>1?"s":""}`:it.a===it.b?`${it.ch}:${it.a}`:`${it.ch}:${it.a}–${it.b}`}
+function lpItemMs(it,tp){const n=it.b-it.a+1;let ms=0;const v=tp&&tp.data&&tp.data.surahs&&tp.data.surahs[it.ch]&&tp.data.surahs[it.ch].v;
+  if(v&&v[it.a-1]&&v[it.b-1])ms=v[it.b-1][1]-v[it.a-1][0];else ms=n*7000;return ms*(it.rep||1)}
+const lpDurAsk={};
+function plRec(pl){return pl&&pl.rec&&installed[pl.rec]?pl.rec:LREC()}
+function lpDur(pl){const r=plRec(pl);const tp=packCache.get(r);if(!tp&&r&&!lpDurAsk[r]){lpDurAsk[r]=1;getPack(r).then(()=>lpRefresh()).catch(()=>{})}
+  const ms=pl.items.reduce((t,it)=>t+lpItemMs(it,tp),0)+(pl.items.length-1)*((pl.gap!=null?pl.gap:1.5)*1000);const m=Math.round(ms/60000);return m<1?"<1 min":"~"+m+" min"}
+function lpRefresh(){try{if(hTab==="listen")lsBody();else renderHome()}catch(e){}}
+function lpSleepStart(pl){if(pl.sleep>0){SLEEP={mode:"time",at:Date.now()+pl.sleep*60000,idx:-1};try{sleepChip()}catch(e){}toast(`⏾ Stops in ${pl.sleep} min`)}}
+function lpCard(pl,i){const live=MIN&&MIN.plan===pl;const nowJ=live?MIN.planJ+MIN.qi:-1;const on=live&&(!MPA.paused||mpBusy(MIN));
+  const open=live||LPOPEN.has(pl);const rp=installed[live&&MIN.rec?MIN.rec:plRec(pl)];const n=pl.items.length;
+  const meta=`${n} item${n!==1?"s":""} · ${lpDur(pl)}${rp?` · ${esc(shortRec(rp.id||(live&&MIN.rec)||plRec(pl)))}`:""}${pl.loop?" · 🔁":""}`;
+  const resume=!live&&pl.lpos&&pl.items[pl.lpos.j]?`<small class="lpres">Resumes at ${pl.items[pl.lpos.j].ch}:${pl.lpos.v}</small>`:"";
+  const head=`<div class="lph"><span class="lpi">${liSvg("head")}</span>
+    <button class="lpt" data-lpx="${i}">${live?`<small class="lplive"><i></i>${on?"NOW PLAYING":"PAUSED"} · ${nowJ+1} of ${n}</small>`:""}<b>${esc(pl.name||"Playlist")}</b><small>${meta}</small>${resume}</button>
+    <button class="p2pp" ${live?`data-p2tog="1"`:`data-pllisten="${i}"`} aria-label="${on?"Pause":"Play"}">${on?LIC.pause:LIC.play}</button>
+    <button class="lpc" data-lpx="${i}" aria-label="${open?"Close":"Open"}">${liSvg("chev")}</button></div>`;
+  if(!open)return `<div class="pk lp2${live?" live":""}">${head}</div>`;
+  const rows=pl.items.map((it,j)=>{const isNow=j===nowJ;const past=live&&j<nowJ;
+    const sub=isNow?`${on?"Now playing":"Paused"} · ayah ${MIN.ai||it.a}`:lpSub(it);
+    return `<button class="p2row${isNow?" on":""}${past?" past":""}" data-plitem="${i}:${j}"><span class="lno2">${it.ch}</span><span class="nm"><b>${esc(lpName(it))}${it.rep>1?`<em class="lprep">×${it.rep}</em>`:""}</b><span>${sub}</span></span><span class="an">${esc((core.chapters.find(c=>c.id===it.ch)||{}).a||"")}</span><span class="p2s ${isNow&&on?"now":"play"}">${isNow&&on?LIC.pause:LIC.play}</span></button>`}).join("");
+  return `<div class="pk lp2 open${live?" live":""}">${head}<div class="p2l lpl">${rows}</div>
+    <div class="lpa"><button class="lpchip${pl.loop?" on":""}" data-lploop="${i}">${liSvg("rep")} Loop</button><button class="lpchip${pl.sleep>0?" on":""}" data-lpsleep="${i}">${liSvg("moon")} ${pl.sleep>0?"Sleep "+pl.sleep+" min":"Sleep"}</button><span style="flex:1"></span><button class="lpchip" data-pledit="${i}">✎ Edit</button><button class="p2m" data-plmenu="${i}" aria-label="More options">${liSvg("dots")}</button></div></div>`}
+// ready-made playlists
+const LPT=[
+ {n:"Before sleep",s:"Mulk · Sajdah · Kursi · 3 Quls",ic:"moon",it:[[67],[32],[2,255,255],[2,285,286],[112,0,0,3],[113,0,0,3],[114,0,0,3]]},
+ {n:"Morning protection",s:"Kursi · 3 Quls",ic:"sun",it:[[2,255,255],[112,0,0,3],[113,0,0,3],[114,0,0,3]]},
+ {n:"Ruqyah",s:"Ayahs of healing & protection",ic:"shield",it:[[1],[2,1,5],[2,163,164],[2,255,257],[2,284,286],[3,18,19],[7,117,122],[10,81,82],[20,69,69],[23,115,118],[37,1,10],[46,29,32],[72,1,9],[112],[113],[114]]},
+ {n:"Friday · Al-Kahf",s:"Surah Al-Kahf",ic:"book",it:[[18]]},
+ {n:"Juz Amma",s:"An-Naba to An-Nas",ic:"book",it:Array.from({length:37},(_,k)=>[78+k])}];
+function lpMk(x){const c=core.chapters.find(y=>y.id===x[0]);const a=x[1]||1,b=x[2]||(c?c.vc:1);const it={ch:x[0],a,b};if(x[3]>1)it.rep=x[3];return it}
+function lpFromTemplate(k){const t=LPT[k];if(!t)return;const pl={type:"custom",mode:"listen",name:t.n,days:[],items:t.it.map(lpMk),gap:1.5};
+  plans.push(pl);save(pk("plans"),plans);LPOPEN.add(pl);lpRefresh();toast("✓ Playlist added — "+t.n)}
+// editor
+function lpParse(q){q=q.trim().toLowerCase();const out=[];if(!q)return out;
+  const al={"kursi":[2,255,255],"ayat al-kursi":[2,255,255],"ayatul kursi":[2,255,255],"amana":[2,285,286],"baqarah end":[2,285,286],"last 2 baqarah":[2,285,286],"hashr end":[59,22,24],"kahf 10":[18,1,10]};
+  for(const k in al)if(k.includes(q)||q.includes(k))out.push(lpMk(al[k]));
+  let m=q.match(/^(\d{1,3})\s*[:.]\s*(\d{1,3})(?:\s*[-–]\s*(\d{1,3}))?$/);
+  if(m){const ch=+m[1],c=core.chapters.find(x=>x.id===ch);if(c){const a=Math.max(1,Math.min(c.vc,+m[2])),b=Math.max(a,Math.min(c.vc,m[3]?+m[3]:a));out.unshift({ch,a,b})}return out}
+  m=q.match(/^(\d{1,3})$/);if(m){const c=core.chapters.find(x=>x.id===+m[1]);if(c)out.unshift(lpMk([c.id]));return out}
+  core.chapters.filter(c=>c.n.toLowerCase().includes(q)||(c.t||"").toLowerCase().includes(q)||(c.ta||"").includes(q)||c.a.includes(q)).slice(0,6).forEach(c=>out.push(lpMk([c.id])));
+  const seen=new Set();return out.filter(it=>{const k=it.ch+":"+it.a+"-"+it.b;if(seen.has(k))return false;seen.add(k);return true}).slice(0,7)}
+function lpEditor(pl){const isNew=!pl;const d=pl?{name:pl.name||"",items:pl.items.map(x=>Object.assign({},x)),loop:!!pl.loop,gap:pl.gap!=null?pl.gap:1.5,sleep:pl.sleep||0,rec:pl.rec&&installed[pl.rec]?pl.rec:""}:{name:"",items:[],loop:false,gap:1.5,sleep:0,rec:""};
+  const recs=Object.values(installed).filter(x=>x.type==="timing");
+  openSheet(`<h2>${isNew?"New playlist":"Edit playlist"}</h2>
+  <div class="lpe"><label class="lpel">Name</label><input id="lpeN" class="lpein" placeholder="e.g. Night, Morning, Car" value="${esc(d.name)}" maxlength="40">
+  <label class="lpel">Reciter</label><div class="lperc" id="lpeRc">${[["",`Listen reciter (${esc(shortRec(LREC())||"—")})`]].concat(recs.map(x=>[x.id,shortRec(x.id)])).map(([id,l])=>`<button class="chk ${d.rec===id?"on":""}" data-erc="${id}">${id?liSvg("mic")+" ":""}${l}</button>`).join("")}</div>
+  <label class="lpel">Surahs and ayahs</label>
+  <div class="search lpes"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="lpeQ" placeholder="Add: Mulk, 112, Kursi, 2:285-286" autocomplete="off"></div>
+  <div id="lpeR" class="lper"></div><div id="lpeL" class="lpeli"></div>
+  ${isNew?`<div class="lpel" style="margin-top:6px">Or start from</div><div class="chips">${LPT.map((t,k)=>`<button class="chk" data-lpet="${k}">${esc(t.n)}</button>`).join("")}</div>`:""}
+  <div class="lpeo"><label class="lpeor"><span><b>Loop the playlist</b><small>Start again after the last item</small></span><input type="checkbox" id="lpeLoop" ${d.loop?"checked":""}></label>
+  <label class="lpeor"><span><b>Gap between items</b><small>Short pause before the next item</small></span><select id="lpeGap">${[0,1.5,3,5].map(v=>`<option value="${v}" ${d.gap==v?"selected":""}>${v?v+" s":"None"}</option>`).join("")}</select></label>
+  <label class="lpeor"><span><b>Sleep timer</b><small>Stop after a set time (when you press ▶)</small></span><select id="lpeSl">${[0,15,30,45,60,90].map(v=>`<option value="${v}" ${d.sleep==v?"selected":""}>${v?v+" min":"Off"}</option>`).join("")}</select></label></div>
+  <div class="note" id="lpeT" style="text-align:center;margin:8px 0 0"></div>
+  <div class="acts" style="margin-top:12px"><button class="sb" id="lpeSave" style="flex:1;justify-content:center">${isNew?"Create playlist":"Save"}</button>${isNew?"":`<button class="sb l" id="lpeDel" style="color:var(--maroon)">Delete</button>`}</div></div>`);
+  const L=$("#lpeL"),R=$("#lpeR");
+  const tot=()=>{const tp=packCache.get(d.rec||LREC());const ms=d.items.reduce((t,it)=>t+lpItemMs(it,tp),0);$("#lpeT").textContent=d.items.length?`${d.items.length} item${d.items.length>1?"s":""} · total ≈ ${Math.max(1,Math.round(ms/60000))} min · Bismillah before each surah`:"Add at least one surah or ayah range"};
+  const draw=()=>{L.innerHTML=d.items.map((it,j)=>`<div class="lper2" data-j="${j}"><span class="lpg" data-grip="${j}" aria-label="Drag to reorder">${liSvg("grip")}</span>
+    <span class="nm"><b>${esc(lpName(it))}</b><small>${lpSub(it)}</small></span>
+    <span class="lpst"><button data-rm1="${j}" aria-label="Fewer times">−</button><b>×${it.rep||1}</b><button data-rp1="${j}" aria-label="More times">+</button></span>
+    <button class="lpx" data-del="${j}" aria-label="Remove">×</button></div>`).join("")||`<div class="note" style="margin:6px 0">Nothing added yet — search above.</div>`;
+    if(d.items.length>1)L.insertAdjacentHTML("beforeend",`<div class="note" style="font-size:12px;margin:6px 2px 0">Drag ⋮⋮ to change the order · ×3 = play that item 3 times</div>`);tot()};
+  const res=()=>{const r=lpParse($("#lpeQ").value);R.innerHTML=r.map((it,k)=>`<button data-add="${k}"><b>${esc(lpName(it))}</b><small>${lpSub(it)}</small><span>＋</span></button>`).join("");R._r=r};
+  $("#lpeQ").oninput=res;$("#lpeQ").onkeydown=e=>{if(e.key==="Enter"&&R._r&&R._r[0]){d.items.push(R._r[0]);$("#lpeQ").value="";res();draw()}};
+  draw();
+  $("#sheet").onclick=e=>{const b=e.target.closest("button");if(!b)return;const x=b.dataset;
+    if(x.erc!=null){d.rec=x.erc;$("#lpeRc").querySelectorAll("[data-erc]").forEach(k=>k.classList.toggle("on",k.dataset.erc===d.rec));tot();if(d.rec)getPack(d.rec).then(tot).catch(()=>{})}
+    else if(x.add!=null){d.items.push(Object.assign({},R._r[+x.add]));$("#lpeQ").value="";res();draw();$("#lpeQ").focus()}
+    else if(x.rp1!=null){const it=d.items[+x.rp1];it.rep=Math.min(10,(it.rep||1)+1);draw()}
+    else if(x.rm1!=null){const it=d.items[+x.rm1];it.rep=Math.max(1,(it.rep||1)-1);if(it.rep===1)delete it.rep;draw()}
+    else if(x.del!=null){d.items.splice(+x.del,1);draw()}
+    else if(x.lpet!=null){const t=LPT[+x.lpet];d.items=t.it.map(lpMk);if(!$("#lpeN").value.trim())$("#lpeN").value=t.n;draw()}
+    else if(b.id==="lpeSave"){if(!d.items.length)return toast("Add at least one surah or ayah range");
+      const o=pl||{type:"custom",mode:"listen",days:[]};o.name=$("#lpeN").value.trim()||"My playlist";o.items=d.items;o.loop=$("#lpeLoop").checked;o.gap=+$("#lpeGap").value;o.sleep=+$("#lpeSl").value;if(d.rec)o.rec=d.rec;else delete o.rec;
+      if(isNew){plans.push(o);LPOPEN.add(o)}else if(o.lpos&&!o.items[o.lpos.j])o.lpos=null;
+      save(pk("plans"),plans);closeSheet();hTab="listen";lTab="plans";try{renderHome()}catch(e){}toast(isNew?"✓ Playlist created":"✓ Playlist saved")}
+    else if(b.id==="lpeDel"){if(!confirm("Delete this playlist?"))return;if(MIN&&MIN.plan===pl)mpStop();plans.splice(plans.indexOf(pl),1);save(pk("plans"),plans);closeSheet();lpRefresh()}};
+  // drag ⋮⋮ to reorder
+  L.addEventListener("pointerdown",e=>{const g=e.target.closest("[data-grip]");if(!g)return;e.preventDefault();const from=+g.dataset.grip;const row=g.closest(".lper2");
+    const rows=[...L.querySelectorAll(".lper2")];const rects=rows.map(r=>r.getBoundingClientRect());const y0=e.clientY;let to=from;row.classList.add("drag");
+    const mv=ev=>{const dy=ev.clientY-y0;row.style.transform=`translateY(${dy}px)`;const cy=rects[from].top+rects[from].height/2+dy;to=rects.findIndex(r=>cy<r.bottom);if(to<0)to=rects.length-1};
+    const up=()=>{document.removeEventListener("pointermove",mv);document.removeEventListener("pointerup",up);document.removeEventListener("pointercancel",up);
+      if(to!==from){const [it]=d.items.splice(from,1);d.items.splice(to,0,it)}draw()};
+    document.addEventListener("pointermove",mv);document.addEventListener("pointerup",up);document.addEventListener("pointercancel",up)});
+}
+
+/* v19.1: LISTENING RECITER — its own reciter for Listen (reader keeps the reading reciter), 2 favourites, more reciters */
+function LREC(){const r=S.lrec&&installed[S.lrec]&&installed[S.lrec].type==="timing"?S.lrec:S.reciter;return r&&installed[r]?r:null}
+function shortRec(id){const n=(installed[id]&&installed[id].name)||(packInfo(id)||{}).name||"";const w=n.replace(/^(Sheikh|Shaykh|Sh\.)\s+/i,"").split(/\s+/);return w.length>2?w.slice(0,2).join(" "):w.join(" ")}
+function lrecFavs(){const f=(S.lfav||[]).filter(id=>installed[id]);const L=LREC();if(L&&!f.includes(L))f.unshift(L);return f.slice(0,2)}
+async function lrecSet(id){if(!installed[id])return;const prev=LREC();S.lrec=id;S.lfav=[id].concat(prev&&prev!==id?[prev]:[],(S.lfav||[]).filter(x=>x!==id&&x!==prev)).slice(0,2);saveSet();toast("🎧 "+installed[id].name);
+  if(MIN){const wasP=!MPA.paused;clearTimeout(MIN.gapT);bismStop();MIN.rec=id;MIN.srcCh=null;MIN.resumeAi=MIN.ai;MPA.pause();await mpLoad();if(!wasP)MPA.pause()}
+  try{recChip()}catch(e){}try{if(hTab==="listen")renderListenTab()}catch(e){}}
+function lrecSheet(){const L=Object.values(installed).filter(p=>p.type==="timing");const cur0=(MIN&&MIN.rec)||LREC();
+  const more=(catalog.packs||[]).filter(p=>p.type==="timing"&&!installed[p.id]).sort((a,b)=>(b.words?1:0)-(a.words?1:0)||String(a.name).localeCompare(b.name));
+  setSheet(`<h2>🎧 Listening reciter</h2><div class="note" style="margin:0 0 10px">Only for Listen and playlists. The reader keeps its own reciter for word highlighting.</div>
+  <div class="mlist">${L.map(p=>{const n=audioIdx[p.id]?Object.keys(audioIdx[p.id]).length:0;return `<button data-lrc="${p.id}"><i>${p.id===cur0?"✓":"🎙"}</i><span><b>${esc(p.name)}</b><small>${esc(p.style||"")}${n?` · ${n} / 114 offline`:" · streams online"}</small></span></button>`}).join("")}</div>
+  ${more.length?`<h3 style="margin:16px 0 8px">More reciters</h3><div class="note" style="margin:0 0 8px">Word timing is not needed for listening — every reciter here works. Tap to add (small download).</div><div class="mlist">${more.map(p=>`<button data-lradd="${p.id}"><i>＋</i><span><b>${esc(p.name)}</b><small>${esc(p.style||"Murattal")}${p.words?" · word highlight too":""}</small></span></button>`).join("")}</div>`:`<div class="note" style="margin-top:12px">More reciters: Library → Reciters (needs internet).</div>`}`);
+  $("#sheet").onclick=e=>{const b=e.target.closest("[data-lrc],[data-lradd]");if(!b)return;
+    if(b.dataset.lrc){closeSheet();lrecSet(b.dataset.lrc);return}
+    const id=b.dataset.lradd;if(!navigator.onLine)return toast("No internet connection");closeSheet();dlPack(id);toast("Adding reciter…");
+    let k=0;const t=setInterval(()=>{k++;if(installed[id]){clearInterval(t);lrecSet(id)}else if(k>90)clearInterval(t)},1000)}}
 </script>
 </body>
 </html>
