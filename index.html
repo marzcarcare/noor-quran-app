@@ -118,7 +118,7 @@ select{font-size:15px;padding:10px;border-radius:10px;border:1px solid var(--lin
 .lpein{height:44px;border-radius:12px;border:1px solid var(--line);background:var(--card);padding:0 12px;font:inherit;font-size:15px;color:var(--ink)}
 .lper{display:flex;flex-direction:column;gap:4px}.lper button{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;background:var(--accs);text-align:left;color:var(--ink)}.lper button b{font-size:14px}.lper button small{flex:1;font-size:12px;color:var(--muted)}.lper button span{color:var(--green2);font-weight:800;font-size:18px}
 .lpeli{display:flex;flex-direction:column}.lper2{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--line);background:var(--bg);touch-action:pan-y}.lper2.drag{position:relative;z-index:2;background:var(--card);box-shadow:0 6px 16px #0002;border-radius:10px}
-.lpg{width:26px;height:36px;display:grid;place-items:center;color:var(--muted);touch-action:none;cursor:grab;flex:none}.lpg svg.bi{width:18px;height:18px;vertical-align:0}
+.lpgr{width:26px;height:36px;display:grid;place-items:center;color:var(--muted);touch-action:none;cursor:grab;flex:none}.lpgr svg.bi{width:18px;height:18px;vertical-align:0}
 .lper2 .nm{flex:1;min-width:0;display:flex;flex-direction:column}.lper2 .nm b{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lper2 .nm small{font-size:12px;color:var(--muted)}
 .lpst{display:flex;align-items:center;border:1px solid var(--line);border-radius:16px;background:var(--card);height:32px;flex:none}.lpst button{width:30px;height:30px;font-size:17px;font-weight:700;color:var(--muted)}.lpst b{font-size:12.5px;color:var(--green2);min-width:24px;text-align:center}
 .lpx{width:32px;height:32px;font-size:20px;color:var(--muted);flex:none}
@@ -383,7 +383,7 @@ body.uim .hero b,body.uim .stat b{font-weight:800}
 .lforms{display:flex;justify-content:space-around;direction:rtl;margin:10px 0;padding:8px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
 .lforms div{display:flex;flex-direction:column;align-items:center}.lforms b{font-family:AmiriQuran,serif;font-size:32px;line-height:2.1;font-weight:400;margin:-8px 0 -10px}.lforms small{direction:ltr;font-size:11px;color:var(--muted)}
 .mksvg{width:100%;max-width:330px;display:block;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:16px}
-.mk-skin{fill:#f1d7c2;stroke:#b98a6b;stroke-width:2}.mk-nose{fill:#c9a08a}.mk-air{fill:#6b2e33}.mk-palate{fill:none;stroke:#b55a5a;stroke-width:5;stroke-linecap:round}.mk-wall{fill:none;stroke:#b55a5a;stroke-width:4;stroke-linecap:round}.mk-tongue{fill:#e48a8a;stroke:#b55a5a;stroke-width:1.5}
+.mk-skin{fill:#f1d7c2;stroke:#b98a6b;stroke-width:2}.mk-out{fill:#f6e3e0;stroke:#c99a94;stroke-width:1.5}.mk-nose{fill:#c9a08a}.mk-air{fill:#6b2e33}.mk-palate{fill:none;stroke:#b55a5a;stroke-width:5;stroke-linecap:round}.mk-wall{fill:none;stroke:#b55a5a;stroke-width:4;stroke-linecap:round}.mk-tongue{fill:#e48a8a;stroke:#b55a5a;stroke-width:1.5}
 .mk-teeth{fill:#fff;stroke:#bbb;stroke-width:1}.mk-lip{fill:#d27c7c}.mk-line{fill:none;stroke:#5a2a2a;stroke-width:2}
 .mk-lab{font-size:10px;fill:#5a3a2a;font-family:inherit}.mk-jawf{fill:#f5c542;opacity:.6;animation:mkj 1.4s ease-in-out infinite}@keyframes mkj{50%{opacity:.25}}
 .mk-pt{fill:#f5c542;stroke:#7a4a00;stroke-width:2}.mk-glow{fill:#f5c542;opacity:.45;animation:mkp 1.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
@@ -3807,17 +3807,16 @@ const MK_OF={"ا":"jawf","ب":"lips","ت":"tip_gum","ث":"teeth_tips","ج":"mid"
 const MK_HEAVY="خصضغطقظ";
 function makhrajSvg(pt){
   const [x,y]=MK_PTS[pt]||[0,0];const jawf=pt==="jawf";
-  return `<svg class="mksvg" viewBox="0 0 250 270" role="img" aria-label="Makhraj diagram">
-  <path class="mk-skin" d="M78 8 C50 10 36 30 34 52 C33 64 30 72 22 84 C17 92 22 98 30 100 C28 106 32 110 38 112 L42 128 L42 140 C36 150 38 160 46 166 C44 180 52 192 74 196 C96 200 116 204 134 214 L150 270 L248 270 L244 220 C250 180 248 140 238 100 C226 52 196 10 146 6 C120 4 98 4 78 8 Z"/>
-  <path class="mk-nose" d="M56 80 C90 72 150 72 188 84 C196 88 198 96 194 100 C160 94 110 92 70 96 C60 96 54 88 56 80 Z"/>
-  <path class="mk-air" d="M62 122 C66 112 84 104 110 102 C140 100 166 104 184 116 C194 124 196 140 197 160 L201 252 L184 252 L182 196 C180 172 176 152 164 140 C140 128 104 128 80 132 C70 134 63 130 62 122 Z"/>
-  ${jawf?`<path class="mk-jawf" d="M62 122 C66 112 84 104 110 102 C140 100 166 104 184 116 C194 124 196 140 197 160 L201 252 L184 252 L182 196 C180 172 176 152 164 140 C140 128 104 128 80 132 C70 134 63 130 62 122 Z"/>`:""}
+  return `<svg class="mksvg" viewBox="20 84 236 182" role="img" aria-label="Mouth and throat — where the sound comes from">
+  <path class="mk-out" d="M34 112 C38 102 56 98 80 98 C120 96 160 98 184 106 C202 114 210 134 212 160 L214 262 L172 262 L170 216 C150 206 112 200 80 196 C56 194 42 182 38 164 C34 148 32 126 34 112 Z"/>
+  <path class="mk-air" d="M62 122 C66 112 84 104 110 102 C140 100 166 104 184 116 C194 124 196 140 197 160 L201 262 L184 262 L182 196 C180 172 176 152 164 140 C140 128 104 128 80 132 C70 134 63 130 62 122 Z"/>
+  ${jawf?`<path class="mk-jawf" d="M62 122 C66 112 84 104 110 102 C140 100 166 104 184 116 C194 124 196 140 197 160 L201 262 L184 262 L182 196 C180 172 176 152 164 140 C140 128 104 128 80 132 C70 134 63 130 62 122 Z"/>`:""}
   <path class="mk-palate" d="M62 118 C72 108 96 102 124 102 C146 102 164 106 178 114 C186 120 190 126 190 134"/>
   <path class="mk-tongue" d="M60 140 C62 132 72 128 86 128 C108 126 132 124 152 130 C170 136 180 150 182 170 C183 186 182 200 184 214 L172 214 C168 196 160 182 140 172 C116 160 92 156 74 154 C64 152 58 148 60 140 Z"/>
   <path class="mk-teeth" d="M56 112 L66 112 L66 127 L58 127 Z M57 140 L66 140 L66 152 L59 152 Z M104 108 L118 108 L118 116 L104 116 Z"/>
   <path class="mk-lip" d="M36 116 C42 110 52 110 57 114 L57 128 C50 131 42 130 37 125 Z M38 139 C44 135 52 135 57 139 L57 152 C50 156 42 154 38 149 Z"/>
-  <path class="mk-wall" d="M190 112 C198 150 200 200 204 256"/>
-  <text x="112" y="88" class="mk-lab">nose</text><text x="206" y="168" class="mk-lab">throat</text><text x="110" y="148" class="mk-lab">tongue</text>
+  <path class="mk-wall" d="M190 112 C198 150 200 200 204 262"/>
+  <text x="120" y="93" class="mk-lab" text-anchor="middle">palate</text><text x="30" y="176" class="mk-lab">lips</text><text x="110" y="148" class="mk-lab">tongue</text><text x="218" y="190" class="mk-lab">throat</text>
   ${jawf?"":`<circle cx="${x}" cy="${y}" r="12" class="mk-glow"/><circle cx="${x}" cy="${y}" r="5.5" class="mk-pt"/>`}
   </svg>`;
 }
@@ -4900,7 +4899,7 @@ function lpEditor(pl){const isNew=!pl;const d=pl?{name:pl.name||"",items:pl.item
   <div class="acts" style="margin-top:12px"><button class="sb" id="lpeSave" style="flex:1;justify-content:center">${isNew?"Create playlist":"Save"}</button>${isNew?"":`<button class="sb l" id="lpeDel" style="color:var(--maroon)">Delete</button>`}</div></div>`);
   const L=$("#lpeL"),R=$("#lpeR");
   const tot=()=>{const tp=packCache.get(d.rec||LREC());const ms=d.items.reduce((t,it)=>t+lpItemMs(it,tp),0);$("#lpeT").textContent=d.items.length?`${d.items.length} item${d.items.length>1?"s":""} · total ≈ ${Math.max(1,Math.round(ms/60000))} min · Bismillah before each surah`:"Add at least one surah or ayah range"};
-  const draw=()=>{L.innerHTML=d.items.map((it,j)=>`<div class="lper2" data-j="${j}"><span class="lpg" data-grip="${j}" aria-label="Drag to reorder">${liSvg("grip")}</span>
+  const draw=()=>{L.innerHTML=d.items.map((it,j)=>`<div class="lper2" data-j="${j}"><span class="lpgr" data-grip="${j}" aria-label="Drag to reorder">${liSvg("grip")}</span>
     <span class="nm"><b>${esc(lpName(it))}</b><small>${lpSub(it)}</small></span>
     <span class="lpst"><button data-rm1="${j}" aria-label="Fewer times">−</button><b>×${it.rep||1}</b><button data-rp1="${j}" aria-label="More times">+</button></span>
     <button class="lpx" data-del="${j}" aria-label="Remove">×</button></div>`).join("")||`<div class="note" style="margin:6px 0">Nothing added yet — search above.</div>`;
